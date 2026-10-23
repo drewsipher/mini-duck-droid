@@ -1,0 +1,196 @@
+{
+ "source": "sim/train_pg/playground/open_duck_mini_v2/xmls/open_duck_mini_v2_backlash.xml",
+ "source_sha256": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38",
+ "generated": "2026-10-23 00:34",
+ "total_kg": 2.107141,
+ "bodies": [
+  {
+   "name": "base",
+   "parent": "world",
+   "mass_kg": null,
+   "subtree_mass_kg": 2.107141,
+   "inertial_pos": null,
+   "group": null,
+   "what": null
+  },
+  {
+   "name": "trunk_assembly",
+   "parent": "base",
+   "mass_kg": 0.698526,
+   "subtree_mass_kg": 2.107141,
+   "inertial_pos": "-0.0483259 -9.97823e-05 0.0384971",
+   "group": "trunk",
+   "what": "body shell with the Pi, the battery pack and the two hip-yaw servos"
+  },
+  {
+   "name": "hip_roll_assembly",
+   "parent": "trunk_assembly",
+   "mass_kg": 0.06648,
+   "subtree_mass_kg": 0.41354,
+   "inertial_pos": "0.000795081 -5.46541e-06 -0.03306",
+   "group": "left_leg",
+   "what": "left hip: yaw-to-roll bracket with the hip roll servo"
+  },
+  {
+   "name": "left_roll_to_pitch_assembly",
+   "parent": "hip_roll_assembly",
+   "mass_kg": 0.07516,
+   "subtree_mass_kg": 0.34706,
+   "inertial_pos": "0.0508042 -0.00041105 0.0204704",
+   "group": "left_leg",
+   "what": "left hip: roll-to-pitch bracket with the hip pitch servo"
+  },
+  {
+   "name": "knee_and_ankle_assembly",
+   "parent": "left_roll_to_pitch_assembly",
+   "mass_kg": 0.12407,
+   "subtree_mass_kg": 0.2719,
+   "inertial_pos": "0.00253369 -0.0390636 0.0102776",
+   "group": "left_leg",
+   "what": "left thigh (hip pitch horn to knee) with the knee servo"
+  },
+  {
+   "name": "knee_and_ankle_assembly_2",
+   "parent": "knee_and_ankle_assembly",
+   "mass_kg": 0.07259,
+   "subtree_mass_kg": 0.14783,
+   "inertial_pos": "5.01859e-06 -0.0577465 0.0181136",
+   "group": "left_leg",
+   "what": "left shank (knee to ankle) with the ankle servo"
+  },
+  {
+   "name": "foot_assembly",
+   "parent": "knee_and_ankle_assembly_2",
+   "mass_kg": 0.07524,
+   "subtree_mass_kg": 0.07524,
+   "inertial_pos": "0.0110718 -0.0246608 0.0190626",
+   "group": "left_leg",
+   "what": "left foot with the TPU sole"
+  },
+  {
+   "name": "neck_pitch_assembly",
+   "parent": "trunk_assembly",
+   "mass_kg": 0.06618,
+   "subtree_mass_kg": 0.581535,
+   "inertial_pos": "-5.63137e-06 0.0492968 0.0181786",
+   "group": "head_and_neck",
+   "what": "neck: pitch bracket with the head pitch servo"
+  },
+  {
+   "name": "head_pitch_to_yaw",
+   "parent": "neck_pitch_assembly",
+   "mass_kg": 0.0169378,
+   "subtree_mass_kg": 0.515355,
+   "inertial_pos": "-0.00766247 0.026015 0.0186681",
+   "group": "head_and_neck",
+   "what": "neck: small pitch-to-yaw link"
+  },
+  {
+   "name": "neck_yaw_assembly",
+   "parent": "head_pitch_to_yaw",
+   "mass_kg": 0.0918099,
+   "subtree_mass_kg": 0.498417,
+   "inertial_pos": "0.00412907 3.95745e-06 -0.0222828",
+   "group": "head_and_neck",
+   "what": "neck: yaw block with the head roll servo"
+  },
+  {
+   "name": "head_assembly",
+   "parent": "neck_yaw_assembly",
+   "mass_kg": 0.406607,
+   "subtree_mass_kg": 0.406607,
+   "inertial_pos": "0.00815416 -0.00390754 0.0227726",
+   "group": "head_and_neck",
+   "what": "the head: shell, eyes, speaker, camera mounts"
+  },
+  {
+   "name": "hip_roll_assembly_2",
+   "parent": "trunk_assembly",
+   "mass_kg": 0.06648,
+   "subtree_mass_kg": 0.41354,
+   "inertial_pos": "0.000795081 -5.46541e-06 -0.03306",
+   "group": "right_leg",
+   "what": "right hip: yaw-to-roll bracket with the hip roll servo"
+  },
+  {
+   "name": "right_roll_to_pitch_assembly",
+   "parent": "hip_roll_assembly_2",
+   "mass_kg": 0.07516,
+   "subtree_mass_kg": 0.34706,
+   "inertial_pos": "-0.0508042 -0.000420742 0.0204704",
+   "group": "right_leg",
+   "what": "right hip: roll-to-pitch bracket with the hip pitch servo"
+  },
+  {
+   "name": "knee_and_ankle_assembly_3",
+   "parent": "right_roll_to_pitch_assembly",
+   "mass_kg": 0.12407,
+   "subtree_mass_kg": 0.2719,
+   "inertial_pos": "0.00253369 0.0390636 0.010809",
+   "group": "right_leg",
+   "what": "right thigh (hip pitch horn to knee) with the knee servo"
+  },
+  {
+   "name": "knee_and_ankle_assembly_4",
+   "parent": "knee_and_ankle_assembly_3",
+   "mass_kg": 0.07259,
+   "subtree_mass_kg": 0.14783,
+   "inertial_pos": "5.01859e-06 -0.0577465 0.0181136",
+   "group": "right_leg",
+   "what": "right shank (knee to ankle) with the ankle servo"
+  },
+  {
+   "name": "foot_assembly_2",
+   "parent": "knee_and_ankle_assembly_4",
+   "mass_kg": 0.07524,
+   "subtree_mass_kg": 0.07524,
+   "inertial_pos": "0.0110718 -0.0246608 0.0190626",
+   "group": "right_leg",
+   "what": "right foot with the TPU sole"
+  }
+ ],
+ "groups": {
+  "trunk": {
+   "bodies": [
+    "trunk_assembly"
+   ],
+   "mass_kg": 0.698526
+  },
+  "head_and_neck": {
+   "bodies": [
+    "neck_pitch_assembly",
+    "head_pitch_to_yaw",
+    "neck_yaw_assembly",
+    "head_assembly"
+   ],
+   "mass_kg": 0.581535
+  },
+  "left_leg": {
+   "bodies": [
+    "hip_roll_assembly",
+    "left_roll_to_pitch_assembly",
+    "knee_and_ankle_assembly",
+    "knee_and_ankle_assembly_2",
+    "foot_assembly"
+   ],
+   "mass_kg": 0.41354
+  },
+  "right_leg": {
+   "bodies": [
+    "hip_roll_assembly_2",
+    "right_roll_to_pitch_assembly",
+    "knee_and_ankle_assembly_3",
+    "knee_and_ankle_assembly_4",
+    "foot_assembly_2"
+   ],
+   "mass_kg": 0.41354
+  }
+ },
+ "notes": [
+  "Masses are the onshape-to-robot export with slicer-estimated masses for printed parts (official sim2real.md).",
+  "The 'base' body is massless; 'world' is the floor. 15 bodies carry mass.",
+  "Each hip_roll_assembly / roll_to_pitch / thigh / shank body carries one STS3215 (about 55-60 g each, unverified), so a leg is five servos plus plastic.",
+  "User estimate of the real duck: 1.5-1.8 kg (sim/report1 'Where his weight is'); the model is 2.107 kg. Training randomises mass x0.9-1.1 per body plus MASS_SCALE when set.",
+  "Whether the CAD trunk includes the two 18650 cells (about 2 x 47 g) is unknown: weigh the duck with and without the pack."
+ ]
+}

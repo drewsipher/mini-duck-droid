@@ -1,0 +1,124 @@
+{
+ "skill": "walk",
+ "version": 1,
+ "date": "2026-10-23T00:53:24",
+ "generated_by": "graph_runtime/make_demo_skills.py",
+ "simulator": {
+  "engine": "graph_runtime.engine on MujocoBackend",
+  "xml": "/home/hermes/src/mini-duck-droid/sim/Open_Duck_Playground/playground/open_duck_mini_v2/xmls/scene_flat_terrain_backlash.xml",
+  "torque_nm": 1.86,
+  "timestep_s": 0.002,
+  "control_hz": 50,
+  "start_pose_noise_rad": 0.02
+ },
+ "protocol": "10 trials: 3 s standing then 3 s walking at vx 0.10-0.14 m/s; fall = tilt > 45.0 deg or trunk < 0.08 m",
+ "trials": 10,
+ "passes": 10,
+ "fails": 0,
+ "ratio": "10/10",
+ "threshold": 0.9,
+ "passed": true,
+ "results": [
+  {
+   "seed": 0,
+   "vx": 0.1,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 7.7,
+   "min_height_m": 0.15,
+   "fwd_m": 0.152,
+   "recovery": null
+  },
+  {
+   "seed": 1,
+   "vx": 0.104,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 7.9,
+   "min_height_m": 0.15,
+   "fwd_m": 0.164,
+   "recovery": null
+  },
+  {
+   "seed": 2,
+   "vx": 0.109,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 7.6,
+   "min_height_m": 0.15,
+   "fwd_m": 0.186,
+   "recovery": null
+  },
+  {
+   "seed": 3,
+   "vx": 0.113,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 7.6,
+   "min_height_m": 0.15,
+   "fwd_m": 0.195,
+   "recovery": null
+  },
+  {
+   "seed": 4,
+   "vx": 0.118,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 7.8,
+   "min_height_m": 0.15,
+   "fwd_m": 0.204,
+   "recovery": null
+  },
+  {
+   "seed": 5,
+   "vx": 0.122,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 8.0,
+   "min_height_m": 0.15,
+   "fwd_m": 0.22,
+   "recovery": null
+  },
+  {
+   "seed": 6,
+   "vx": 0.127,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 8.0,
+   "min_height_m": 0.15,
+   "fwd_m": 0.222,
+   "recovery": null
+  },
+  {
+   "seed": 7,
+   "vx": 0.131,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 8.2,
+   "min_height_m": 0.15,
+   "fwd_m": 0.233,
+   "recovery": null
+  },
+  {
+   "seed": 8,
+   "vx": 0.136,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 8.1,
+   "min_height_m": 0.15,
+   "fwd_m": 0.239,
+   "recovery": null
+  },
+  {
+   "seed": 9,
+   "vx": 0.14,
+   "fell": false,
+   "fall_t": null,
+   "max_tilt_deg": 8.3,
+   "min_height_m": 0.15,
+   "fwd_m": 0.231,
+   "recovery": null
+  }
+ ],
+ "falls": 0
+}

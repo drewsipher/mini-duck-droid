@@ -1,0 +1,63 @@
+{
+ "skill": "sit",
+ "version": 1,
+ "date": "2026-10-23T00:53:25",
+ "generated_by": "graph_runtime/make_demo_skills.py",
+ "simulator": {
+  "engine": "graph_runtime.engine on MujocoBackend",
+  "xml": "/home/hermes/src/mini-duck-droid/sim/Open_Duck_Playground/playground/open_duck_mini_v2/xmls/scene_flat_terrain_backlash.xml",
+  "torque_nm": 1.86,
+  "timestep_s": 0.002,
+  "control_hz": 50,
+  "start_pose_noise_rad": 0.02
+ },
+ "protocol": "5 trials: abort from standing; pass = relaxed, tilt < 20 deg and trunk > 0.10 m for 3 s after relaxing",
+ "trials": 5,
+ "passes": 5,
+ "fails": 0,
+ "ratio": "5/5",
+ "threshold": 0.9,
+ "passed": true,
+ "results": [
+  {
+   "seed": 100,
+   "passed": true,
+   "relaxed_at_s": 3.0,
+   "max_tilt_after_relax_deg": 5.6,
+   "min_height_after_relax_m": 0.14,
+   "stiffness": 0.3
+  },
+  {
+   "seed": 101,
+   "passed": true,
+   "relaxed_at_s": 3.0,
+   "max_tilt_after_relax_deg": 5.6,
+   "min_height_after_relax_m": 0.14,
+   "stiffness": 0.3
+  },
+  {
+   "seed": 102,
+   "passed": true,
+   "relaxed_at_s": 3.0,
+   "max_tilt_after_relax_deg": 5.6,
+   "min_height_after_relax_m": 0.14,
+   "stiffness": 0.3
+  },
+  {
+   "seed": 103,
+   "passed": true,
+   "relaxed_at_s": 3.0,
+   "max_tilt_after_relax_deg": 5.6,
+   "min_height_after_relax_m": 0.14,
+   "stiffness": 0.3
+  },
+  {
+   "seed": 104,
+   "passed": true,
+   "relaxed_at_s": 3.0,
+   "max_tilt_after_relax_deg": 5.6,
+   "min_height_after_relax_m": 0.14,
+   "stiffness": 0.3
+  }
+ ]
+}

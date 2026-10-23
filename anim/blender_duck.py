@@ -299,9 +299,9 @@ def _controls_look(arm):
             p.custom_shape_scale_xyz = (0.8, 0.8, 0.8)
             p.color.palette = "THEME01"
         elif any(k in p.name for k in ("neck", "head")):
-            p.color.palette = "THEME04"              # green: head chain (FK)
+            p.color.palette = "THEME03"              # green: head chain (FK)
         else:
-            p.color.palette = "THEME03"              # blue: leg joints (IK or FK)
+            p.color.palette = "THEME04"              # blue: leg joints (IK or FK)
     arm.data.show_axes = False
 
 

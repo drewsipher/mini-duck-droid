@@ -1,0 +1,28 @@
+WARNING: --allow-failed-battery: loading packages that did not pass their battery (simulation only)
+graph demo_openloop: start walk, idle = walk @ [0, 0, 0], recovery = sit
+  node walk     locomotion v1 onnx  clip 0.54s battery pass status 'deployed v1 (BEST_WALK_ONNX_2); lpf off because an 8 Hz low-pass stops this brain walking in sim'
+  node bow      episodic   v1 null  clip 2.50s battery FAIL status "open-loop placeholder until the Controls agent's tracking policy lands (sim/train_pg/runs_skills/*/package_draft)"
+  node sit      recovery   v1 null  clip 1.50s battery pass status 'canned sit-down; relax = 0.3 stiffness hold (full torque-off collapses the duck; HWI.low_torque_kps on the robot)'
+  edge walk -> bow [normal] phase [0.0, 1.0] contact double speed [0.0, 0.03] window 0.4s wait 3.0s
+  edge bow -> walk [return] phase [0.95, 1.0] contact any speed None window 0.4s wait 1.0s
+  edge walk -> sit [recovery] phase [0.0, 1.0] contact any speed None window 0.3s wait 2.0s
+  edge bow -> sit [recovery] phase [0.0, 1.0] contact any speed None window 0.3s wait 2.0s
+   0.00s  start      walk (graph demo_openloop)
+script: [('idle', 2.0), ('walk', (0.12, 0.0, 0.0), 3.0), ('trigger', 'bow'), ('walk', (0.12, 0.0, 0.0), 2.0), ('abort',)]
+   5.00s  request    walk -> bow
+   5.28s  window     walk -> bow open after 0.30s (phase 0.78, contacts [1.0, 1.0], speed 0.03)
+   5.28s  handoff    walk -> bow: blending reference over 0.40s
+   5.66s  handoff    bow in charge (blend 0.40s done)
+   7.24s  abort      tilt 48 deg > 45.0 (bow envelope): bow -> sit
+   7.24s  handoff    bow -> sit: blending reference over 0.30s
+   7.52s  handoff    sit in charge (blend 0.30s done)
+   8.74s  recovery   sit clip done, holding 0.5s
+   9.24s  relax      servos at stiffness 0.3, holding the pose
+
+summary: 12.76 s simulated in 1.0 s wall; final sit (relaxed); fell True at 7.26 s; max tilt 113.9 deg; min height 0.138 m
+    0.00s  walk     5.28s
+    5.28s  bow      1.96s
+    7.24s  sit      5.52s
+video graph_runtime/demo/demo_openloop_bow.mp4
+log graph_runtime/demo/demo_openloop_bow.json
+exit 0

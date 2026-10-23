@@ -1,0 +1,61 @@
+{
+ "name": "bow",
+ "type": "episodic",
+ "version": 1,
+ "description": "OPEN-LOOP PLACEHOLDER: the test_bow clip played as joint targets by a null policy, no feedback.",
+ "commands": {},
+ "entry": {
+  "from": [
+   "walk"
+  ],
+  "phase": [
+   0.0,
+   1.0
+  ],
+  "window_s": 0.4,
+  "contact": "double",
+  "speed": [
+   0.0,
+   0.03
+  ]
+ },
+ "exit": {
+  "to": [
+   "walk",
+   "sit"
+  ],
+  "phase": [
+   0.95,
+   1.0
+  ]
+ },
+ "neighbours": [
+  "walk",
+  "sit"
+ ],
+ "timeout_s": 4.0,
+ "envelope": {
+  "torque_nm": 1.86,
+  "max_vel_rad_s": 4.0,
+  "thermal_c": 55.0,
+  "fall_tilt_deg": 45.0,
+  "min_height_m": 0.1
+ },
+ "obs_spec": {
+  "names": [],
+  "size": 1
+ },
+ "policy": {
+  "kind": "null",
+  "action_scale": 0.25,
+  "head_mode": "policy",
+  "lpf_hz": 0.0,
+  "max_vel_rad_s": 4.0,
+  "open_loop": true
+ },
+ "status": "open-loop placeholder until the Controls agent's tracking policy lands (sim/train_pg/runs_skills/*/package_draft)",
+ "source": {
+  "clip": "tracker/data/clips/test_bow.json",
+  "packaged_by": "graph_runtime/make_demo_skills.py"
+ }
+}

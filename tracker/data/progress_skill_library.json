@@ -1,26 +1,124 @@
 {
-  "updated": "2026-10-23T00:20:00-04:00",
+  "updated": "2026-10-23T01:57-04:00",
   "plan": "skill-library-plan.md",
   "flow_map": "http://hermes-agent.local/apps/mermaid-flow-studio/?load=diagrams/skill-library-plan.mmd",
   "milestones": [
-    {"id": "M0", "title": "Foundation", "status": "in_progress", "weeks": "1", "notes": "Plan, flow map, package spec, experiment log, teams briefed. Blender rig built 10-23."},
-    {"id": "M1", "title": "One skill end to end", "status": "todo", "weeks": "2-3", "notes": "bow clip: author, check, train, battery, sim-to-sim, hardware, skills/bow/v1"},
-    {"id": "M2", "title": "Locomotion packaged", "status": "todo", "weeks": "3", "notes": "BEST_WALK_ONNX_2 as skills/walk/v1"},
-    {"id": "M3", "title": "Motion graph runtime v1 on the Pi", "status": "todo", "weeks": "4-6", "notes": "walk + bow + sit abort, operator from web UI and gamepad"},
-    {"id": "M4", "title": "Recovery", "status": "todo", "weeks": "6-8", "notes": "stand-up under the recipe"},
-    {"id": "M5", "title": "Skills at pace", "status": "todo", "weeks": "8-12", "notes": "weekly cycle, overlays, nightly regression"},
-    {"id": "M6", "title": "Consolidation", "status": "todo", "weeks": "later", "notes": "mjlab or distillation decision"}
+    {
+      "id": "M0",
+      "title": "Foundation",
+      "status": "in_progress",
+      "weeks": "1",
+      "notes": "Plan, flow map, package spec, experiment log, teams briefed. Blender rig built 10-23."
+    },
+    {
+      "id": "M1",
+      "title": "One skill end to end",
+      "status": "todo",
+      "weeks": "2-3",
+      "notes": "bow clip: author, check, train, battery, sim-to-sim, hardware, skills/bow/v1"
+    },
+    {
+      "id": "M2",
+      "title": "Locomotion packaged",
+      "status": "in_progress",
+      "weeks": "3",
+      "notes": "skills/walk/v1 packaged (draft): battery 280/400, sim2sim 0.020 rad; backward and side-right fail"
+    },
+    {
+      "id": "M3",
+      "title": "Motion graph runtime v1 on the Pi",
+      "status": "todo",
+      "weeks": "4-6",
+      "notes": "walk + bow + sit abort, operator from web UI and gamepad"
+    },
+    {
+      "id": "M4",
+      "title": "Recovery",
+      "status": "todo",
+      "weeks": "6-8",
+      "notes": "stand-up under the recipe"
+    },
+    {
+      "id": "M5",
+      "title": "Skills at pace",
+      "status": "todo",
+      "weeks": "8-12",
+      "notes": "weekly cycle, overlays, nightly regression"
+    },
+    {
+      "id": "M6",
+      "title": "Consolidation",
+      "status": "todo",
+      "weeks": "later",
+      "notes": "mjlab or distillation decision"
+    }
   ],
   "workstreams": [
-    {"team": "Animation", "item": "Blender rig + clip import/export (anim/)", "status": "done", "notes": "duck.blend, blender_duck.py, round trip exact"},
-    {"team": "Animation", "item": "Stage 2 clip checker (anim/clip_check.py)", "status": "done", "notes": "penetration, self-collision, limits, speed, home pose"},
-    {"team": "Animation", "item": "Blender add-on panel (import/export/check buttons)", "status": "in_progress", "notes": ""},
-    {"team": "Software", "item": "Duck Dashboard (tracker/)", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Software", "item": "Skill package format + tools (skills/, tools/)", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Software", "item": "Motion graph runtime (graph_runtime/)", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Controls", "item": "Tracking task + recipe + train_skill.sh", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Controls", "item": "mjlab spike", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Mechatronics", "item": "Envelope, telemetry, mass audit, servo response", "status": "in_progress", "notes": "agent running overnight 10-23"},
-    {"team": "Testing", "item": "pytest suite, gates, questions log", "status": "in_progress", "notes": "agent running overnight 10-23"}
+    {
+      "team": "Animation",
+      "item": "Blender rig + clip import/export (anim/)",
+      "status": "done",
+      "notes": "duck.blend, blender_duck.py, round trip exact"
+    },
+    {
+      "team": "Animation",
+      "item": "Stage 2 clip checker (anim/clip_check.py)",
+      "status": "done",
+      "notes": "penetration, self-collision, limits, speed, home pose"
+    },
+    {
+      "team": "Animation",
+      "item": "Blender add-on panel (import/export/check buttons)",
+      "status": "done",
+      "notes": "Duck Tools panel: rebuild, home, snap IK, import/export, check, mirror, loop. anim/README.md"
+    },
+    {
+      "team": "Animation",
+      "item": "Author the first real clips in Blender (bow, wiggle, look_around)",
+      "status": "todo",
+      "notes": "Drew: anim/blender.sh; placeholders test_bow/test_look exist"
+    },
+    {
+      "team": "Software",
+      "item": "Duck Dashboard (tracker/)",
+      "status": "done",
+      "notes": "live at :8430 since 10-23 01:00; jobs runner, 8 tabs, puppet at /puppet/"
+    },
+    {
+      "team": "Software",
+      "item": "Skill package format + tools (skills/, tools/)",
+      "status": "done",
+      "notes": "skills/schema.json, tools/skill_package.py, battery.py, sim2sim.py, regression nightly 03:30; walk/v1 battery 280/400 (draft)"
+    },
+    {
+      "team": "Software",
+      "item": "Motion graph runtime (graph_runtime/)",
+      "status": "done",
+      "notes": "engine + mujoco backend + 56 tests; demo.mp4 walk, bow overlay, abort->sit, no fall; hardware backend locked"
+    },
+    {
+      "team": "Controls",
+      "item": "Tracking task + recipe + train_skill.sh",
+      "status": "in_progress",
+      "notes": "agent running overnight 10-23"
+    },
+    {
+      "team": "Controls",
+      "item": "mjlab spike",
+      "status": "done",
+      "notes": "experiments/mjlab_spike.md: no blocker, ~33k env-steps/s, port in phase 2"
+    },
+    {
+      "team": "Mechatronics",
+      "item": "Envelope, telemetry, mass audit, servo response",
+      "status": "done",
+      "notes": "mechatronics/: envelope.json, servo_health.py (Pi was off), weigh_me.md, response curves; 8 Hz filter is really 1.2 Hz"
+    },
+    {
+      "team": "Testing",
+      "item": "pytest suite, gates, questions log",
+      "status": "done",
+      "notes": "86 passed 2 skipped (run_tests.sh); tests/GATES.md proposed thresholds for Drew"
+    }
   ]
 }

@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mini-duck-droid/skills/schema.json",
+  "title": "Open Duck Mini skill package: skill.json",
+  "description": "One versioned skill in skills/<name>/v<N>/. The other files of the package (clip.json, policy.onnx, report/battery.json) are required by tools/skill_package.py validate; this schema covers skill.json only.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["name", "type", "version", "commands", "entry", "exit", "neighbours", "timeout_s",
+               "envelope", "robot_model_hash", "actuator_model_version", "recipe_version", "seed",
+               "obs_spec", "created", "source", "status"],
+  "properties": {
+    "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$",
+             "description": "Folder name under skills/. Lower-case snake case."},
+    "type": {"type": "string", "enum": ["locomotion", "overlay", "episodic", "recovery"]},
+    "version": {"type": "integer", "minimum": 1, "description": "N of skills/<name>/v<N>/."},
+    "description": {"type": "string"},
+    "commands": {
+      "type": "object",
+      "description": "Runtime inputs and the ranges they were trained over: {input: [min, max]}. Empty for a skill that takes only a trigger.",
+      "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}
+    },
+    "entry": {
+      "type": "object",
+      "required": ["from", "phase", "window_s"],
+      "properties": {
+        "from": {"type": "array", "items": {"type": "string"}, "description": "Skills this one may be entered from."},
+        "phase": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 2, "maxItems": 2,
+                  "description": "Gait phase window [lo, hi] (fraction of the locomotion cycle) in which the hand-off may start."},
+        "window_s": {"type": "number", "minimum": 0, "description": "Length of the reference-level blend into this skill."}
+      }
+    },
+    "exit": {
+      "type": "object",
+      "required": ["to"],
+      "properties": {
+        "to": {"type": "array", "items": {"type": "string"}, "description": "Skills this one may hand off to."},
+        "window_s": {"type": "number", "minimum": 0}
+      }
+    },
+    "neighbours": {"type": "array", "items": {"type": "string"},
+                   "description": "Every skill named in entry.from or exit.to. The motion graph loader checks each exists and passed its battery."},
+    "timeout_s": {"type": ["number", "null"], "exclusiveMinimum": 0,
+                  "description": "Longest the skill may run before the engine aborts to recovery. null = no timeout (locomotion); an episodic skill must have one."},
+    "envelope": {
+      "type": "object",
+      "required": ["torque_nm", "max_vel_rad_s", "thermal_c", "fall_tilt_deg"],
+      "properties": {
+        "torque_nm": {"type": "number", "minimum": 0, "description": "Servo torque ceiling the battery passed under (deployable 1.86 N.m)."},
+        "max_vel_rad_s": {"type": "number", "minimum": 0, "description": "Target slew limit per joint (MAX_MOTOR_VEL)."},
+        "thermal_c": {"type": "number", "description": "Servo temperature above which the runtime must not start this skill."},
+        "fall_tilt_deg": {"type": "number", "minimum": 0, "maximum": 180, "description": "Trunk tilt that counts as a fall in the battery and the runtime."}
+      }
+    },
+    "robot_model_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$",
+                         "description": "sha256 of sim/train_pg/playground/open_duck_mini_v2/xmls/open_duck_mini_v2_backlash.xml (tools/skill_package.py hash-model)."},
+    "actuator_model_version": {"type": "string", "description": "Mechatronics' actuator model id, e.g. bam-sts3215-2025.09."},
+    "recipe_version": {"type": "string", "description": "Training recipe id (frozen reward template + randomisation), or 'legacy-joystick' for brains from before the recipe."},
+    "seed": {"type": "integer", "description": "Training seed."},
+    "obs_spec": {
+      "type": "object",
+      "required": ["names", "size"],
+      "properties": {
+        "names": {"type": "array", "items": {"type": "string"}, "minItems": 1,
+                  "description": "Ordered observation blocks. Known names: tools/skillkit.BLOCK_SIZES."},
+        "size": {"type": "integer", "minimum": 1, "description": "Total observation dimension; must equal the ONNX input width."},
+        "blocks": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1},
+                   "description": "Optional per-block sizes when they differ from the defaults."}
+      }
+    },
+    "action_spec": {
+      "type": "object",
+      "properties": {
+        "size": {"type": "integer", "minimum": 1},
+        "joints": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "description": "How actions become servo targets. Defaults are the deployed walk's.",
+      "properties": {
+        "action_scale": {"type": "number"},
+        "lpf_hz": {"type": "number", "minimum": 0, "description": "First-order action low-pass cutoff (0 = off)."},
+        "head_mode": {"type": "string", "enum": ["add", "from_cmd", "policy"],
+                      "description": "add: head = policy + head command (upstream runtime); from_cmd: head = home + command (HEAD_FROM_CMD brains)."},
+        "accel_bias": {"type": "number"},
+        "gait_clock": {"type": "string", "enum": ["poly", "clip", "hybrid"]},
+        "leg_action_scale": {"type": "number"},
+        "episodic_cmd": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3,
+                         "description": "Velocity command held while an episodic clip plays."}
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "description": "Battery and sim-to-sim pass criteria; defaults in tools/skillkit.DEFAULT_THRESHOLDS.",
+      "properties": {
+        "min_height_m": {"type": "number", "minimum": 0},
+        "joint_err_rad": {"type": "number", "minimum": 0},
+        "min_tracking_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "battery_pass_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+        "battery_min_test_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+        "sim2sim_rms_rad": {"type": "number", "minimum": 0}
+      }
+    },
+    "created": {"type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T"},
+    "source": {
+      "type": "object",
+      "required": ["clip", "run"],
+      "properties": {
+        "clip": {"type": "string", "description": "Where clip.json came from (path or tool)."},
+        "run": {"type": "string", "description": "Training run folder or the ONNX the package was built from."},
+        "onnx": {"type": "string"}
+      }
+    },
+    "status": {"type": "string", "enum": ["draft", "battery_passed", "sim2sim_passed", "hardware_passed", "released"]},
+    "hashes": {
+      "type": "object",
+      "properties": {
+        "policy_onnx": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "clip_json": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

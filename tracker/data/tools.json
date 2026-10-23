@@ -1,0 +1,282 @@
+[
+  {
+    "id": "clip_check",
+    "name": "Clip check",
+    "group": "Animation",
+    "help": "Stage 2 gate: plays the clip kinematically on the MJCF and reports floor penetration, self-collision, joint-limit and servo-speed breaches, and whether it starts and ends at home. Writes anim/reports/<name>/check.json and check.mp4.",
+    "cwd": "sim",
+    "command": [
+      "MUJOCO_GL=egl",
+      ".venv/bin/python",
+      "../anim/clip_check.py",
+      "{clip}",
+      "--json",
+      "../anim/reports/{name}/check.json",
+      "--video",
+      "../anim/reports/{name}/check.mp4",
+      "{loop}"
+    ],
+    "args": [
+      {
+        "name": "clip",
+        "label": "Clip",
+        "type": "file",
+        "glob": "tracker/data/clips/*.json;skills/*/v*/clip.json"
+      },
+      {
+        "name": "loop",
+        "label": "Cyclic clip (end must match start, not home)",
+        "type": "bool",
+        "default": false,
+        "flag": "--loop"
+      },
+      {
+        "name": "name",
+        "type": "derived",
+        "derive": "clipname:clip"
+      }
+    ],
+    "gpu": false,
+    "outputs": [
+      "anim/reports/{name}/*"
+    ]
+  },
+  {
+    "id": "render_video",
+    "name": "Render policy video",
+    "group": "Training",
+    "help": "Runs the test routine (stand, forward, back, turns, side-steps, head moves) with the camera following the duck. Spec: Label=path.onnx:lpf=8:vel=4, several specs separated by spaces render side by side.",
+    "cwd": "sim",
+    "command": [
+      "MUJOCO_GL=egl",
+      ".venv/bin/python",
+      "render_video.py",
+      "{out}",
+      "{spec}",
+      "--torque",
+      "1.86"
+    ],
+    "args": [
+      {
+        "name": "out",
+        "label": "Output (inside sim/)",
+        "type": "text",
+        "default": "report2/dash_render.mp4",
+        "required": true
+      },
+      {
+        "name": "spec",
+        "label": "Spec",
+        "type": "text",
+        "default": "Brain=BEST_WALK_ONNX_2.onnx:lpf=8:vel=4",
+        "required": true
+      }
+    ],
+    "gpu": false,
+    "outputs": [
+      "sim/{out}"
+    ]
+  },
+  {
+    "id": "eval_policy",
+    "name": "Score a policy",
+    "group": "Training",
+    "help": "eval_policy.py at real servo torque (1.86 N.m): head at rest, which commands start stepping, speeds, sway, pushes survived. The result is in the job log.",
+    "cwd": "sim",
+    "command": [
+      ".venv/bin/python",
+      "eval_policy.py",
+      "{onnx}",
+      "--head-from-cmd",
+      "--cutoff",
+      "{cutoff}",
+      "--max-motor-vel",
+      "{vel}"
+    ],
+    "args": [
+      {
+        "name": "onnx",
+        "label": "ONNX policy",
+        "type": "file",
+        "glob": "sim/train_pg/runs*/*/*.onnx;sim/*.onnx;skills/*/v*/policy.onnx"
+      },
+      {
+        "name": "cutoff",
+        "label": "Action low-pass Hz (0 for BEST_WALK_ONNX_2, 8 for curriculum brains)",
+        "type": "number",
+        "default": 8
+      },
+      {
+        "name": "vel",
+        "label": "Max motor velocity rad/s",
+        "type": "number",
+        "default": 4
+      }
+    ],
+    "gpu": false,
+    "outputs": []
+  },
+  {
+    "id": "curriculum",
+    "name": "Curriculum stage(s)",
+    "group": "Training",
+    "help": "sim/curriculum.sh: one GPU run per stage, ~1 h per 100M steps each. Stages like p2, s2a, h1 (see the script). Restore is a checkpoint directory for the first stage, e.g. train_pg/runs7/cur_p1/2026_10_22_161241_100761600. The GPU must be free of ComfyUI.",
+    "cwd": "sim",
+    "command": [
+      "env",
+      "RUNS={runs}",
+      "RESTORE_FROM={restore}",
+      "STAGES={stages}",
+      "./curriculum.sh",
+      "{start}"
+    ],
+    "args": [
+      {
+        "name": "runs",
+        "label": "Runs folder (under sim/train_pg/)",
+        "type": "text",
+        "default": "runs9",
+        "required": true
+      },
+      {
+        "name": "restore",
+        "label": "Restore from checkpoint (optional)",
+        "type": "text",
+        "default": ""
+      },
+      {
+        "name": "stages",
+        "label": "Stages, space separated",
+        "type": "text",
+        "default": "p2",
+        "required": true
+      },
+      {
+        "name": "start",
+        "type": "derived",
+        "derive": "first:stages"
+      }
+    ],
+    "gpu": true,
+    "outputs": [
+      "sim/train_pg/{runs}/*.log",
+      "sim/train_pg/{runs}/*.score",
+      "sim/train_pg/{runs}/*/*.onnx"
+    ]
+  },
+  {
+    "id": "train_skill",
+    "name": "Train a skill from a clip",
+    "group": "Training",
+    "help": "sim/train_skill.sh <clip> <name> [--preview]: the tracking recipe on one clip (written by the Controls team). Preview is the ~30 minute run.",
+    "cwd": "sim",
+    "command": [
+      "./train_skill.sh",
+      "{clip}",
+      "{name}",
+      "{preview}"
+    ],
+    "args": [
+      {
+        "name": "clip",
+        "label": "Clip",
+        "type": "file",
+        "glob": "tracker/data/clips/*.json;skills/*/v*/clip.json"
+      },
+      {
+        "name": "name",
+        "label": "Skill name (blank = clip name)",
+        "type": "text",
+        "default": "",
+        "derive": "clipname:clip"
+      },
+      {
+        "name": "preview",
+        "label": "Preview run (short)",
+        "type": "bool",
+        "default": true,
+        "flag": "--preview"
+      }
+    ],
+    "gpu": true,
+    "outputs": [
+      "skills/{name}/*/report/*",
+      "skills/{name}/*/skill.json"
+    ]
+  },
+  {
+    "id": "battery",
+    "name": "Sim battery",
+    "group": "Skills",
+    "help": "tools/battery.py <skill_dir>: multi-seed battery of one skill package, writes report/battery.json (ratios).",
+    "cwd": ".",
+    "command": [
+      "sim/.venv/bin/python",
+      "tools/battery.py",
+      "{skill_dir}"
+    ],
+    "args": [
+      {
+        "name": "skill_dir",
+        "label": "Skill package",
+        "type": "file",
+        "glob": "skills/*/v*"
+      }
+    ],
+    "gpu": false,
+    "outputs": [
+      "{skill_dir}/report/*"
+    ]
+  },
+  {
+    "id": "blender",
+    "name": "Open in Blender",
+    "group": "Animation",
+    "help": "Opens the duck rig (anim/duck.blend) on this machine's desktop with the MCP server; a clip is imported as an action if given. Nothing to see in the log beyond the pid.",
+    "cwd": "anim",
+    "command": [
+      "./blender.sh",
+      "{clip}"
+    ],
+    "args": [
+      {
+        "name": "clip",
+        "label": "Clip (optional)",
+        "type": "file",
+        "glob": "tracker/data/clips/*.json;skills/*/v*/clip.json",
+        "optional": true
+      }
+    ],
+    "gpu": false,
+    "outputs": []
+  },
+  {
+    "id": "dump_model",
+    "name": "Dump robot model",
+    "group": "Animation",
+    "help": "anim/dump_mjcf.py: rewrites anim/duck_model.json (kinematic tree, joints, meshes, home pose) from the MJCF for the Blender importer.",
+    "cwd": "sim",
+    "command": [
+      ".venv/bin/python",
+      "../anim/dump_mjcf.py"
+    ],
+    "args": [],
+    "gpu": false,
+    "outputs": []
+  },
+  {
+    "id": "servo_health",
+    "name": "Pull servo telemetry",
+    "group": "Telemetry",
+    "help": "mechatronics/telemetry_pull.sh: reads voltage, temperature, current and position of every servo through the duck's agent and appends a line to mechatronics/telemetry/<date>.jsonl (written by the Mechatronics team).",
+    "cwd": ".",
+    "command": [
+      "mechatronics/telemetry_pull.sh"
+    ],
+    "args": [],
+    "gpu": false,
+    "outputs": [
+      "mechatronics/telemetry/*.jsonl"
+    ]
+  }
+]

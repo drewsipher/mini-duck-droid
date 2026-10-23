@@ -1,0 +1,117 @@
+{
+  "name": "walk",
+  "type": "locomotion",
+  "version": 1,
+  "description": "Deployed walk brain BEST_WALK_ONNX_2 packaged as-is (upstream joystick training). No action low-pass: with the 8 Hz filter this brain stands still in sim.",
+  "commands": {
+    "vx": [
+      -0.15,
+      0.15
+    ],
+    "vy": [
+      -0.2,
+      0.2
+    ],
+    "wz": [
+      -1.0,
+      1.0
+    ]
+  },
+  "entry": {
+    "from": [],
+    "phase": [
+      0.0,
+      1.0
+    ],
+    "window_s": 0.3
+  },
+  "exit": {
+    "to": [],
+    "window_s": 0.3
+  },
+  "neighbours": [],
+  "timeout_s": null,
+  "envelope": {
+    "torque_nm": 1.86,
+    "max_vel_rad_s": 4.0,
+    "thermal_c": 60.0,
+    "fall_tilt_deg": 45.0
+  },
+  "robot_model_hash": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38",
+  "actuator_model_version": "bam-sts3215-7.4V/xml-2025 (damping 0.56, frictionloss 0.068, armature 0.027, kp 17.11, forcerange 3.23)",
+  "recipe_version": "legacy-joystick",
+  "seed": 0,
+  "obs_spec": {
+    "names": [
+      "gyro",
+      "accelerometer",
+      "commands",
+      "joint_pos_rel",
+      "joint_vel_scaled",
+      "last_action",
+      "last_last_action",
+      "last_last_last_action",
+      "motor_targets",
+      "feet_contacts",
+      "gait_phase"
+    ],
+    "size": 101
+  },
+  "action_spec": {
+    "size": 14,
+    "joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ]
+  },
+  "runtime": {
+    "action_scale": 0.25,
+    "lpf_hz": 0.0,
+    "head_mode": "add",
+    "accel_bias": 0.0,
+    "gait_clock": "poly",
+    "episodic_cmd": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "policy": {
+    "kind": "onnx",
+    "action_scale": 0.25,
+    "lpf_hz": 0.0,
+    "max_vel_rad_s": 4.0,
+    "head_mode": "add",
+    "accel_bias": 0.0,
+    "gait_period_steps": 27,
+    "input_name": "obs"
+  },
+  "thresholds": {
+    "min_height_m": 0.09,
+    "joint_err_rad": 0.15
+  },
+  "created": "2026-10-23T00:32:39-04:00",
+  "source": {
+    "clip": "sim/record_policy_clip.py BEST_WALK_ONNX_2.onnx --cmd 0.15,0,0 --seconds 8 --torque 1.86 --cutoff 0 --max-motor-vel 4",
+    "run": "upstream Open_Duck_Playground joystick run (BEST_WALK_ONNX_2.onnx, 2026-09)",
+    "onnx": "sim/BEST_WALK_ONNX_2.onnx"
+  },
+  "status": "draft",
+  "hashes": {
+    "policy_onnx": "3c606f9381a1710cc8fecdb7442787dcbfce3ee9bc02a6f1224774ab2b3a1067",
+    "clip_json": "48746ba578b81526bc9ebd8c2f93e4c196d83fdae1dcd2dcc8858d10f79dcc20"
+  },
+  "envelope_source": "mechatronics/envelope.json v0.1 (torque 1.86 confirmed, thermal 60 cool-down / 50 warn / 65 stop)"
+}

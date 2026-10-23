@@ -1,0 +1,35 @@
+{
+ "_how": "Grams. Fill what you weighed, leave the rest null. See weigh_me.md. Then: cd sim && .venv/bin/python ../mechatronics/apply_masses.py",
+ "date": null,
+ "scale": null,
+ "notes": "",
+ "total_g": {
+  "with_battery": null,
+  "without_battery": null
+ },
+ "battery_pack_g": null,
+ "servo_g": null,
+ "groups_g": {
+  "head_and_neck": null,
+  "left_leg": null,
+  "right_leg": null,
+  "trunk": null
+ },
+ "bodies_g": {
+  "trunk_assembly": null,
+  "head_assembly": null,
+  "neck_yaw_assembly": null,
+  "head_pitch_to_yaw": null,
+  "neck_pitch_assembly": null,
+  "hip_roll_assembly": null,
+  "left_roll_to_pitch_assembly": null,
+  "knee_and_ankle_assembly": null,
+  "knee_and_ankle_assembly_2": null,
+  "foot_assembly": null,
+  "hip_roll_assembly_2": null,
+  "right_roll_to_pitch_assembly": null,
+  "knee_and_ankle_assembly_3": null,
+  "knee_and_ankle_assembly_4": null,
+  "foot_assembly_2": null
+ }
+}

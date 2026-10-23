@@ -1,0 +1,94 @@
+{
+  "skill": "walk",
+  "version": 1,
+  "match": false,
+  "match_clock_aligned": true,
+  "rms_target_diff_rad": 0.02004,
+  "max_diff_rad": 0.07995,
+  "settle_rms_rad": 0.01015,
+  "rms_clock_aligned_rad": 0.00561,
+  "threshold_rad": 0.02,
+  "per_joint_rms_rad": {
+    "left_hip_yaw": 0.0086,
+    "left_hip_roll": 0.0195,
+    "left_hip_pitch": 0.0236,
+    "left_knee": 0.0303,
+    "left_ankle": 0.0219,
+    "neck_pitch": 0.0106,
+    "head_pitch": 0.018,
+    "head_yaw": 0.0219,
+    "head_roll": 0.0154,
+    "right_hip_yaw": 0.01,
+    "right_hip_roll": 0.0199,
+    "right_hip_pitch": 0.0201,
+    "right_knee": 0.0296,
+    "right_ankle": 0.0169
+  },
+  "obs_block_rms": {
+    "gyro": 0.0,
+    "accelerometer": 0.0,
+    "commands": 0.0,
+    "joint_pos_rel": 0.00029,
+    "joint_vel_scaled": 1e-05,
+    "last_action": 0.08744,
+    "last_last_action": 0.08734,
+    "last_last_last_action": 0.08721,
+    "motor_targets": 0.01998,
+    "feet_contacts": 0.0,
+    "gait_phase": 0.16418
+  },
+  "free_run": {
+    "joint_pos_rms_rad": 0.01873,
+    "runtime_fell": false,
+    "sim_test_fell": false,
+    "steps_compared": 350
+  },
+  "tracking": {
+    "command": {
+      "vx": 0.15,
+      "vy": 0.0,
+      "wz": 0.0
+    },
+    "runtime": {
+      "fwd_m_s": 0.0965,
+      "left_m_s": -0.0103,
+      "yaw_deg_s": -1.56,
+      "fell": false
+    },
+    "sim_test": {
+      "fwd_m_s": 0.105,
+      "left_m_s": 0.0007,
+      "yaw_deg_s": -0.22,
+      "fell": false
+    }
+  },
+  "command": [
+    0.15,
+    0.0,
+    0.0
+  ],
+  "seconds": 5.0,
+  "settle_s": 2.0,
+  "seed": 0,
+  "steps": 350,
+  "runtime": {
+    "script": "sim/upstream_runtime/scripts/v2_rl_walk_mujoco.py",
+    "cutoff_frequency": null,
+    "action_scale": 0.25,
+    "config": "sim/upstream_runtime/example_config.json",
+    "wall_s": 1.12
+  },
+  "sim_test": {
+    "lpf_hz": 0.0,
+    "max_vel_rad_s": 4.0,
+    "torque_nm": 1.86,
+    "head_mode": "add"
+  },
+  "notes": [
+    "runtime path: sim/upstream_runtime/scripts/v2_rl_walk_mujoco.py RLWalk.run with cutoff_frequency=None, action_scale=0.25; HWI rounds positions/velocities to 0.001; no motor speed clip (commented out upstream) whereas sim_test clips at 4.0 rad/s",
+    "phase clock: the runtime builds the observation before advancing imitation_i (first step sees [0,0]), sim_test advances first; both run 27 steps per period. With sim_test's clock delayed one step to match, the lockstep RMS is 0.0056 rad (diagnostic, not used for match)",
+    "largest observation-block RMS differences (runtime - sim_test, same state): gait_phase 0.16418, last_action 0.08744, last_last_action 0.08734"
+  ],
+  "created": "2026-10-23T00:42:17-04:00",
+  "tool": "tools/sim2sim.py"
+}

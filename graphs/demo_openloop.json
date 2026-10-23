@@ -1,0 +1,19 @@
+{
+  "name": "demo_openloop",
+  "description": "The OPEN-LOOP episodic bow (null policy plays test_bow.json as targets). Its battery failed 0/5: the full head bow with the legs parked at the static home pose tips the duck forward. Loads only with run_sim.py --allow-failed-battery, to watch the fall and the sit recovery.",
+  "root": "graph_runtime/demo_skills",
+  "nodes": {
+    "walk": "walk/v1",
+    "bow": "bow/v1",
+    "sit": "sit/v1"
+  },
+  "start": "walk",
+  "idle": {"node": "walk", "command": [0, 0, 0]},
+  "recovery": {"node": "sit", "window_s": 0.3},
+  "edges": [
+    {"from": "walk", "to": "bow", "phase": [0.0, 1.0], "contact": "double", "speed": [0.0, 0.03], "window_s": 0.4, "wait_timeout_s": 3.0},
+    {"from": "bow", "to": "walk", "phase": [0.95, 1.0], "window_s": 0.4, "wait_timeout_s": 1.0},
+    {"from": "walk", "to": "sit", "window_s": 0.3},
+    {"from": "bow", "to": "sit", "window_s": 0.3}
+  ]
+}

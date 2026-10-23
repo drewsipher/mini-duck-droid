@@ -1,0 +1,63 @@
+{
+ "skill": "bow_overlay",
+ "version": 1,
+ "date": "2026-10-23T00:53:26",
+ "generated_by": "graph_runtime/make_demo_skills.py",
+ "simulator": {
+  "engine": "graph_runtime.engine on MujocoBackend",
+  "xml": "/home/hermes/src/mini-duck-droid/sim/Open_Duck_Playground/playground/open_duck_mini_v2/xmls/scene_flat_terrain_backlash.xml",
+  "torque_nm": 1.86,
+  "timestep_s": 0.002,
+  "control_hz": 50,
+  "start_pose_noise_rad": 0.02
+ },
+ "protocol": "5 trials through the engine, alternating standing and walking at 0.12 m/s: overlay bow on the walk brain; pass = played to the end, no recovery, no fall",
+ "trials": 5,
+ "passes": 5,
+ "fails": 0,
+ "ratio": "5/5",
+ "threshold": 0.9,
+ "passed": true,
+ "results": [
+  {
+   "seed": 300,
+   "walking": false,
+   "passed": true,
+   "max_tilt_deg": 7.0,
+   "min_height_m": 0.152,
+   "recovery": null
+  },
+  {
+   "seed": 301,
+   "walking": true,
+   "passed": true,
+   "max_tilt_deg": 15.1,
+   "min_height_m": 0.148,
+   "recovery": null
+  },
+  {
+   "seed": 302,
+   "walking": false,
+   "passed": true,
+   "max_tilt_deg": 7.0,
+   "min_height_m": 0.152,
+   "recovery": null
+  },
+  {
+   "seed": 303,
+   "walking": true,
+   "passed": true,
+   "max_tilt_deg": 14.0,
+   "min_height_m": 0.148,
+   "recovery": null
+  },
+  {
+   "seed": 304,
+   "walking": false,
+   "passed": true,
+   "max_tilt_deg": 6.9,
+   "min_height_m": 0.153,
+   "recovery": null
+  }
+ ]
+}

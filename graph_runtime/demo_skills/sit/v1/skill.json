@@ -1,0 +1,67 @@
+{
+ "name": "sit",
+ "type": "recovery",
+ "version": 1,
+ "description": "Abort / recovery: canned ramp from the standing pose to a crouch, hold, then soften the servos.",
+ "commands": {},
+ "entry": {
+  "from": [
+   "*"
+  ],
+  "phase": [
+   0.0,
+   1.0
+  ],
+  "window_s": 0.3
+ },
+ "exit": {
+  "to": []
+ },
+ "neighbours": [
+  "*"
+ ],
+ "timeout_s": null,
+ "envelope": {
+  "torque_nm": 1.86,
+  "max_vel_rad_s": 3.0,
+  "thermal_c": 55.0,
+  "fall_tilt_deg": 90.0,
+  "min_height_m": null
+ },
+ "obs_spec": {
+  "names": [],
+  "size": 1
+ },
+ "policy": {
+  "kind": "null",
+  "action_scale": 0.25,
+  "head_mode": "policy",
+  "lpf_hz": 0.0,
+  "max_vel_rad_s": 3.0,
+  "open_loop": true
+ },
+ "recovery": {
+  "relax_stiffness": 0.3,
+  "hold_s": 0.5
+ },
+ "status": "canned sit-down; relax = 0.3 stiffness hold (full torque-off collapses the duck; HWI.low_torque_kps on the robot)",
+ "source": {
+  "crouch": [
+   0.002,
+   0.053,
+   -0.4,
+   1.5,
+   -1.1,
+   -0.3,
+   0.3,
+   0.0,
+   0.0,
+   -0.003,
+   -0.065,
+   0.4,
+   1.5,
+   -1.1
+  ],
+  "packaged_by": "graph_runtime/make_demo_skills.py"
+ }
+}

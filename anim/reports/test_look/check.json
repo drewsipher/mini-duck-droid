@@ -1,5 +1,5 @@
 {
- "clip": "../tracker/data/clips/test_look.json",
+ "clip": "/home/hermes/src/mini-duck-droid/tracker/data/clips/test_look.json",
  "frames": 151,
  "seconds": 3.0,
  "joints": [

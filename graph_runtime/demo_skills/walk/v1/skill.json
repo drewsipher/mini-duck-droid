@@ -1,0 +1,102 @@
+{
+ "name": "walk",
+ "type": "locomotion",
+ "version": 1,
+ "description": "Deployed walk brain BEST_WALK_ONNX_2 packaged as locomotion v1. Idle is this skill at zero command.",
+ "commands": {
+  "vx": [
+   -0.15,
+   0.15
+  ],
+  "vy": [
+   -0.2,
+   0.2
+  ],
+  "wz": [
+   -1.0,
+   1.0
+  ],
+  "neck_pitch": [
+   -0.34,
+   1.1
+  ],
+  "head_pitch": [
+   -0.78,
+   0.78
+  ],
+  "head_yaw": [
+   -1.5,
+   1.5
+  ],
+  "head_roll": [
+   -0.5,
+   0.5
+  ]
+ },
+ "entry": {
+  "from": [
+   "bow"
+  ],
+  "phase": [
+   0.0,
+   1.0
+  ],
+  "window_s": 0.4
+ },
+ "exit": {
+  "to": [
+   "bow",
+   "bow_overlay",
+   "sit"
+  ]
+ },
+ "neighbours": [
+  "bow",
+  "bow_overlay",
+  "sit"
+ ],
+ "timeout_s": null,
+ "envelope": {
+  "torque_nm": 1.86,
+  "max_vel_rad_s": 4.0,
+  "thermal_c": 55.0,
+  "fall_tilt_deg": 45.0,
+  "min_height_m": 0.1
+ },
+ "obs_spec": {
+  "names": [
+   "gyro",
+   "accelerometer",
+   "commands",
+   "joint_pos_rel",
+   "joint_vel_scaled",
+   "last_action",
+   "last_last_action",
+   "last_last_last_action",
+   "motor_targets",
+   "feet_contacts",
+   "gait_phase"
+  ],
+  "size": 101
+ },
+ "policy": {
+  "kind": "onnx",
+  "action_scale": 0.25,
+  "head_mode": "add",
+  "lpf_hz": 0.0,
+  "max_vel_rad_s": 4.0,
+  "accel_bias": 0.0,
+  "gait_period_steps": 27,
+  "input_name": "obs"
+ },
+ "status": "deployed v1 (BEST_WALK_ONNX_2); lpf off because an 8 Hz low-pass stops this brain walking in sim",
+ "source": {
+  "onnx": "sim/BEST_WALK_ONNX_2.onnx",
+  "obs_layout": "sim/sim_test.py Sim.obs",
+  "packaged_by": "graph_runtime/make_demo_skills.py"
+ },
+ "robot_model_hash": null,
+ "actuator_model_version": null,
+ "recipe_version": null,
+ "seed": null
+}

@@ -1,0 +1,23 @@
+graph demo: start walk, idle = walk @ [0, 0, 0], recovery = sit
+  node walk     locomotion v1 onnx  clip 0.54s battery pass status 'deployed v1 (BEST_WALK_ONNX_2); lpf off because an 8 Hz low-pass stops this brain walking in sim'
+  node bow      overlay    v1 null  clip 2.50s battery pass status "overlay v1: same test_bow clip as bow/v1, played through the walk brain's head commands"
+  node sit      recovery   v1 null  clip 1.50s battery pass status 'canned sit-down; relax = 0.3 stiffness hold (full torque-off collapses the duck; HWI.low_torque_kps on the robot)'
+  edge walk -> bow [overlay] phase [0.0, 1.0] contact any speed [0.0, 0.15] window 0.3s wait 2.0s
+  edge walk -> sit [recovery] phase [0.0, 1.0] contact any speed None window 0.3s wait 2.0s
+   0.00s  start      walk (graph demo)
+script: [('idle', 2.0), ('walk', (0.12, 0.0, 0.0), 3.0), ('trigger', 'bow'), ('walk', (0.12, 0.0, 0.0), 2.0), ('abort',)]
+   5.00s  request    overlay bow on walk
+   5.00s  overlay    bow starts on walk (waited 0.02s)
+   7.48s  overlay    bow_overlay done
+   9.50s  abort      script abort: walk -> sit
+   9.50s  handoff    walk -> sit: blending reference over 0.30s
+   9.78s  handoff    sit in charge (blend 0.30s done)
+  11.00s  recovery   sit clip done, holding 0.5s
+  11.50s  relax      servos at stiffness 0.3, holding the pose
+
+summary: 13.0 s simulated in 1.0 s wall; final sit (relaxed); fell False; max tilt 12.9 deg; min height 0.14 m
+    0.00s  walk     9.50s
+    9.50s  sit      3.50s
+video graph_runtime/demo/demo.mp4
+log graph_runtime/demo/demo.json
+exit 0

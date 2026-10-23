@@ -1,0 +1,103 @@
+{
+ "skill": "bow",
+ "version": 1,
+ "date": "2026-10-23T00:53:26",
+ "generated_by": "graph_runtime/make_demo_skills.py",
+ "simulator": {
+  "engine": "graph_runtime.engine on MujocoBackend",
+  "xml": "/home/hermes/src/mini-duck-droid/sim/Open_Duck_Playground/playground/open_duck_mini_v2/xmls/scene_flat_terrain_backlash.xml",
+  "torque_nm": 1.86,
+  "timestep_s": 0.002,
+  "control_hz": 50,
+  "start_pose_noise_rad": 0.02
+ },
+ "protocol": "5 trials through the engine: idle 1 s, trigger bow, return to walk; pass = no recovery and no fall (open-loop clip)",
+ "trials": 5,
+ "passes": 0,
+ "fails": 5,
+ "ratio": "0/5",
+ "threshold": 0.9,
+ "passed": false,
+ "results": [
+  {
+   "seed": 200,
+   "passed": false,
+   "triggered": true,
+   "max_tilt_deg": 179.7,
+   "min_height_m": -0.168,
+   "recovery": "tilt 48 deg > 45.0 (bow envelope)",
+   "events": [
+    "   1.00s  window     walk -> bow open after 0.02s (phase 0.85, contacts [1.0, 1.0], speed 0.00)",
+    "   1.00s  handoff    walk -> bow: blending reference over 0.40s",
+    "   1.38s  handoff    bow in charge (blend 0.40s done)",
+    "   2.52s  abort      tilt 48 deg > 45.0 (bow envelope): bow -> sit",
+    "   2.52s  handoff    bow -> sit: blending reference over 0.30s",
+    "   2.80s  handoff    sit in charge (blend 0.30s done)"
+   ]
+  },
+  {
+   "seed": 201,
+   "passed": false,
+   "triggered": true,
+   "max_tilt_deg": 177.9,
+   "min_height_m": -0.171,
+   "recovery": "tilt 49 deg > 45.0 (bow envelope)",
+   "events": [
+    "   1.00s  window     walk -> bow open after 0.02s (phase 0.85, contacts [1.0, 1.0], speed 0.00)",
+    "   1.00s  handoff    walk -> bow: blending reference over 0.40s",
+    "   1.38s  handoff    bow in charge (blend 0.40s done)",
+    "   2.50s  abort      tilt 49 deg > 45.0 (bow envelope): bow -> sit",
+    "   2.50s  handoff    bow -> sit: blending reference over 0.30s",
+    "   2.78s  handoff    sit in charge (blend 0.30s done)"
+   ]
+  },
+  {
+   "seed": 202,
+   "passed": false,
+   "triggered": true,
+   "max_tilt_deg": 179.1,
+   "min_height_m": -0.171,
+   "recovery": "tilt 49 deg > 45.0 (bow envelope)",
+   "events": [
+    "   1.00s  window     walk -> bow open after 0.02s (phase 0.85, contacts [1.0, 1.0], speed 0.00)",
+    "   1.00s  handoff    walk -> bow: blending reference over 0.40s",
+    "   1.38s  handoff    bow in charge (blend 0.40s done)",
+    "   2.52s  abort      tilt 49 deg > 45.0 (bow envelope): bow -> sit",
+    "   2.52s  handoff    bow -> sit: blending reference over 0.30s",
+    "   2.80s  handoff    sit in charge (blend 0.30s done)"
+   ]
+  },
+  {
+   "seed": 203,
+   "passed": false,
+   "triggered": true,
+   "max_tilt_deg": 178.1,
+   "min_height_m": -0.169,
+   "recovery": "tilt 47 deg > 45.0 (bow envelope)",
+   "events": [
+    "   1.00s  window     walk -> bow open after 0.02s (phase 0.85, contacts [1.0, 1.0], speed 0.00)",
+    "   1.00s  handoff    walk -> bow: blending reference over 0.40s",
+    "   1.38s  handoff    bow in charge (blend 0.40s done)",
+    "   2.52s  abort      tilt 47 deg > 45.0 (bow envelope): bow -> sit",
+    "   2.52s  handoff    bow -> sit: blending reference over 0.30s",
+    "   2.80s  handoff    sit in charge (blend 0.30s done)"
+   ]
+  },
+  {
+   "seed": 204,
+   "passed": false,
+   "triggered": true,
+   "max_tilt_deg": 179.2,
+   "min_height_m": -0.171,
+   "recovery": "tilt 47 deg > 45.0 (bow envelope)",
+   "events": [
+    "   1.00s  window     walk -> bow open after 0.02s (phase 0.85, contacts [1.0, 1.0], speed 0.00)",
+    "   1.00s  handoff    walk -> bow: blending reference over 0.40s",
+    "   1.38s  handoff    bow in charge (blend 0.40s done)",
+    "   2.50s  abort      tilt 47 deg > 45.0 (bow envelope): bow -> sit",
+    "   2.50s  handoff    bow -> sit: blending reference over 0.30s",
+    "   2.78s  handoff    sit in charge (blend 0.30s done)"
+   ]
+  }
+ ]
+}
