@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duck Puppet</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="puppet.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/" } }
+</script>
+</head>
+<body>
+<header>
+  <div class="title">
+    <h1>Duck Puppet</h1>
+    <span id="status" class="muted">connecting…</span>
+  </div>
+  <div class="topbar">
+    <button id="stop" class="danger" title="Esc: every motor off, the duck goes limp">STOP</button>
+    <button data-cmd="free" class="ghost">Free all</button>
+    <button data-cmd="hold" class="ghost">Hold all</button>
+    <button data-cmd="home" class="ghost">Reset to standing</button>
+    <span class="sep"></span>
+    <button id="connect" class="ghost">Connect duck</button>
+    <a class="ghost btn" href="build/" title="The print and shopping tracker">Build tracker</a>
+  </div>
+</header>
+
+<main class="puppet">
+  <section class="viewer">
+    <div class="toolbar">
+      <div class="seg" id="model-source">
+        <button data-src="live" class="on">Live duck</button>
+        <button data-src="clip">Clip</button>
+      </div>
+      <span id="readout" class="muted small"></span>
+      <button id="reset-view" class="ghost">Reset view</button>
+    </div>
+    <div id="canvas-wrap"><div id="loading">Loading model…</div><div id="hover-tip"></div></div>
+    <div class="editor" id="editor" hidden>
+      <div class="tl-bar">
+        <button id="clip-play" class="ghost" title="space">▶</button>
+        <span id="clip-time" class="mono small">0.00 / 0.00 s</span>
+        <label class="check small"><input type="checkbox" id="clip-loop" checked> loop</label>
+        <label class="small">speed <input type="number" id="clip-speed" value="1" min="0.1" max="3" step="0.1"></label>
+        <span class="sep"></span>
+        <span id="clip-title" class="small mono"></span>
+        <button id="clip-save" class="ghost small" disabled>Save</button>
+        <button id="clip-saveas" class="ghost small">Save as…</button>
+        <button id="clip-duck" class="ghost small">Play on duck</button>
+        <button id="clip-duck-stop" class="ghost small" hidden>Stop duck</button>
+      </div>
+      <canvas id="tl"></canvas>
+      <div class="tl-bar">
+        <input type="range" id="tl-val" min="-90" max="90" step="0.5" value="0" disabled><b id="tl-val-txt" class="mono small">select a joint</b>
+        <button id="k-set" class="ghost small" title="key the selected joint at the playhead with the slider value">Set key</button>
+        <button id="k-duck" class="ghost small" title="key the selected joint at the playhead with the duck's live angle">Key from duck</button>
+        <button id="k-duck-all" class="ghost small" title="key every joint at the playhead with the duck's live pose">Key all from duck</button>
+        <span class="sep"></span>
+        <span class="small muted">key</span><input type="number" id="k-time" step="0.01" min="0" disabled><span class="small muted">s</span>
+        <input type="number" id="k-deg" step="0.5" disabled><span class="small muted">°</span>
+        <button id="k-del" class="ghost small" disabled>Delete</button>
+        <span id="k-count" class="small muted"></span>
+        <button id="k-copy" class="ghost small" title="Ctrl+C" disabled>Copy</button>
+        <button id="k-paste" class="ghost small" title="Ctrl+V: pasted keys start at the playhead, same joints, same spacing" disabled>Paste at playhead</button>
+        <button id="k-paste-m" class="ghost small" title="Ctrl+Shift+V: pasted onto the other leg or head side, signs flipped where the sides differ" disabled>Paste mirrored</button>
+        <button id="undo" class="ghost small" title="Ctrl+Z">Undo</button>
+      </div>
+      <div class="tl-bar">
+        <span class="small muted">whole clip</span>
+        <button id="t-faster" class="ghost small">×2 faster</button><button id="t-slower" class="ghost small">×2 slower</button>
+        <label class="small">length <input type="number" id="t-len" step="0.1" min="0.2"> s</label><button id="t-len-apply" class="ghost small">Apply</button>
+        <button id="t-cut-before" class="ghost small">Cut before playhead</button><button id="t-cut-after" class="ghost small">Cut after playhead</button>
+        <button id="t-mirror" class="ghost small" title="the same motion done by the other side (opens unsaved)">Mirror L↔R</button>
+        <button id="t-loop" class="ghost small" title="keep the part between the two markers you set with Cut, and blend the end into the start so it loops">Make loop</button>
+        <select id="t-append-sel"></select><label class="small">gap <input type="number" id="t-gap" value="0" step="0.1" min="0"> s</label><button id="t-append" class="ghost small">Append</button>
+        <label class="check small"><input type="checkbox" id="t-smooth" checked> smooth curves</label>
+        <span class="small muted">joint</span><button id="t-nudge-dn" class="ghost small">−2°</button><button id="t-nudge-up" class="ghost small">+2°</button>
+      </div>
+      <p class="muted small tl-help">Click a row to pick a joint; its curve opens underneath. Drag a dot to move a key in time and angle, double-click the curve to add one, Delete removes it. Ctrl-click adds keys to the selection, Shift-drag boxes them (across rows too), Ctrl+A takes all; a selection drags together. Ctrl+C copies, Ctrl+V pastes at the playhead, Ctrl+Shift+V pastes on the other side. Click or drag anywhere else to scrub.</p>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="card whole-duck">
+      <div class="card-head"><h2>Whole duck</h2><span class="muted small">all 14 servos</span></div>
+      <div class="big-btns">
+        <button data-cmd="free" class="big">Free all<small>motors off, pose him by hand</small></button>
+        <button data-cmd="hold" class="big">Hold all<small>lock every joint where it is</small></button>
+        <button data-cmd="home" class="big">Reset to standing<small>moves to the standing pose in 2.5 s</small></button>
+        <button data-cmd="clay" class="big clay">Clay<small>weak resistance, stays where you put it</small></button>
+      </div>
+      <div class="row"><span>resistance</span><input type="range" id="clay-kp" min="4" max="32" step="1" value="16"><b id="clay-kp-val" class="mono">16</b></div>
+    </div>
+    <div class="card" id="joint-card">
+      <div class="card-head"><h2 id="joint-name">Click a servo</h2><span id="joint-id" class="muted mono"></span></div>
+      <div id="joint-body" hidden>
+        <div class="row"><span>angle</span><b id="joint-angle" class="mono">–</b><span id="joint-torque" class="chip"></span></div>
+        <div class="row"><span>target</span><input type="range" id="joint-slider" min="-90" max="90" step="0.5" value="0"><b id="joint-target" class="mono">–</b></div>
+        <div class="row btns">
+          <button id="joint-free" class="ghost">Free</button>
+          <button id="joint-hold" class="ghost">Hold here</button>
+          <button id="joint-clay" class="ghost">Clay</button>
+          <button id="joint-free-timer" class="ghost">Free for <input type="number" id="joint-secs" value="5" min="1" max="60" step="1"> s, then hold</button>
+        </div>
+        <div class="row"><span>stiffness</span><input type="range" id="joint-kp" min="2" max="32" step="1" value="32"><b id="joint-kp-val" class="mono">32</b></div>
+        <div class="row small muted" id="joint-meta"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Joints</h2><span class="muted small">click to select · dot = holding</span></div>
+      <div id="joint-list" class="joint-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Record</h2><span id="rec-state" class="muted small"></span></div>
+      <div class="row btns">
+        <button id="rec-start">● Record</button>
+        <button id="rec-stop" class="ghost" hidden>■ Stop</button>
+        <input type="text" id="clip-name" placeholder="clip name" maxlength="40">
+        <button id="rec-save" class="ghost" disabled>Save</button>
+      </div>
+      <p class="muted small">Free the joints you want to move, press Record, move the duck by hand. Every servo's angle is logged about 25 times a second.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Clips</h2><button id="clip-new" class="ghost small" title="a 2 s clip from the duck's current pose">+ New clip</button></div>
+      <div id="clip-list" class="clip-list"><p class="muted small">No clips yet.</p></div>
+    </div>
+  </aside>
+</main>
+
+<script type="module" src="puppet.js"></script>
+</body>
+</html>

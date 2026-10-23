@@ -1,0 +1,1139 @@
+import time
+import pickle
+
+import numpy as np
+from mini_bdx_runtime.rustypot_position_hwi import HWI
+try:
+    from battery_guard import BatteryGuard   # low-battery failsafe (scripts/battery_guard.py)
+except ImportError:
+    BatteryGuard = None
+from mini_bdx_runtime.onnx_infer import OnnxInfer
+
+from mini_bdx_runtime.raw_imu import Imu
+from mini_bdx_runtime.poly_reference_motion import PolyReferenceMotion
+from mini_bdx_runtime.xbox_controller import XBoxController
+from mini_bdx_runtime.feet_contacts import FeetContacts
+from mini_bdx_runtime.eyes import Eyes
+from mini_bdx_runtime.sounds import Sounds
+from mini_bdx_runtime.antennas import Antennas
+from mini_bdx_runtime.projector import Projector
+from mini_bdx_runtime.rl_utils import make_action_dict, LowPassActionFilter
+from mini_bdx_runtime.duck_config import DuckConfig
+from mini_bdx_runtime.walk_record import WalkRecorder
+from mini_bdx_runtime.fall_detector import FallDetector
+from mini_bdx_runtime.stability_governor import (
+    governor_from_config, tilt_angle_deg, tilt_rate,
+)
+from mini_bdx_runtime.antenna_anim import AntennaAnimator
+from mini_bdx_runtime.walk_defaults import WALK_TUNING_DEFAULTS, IMU_TRIM_DEFAULTS
+# Optional: Web UI + scanner sound. The walk still runs if these are absent.
+try:
+    from mini_bdx_runtime.control_bus import ControlBus
+    from mini_bdx_runtime.web_control import WebControlServer
+    from mini_bdx_runtime.telemetry import BatteryMonitor, build_state
+except ImportError:
+    ControlBus = WebControlServer = BatteryMonitor = build_state = None
+try:
+    from mini_bdx_runtime.scanner_sound import ScannerSound, PygameScannerBackend
+except ImportError:
+    ScannerSound = PygameScannerBackend = None
+
+import math
+import os
+import random
+
+HOME_DIR = os.path.expanduser("~")
+
+# action_scale is ramped toward a web-set target so a live change can't step the
+# leg amplitude in one tick (motor safety). Max change per control tick:
+ACTION_SCALE_RAMP = 0.02
+
+# DPAD-LEFT hold (s) to start a whole-body recording; walk_recording.pkl persists
+# the last take across restarts (handy for events).
+WALK_RECORD_HOLD_S = 3.0
+WALK_RECORDING_PATH = os.path.join(os.getcwd(), "walk_recording.pkl")
+
+# Live IMU-trim tuner (RB + D-pad, or the web card): step per nudge and the hard
+# clamp so a stuck input can't drive the trim to a dangerous angle.
+TRIM_STEP = 0.002     # rad (~0.11 deg) per D-pad tap / web +/- press
+TRIM_LIMIT = 0.1      # rad (~5.7 deg) max |trim| on either axis
+
+
+def _accel_pitch_roll(accel):
+    """Best-effort pitch/roll (deg) from the accelerometer gravity vector, for the
+    Web UI attitude horizon. Axis convention may need per-robot tuning — cosmetic,
+    never used for control. Returns None if accel is missing."""
+    if accel is None or len(accel) < 3:
+        return None
+    ax, ay, az = float(accel[0]), float(accel[1]), float(accel[2])
+    pitch = math.degrees(math.atan2(-ax, math.sqrt(ay * ay + az * az) or 1e-9))
+    roll = math.degrees(math.atan2(ay, az if az != 0 else 1e-9))
+    return {"pitch": round(pitch, 1), "roll": round(roll, 1)}
+
+
+class _HoldDetector:
+    """Fires once when a button has been held continuously for `duration` (same
+    contract as head_puppet's). reset_require_release() blocks re-arming until the
+    button is released."""
+
+    def __init__(self, duration):
+        self.duration = duration
+        self.start = None
+        self.fired = False
+        self._need_release = False
+
+    def reset_require_release(self):
+        self.start = None
+        self.fired = False
+        self._need_release = True
+
+    def update(self, pressed, now):
+        if self._need_release:
+            if not pressed:
+                self._need_release = False
+            return False
+        if pressed:
+            if self.start is None:
+                self.start = now
+                self.fired = False
+            if not self.fired and now - self.start >= self.duration:
+                self.fired = True
+                return True
+        else:
+            self.start = None
+            self.fired = False
+        return False
+
+
+# Live "feel" controls (web Tune panel). Defaults = how the stock runtime behaves.
+FEEL_DEFAULTS = {"leg_kp": 30, "head_kp": 8, "hip_gain": 1.0, "knee_gain": 1.0,
+                 "ankle_gain": 1.0, "smoothing": 0.0}
+FEEL_RANGES = {"leg_kp": (8, 32), "head_kp": (2, 32), "hip_gain": (0.5, 1.5),
+               "knee_gain": (0.5, 1.5), "ankle_gain": (0.5, 2.0), "smoothing": (0.0, 0.8),
+               "ankle_trim_deg": (-8.0, 8.0)}
+
+
+class RLWalk:
+    def __init__(
+        self,
+        onnx_model_path: str,
+        duck_config_path: str = f"{HOME_DIR}/duck_config.json",
+        serial_port: str = "/dev/ttyACM0",
+        control_freq: float = 50,
+        pid=[30, 0, 0],
+        action_scale=None,
+        commands=False,
+        pitch_bias=0,
+        save_obs=False,
+        replay_obs=None,
+        cutoff_frequency=None,
+    ):
+
+        self.duck_config = DuckConfig(config_json_path=duck_config_path)
+
+        self.commands = commands
+        self.pitch_bias = pitch_bias
+
+        self.onnx_model_path = onnx_model_path
+        self.policy = OnnxInfer(self.onnx_model_path, awd=True)
+
+        self.num_dofs = 14
+        self.max_motor_velocity = self.duck_config.max_motor_velocity_rad_s  # rad/s
+
+        # Control
+        self.control_freq = control_freq
+        self.pid = pid
+
+        self.save_obs = save_obs
+        if self.save_obs:
+            self.saved_obs = []
+            self.saved_meta = []  # [tick start time, loop time] per recorded obs
+
+        self.replay_obs = replay_obs
+        if self.replay_obs is not None:
+            self.replay_obs = pickle.load(open(self.replay_obs, "rb"))
+
+        self.action_filter = None
+        if cutoff_frequency is not None:
+            self.action_filter = LowPassActionFilter(
+                self.control_freq, cutoff_frequency
+            )
+
+        self.hwi = HWI(self.duck_config, serial_port)
+
+        self.start()
+
+        self.imu = Imu(
+            sampling_freq=int(self.control_freq),
+            user_pitch_bias=self.pitch_bias,
+            upside_down=self.duck_config.imu_upside_down,
+            pitch_trim=float(self.duck_config.imu_trim.get("pitch", 0.0)),
+            roll_trim=float(self.duck_config.imu_trim.get("roll", 0.0)),
+        )
+
+        self.feet_contacts = FeetContacts()
+
+        # Scales
+        # action_scale precedence: explicit CLI > duck_config > 0.25 default.
+        if action_scale is not None:
+            self.action_scale = action_scale
+        elif self.duck_config.action_scale is not None:
+            self.action_scale = float(self.duck_config.action_scale)
+        else:
+            self.action_scale = 0.25
+        # Live-tunable target the loop ramps `action_scale` toward (Web UI edits it).
+        self._action_scale_target = self.action_scale
+        print(f"action_scale = {self.action_scale}")
+
+        # Per-tick slew clamp: mirror the config flag into a live-tunable attr so the
+        # Web UI can flip it without a restart (the loop reads self.velocity_clip).
+        self.velocity_clip = bool(self.duck_config.velocity_clip)
+
+        # Live "feel" controls (web Tune panel). Saved under "feel" in duck_config.
+        f = dict(FEEL_DEFAULTS)
+        f.update(self.duck_config.json_config.get("feel", {}))
+        self._feel = f
+        self._feel_kp_dirty = False
+        self._feel_kp_t = 0.0
+        self._feel_ankle_base = {j: float(self.hwi.joints_offsets[j]) for j in ("left_ankle", "right_ankle")}
+        self._feel_ankle_trim_deg = 0.0
+        self._feel_smoothed = None
+        self._feel_log = []          # (time, key, value) for every live slider change, saved with the recording
+        print(f"feel = {self._feel}")
+
+        # Ear-antenna free-animation driver (idle wiggle when not hand-controlled).
+        self.antenna_anim = AntennaAnimator(
+            enabled=self.duck_config.antenna_free_anim,
+            sync=self.duck_config.antenna_sync, rng=random.Random(),
+        )
+
+        self.last_action = np.zeros(self.num_dofs)
+        self.last_last_action = np.zeros(self.num_dofs)
+        self.last_last_last_action = np.zeros(self.num_dofs)
+
+        self.init_pos = list(self.hwi.init_pos.values())
+
+        self.motor_targets = np.array(self.init_pos.copy())
+        self.prev_motor_targets = np.array(self.init_pos.copy())
+
+        self.last_commands = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+        self.paused = self.duck_config.start_paused
+
+        self.command_freq = 20  # hz
+        # Phone Web UI shares one ControlBus with the gamepad (parallel control).
+        self.web_bus = None
+        if getattr(self.duck_config, "web_ui", False) and ControlBus is not None:
+            self.web_bus = ControlBus()
+        if self.commands:
+            self.xbox_controller = XBoxController(
+                self.command_freq, web_bus=self.web_bus
+            )
+
+        # Reference motion, but we only really need the length of one phase
+        # TODO
+        self.PRM = PolyReferenceMotion("./polynomial_coefficients.pkl")
+        self.imitation_i = 0
+        self.imitation_phase = np.array([0, 0])
+        self.phase_frequency_factor = 1.0
+        self.phase_frequency_factor_offset = (
+            self.duck_config.phase_frequency_factor_offset
+        )
+
+        # Optional expression features
+        if self.duck_config.eyes:
+            self.eyes = Eyes()
+        if self.duck_config.projector:
+            self.projector = Projector()
+        if self.duck_config.speaker:
+            self.sounds = Sounds(
+                volume=1.0, sound_directory="../mini_bdx_runtime/assets/"
+            )
+        if self.duck_config.antennas:
+            self.antennas = Antennas()
+
+        # ---- record/playback (whole-body command stream), fall detection ----
+        self.recorder = WalkRecorder(self.control_freq)
+        try:
+            if os.path.exists(WALK_RECORDING_PATH):
+                n = self.recorder.load(WALK_RECORDING_PATH)
+                print(f"[walk] loaded {n} recorded frames "
+                      f"({self.recorder.duration_s:.1f}s) — DPAD-RIGHT to play")
+        except Exception as e:  # noqa: BLE001
+            print(f"[walk] could not load recording: {e}")
+        self._record_hold = _HoldDetector(WALK_RECORD_HOLD_S)
+        self._record_stop_armed = False
+
+        self.fall_detector = FallDetector()
+        # Tilt-based stability governor (disabled unless duck_config enables it).
+        self.governor = governor_from_config(self.duck_config.stability_governor)
+        self._gov_scale = 1.0
+        self._gov_severity = 0.0
+
+        # ---- scanner lamp-loop coupled to the projector LED ----
+        self.scanner = None
+        if self.duck_config.speaker and ScannerSound is not None:
+            try:
+                self.scanner = ScannerSound(
+                    PygameScannerBackend("../mini_bdx_runtime/assets/scanner/")
+                )
+            except Exception as e:  # noqa: BLE001
+                print(f"[walk] scanner sound unavailable: {e}")
+                self.scanner = None
+
+        # ---- telemetry / web server ----
+        self.loop_hz = float(self.control_freq)
+        self._last_imu = None
+        self._start_t = time.time()
+        self.battery_mon = (
+            BatteryMonitor(getattr(self.duck_config, "battery", {}))
+            if BatteryMonitor is not None else None
+        )
+        guard_cfg = self.duck_config.json_config.get("battery_guard", {})
+        self.battery_guard = (
+            BatteryGuard(guard_cfg)
+            if BatteryGuard is not None and guard_cfg.get("enabled", True) else None
+        )
+        self._battery_poweroff = False
+        print(f"battery_guard = {self.battery_guard.cfg if self.battery_guard else None}")
+        self._features = {
+            "antennas": self.duck_config.antennas,
+            "projector": self.duck_config.projector,
+            "speaker": self.duck_config.speaker,
+            "camera": self.duck_config.camera,
+        }
+        self._sound_names = (
+            list(self.sounds.sounds.keys())
+            if self.duck_config.speaker and getattr(self, "sounds", None)
+            and self.sounds.ok else []
+        )
+        self.web_server = None
+        if self.web_bus is not None and WebControlServer is not None:
+            try:
+                self.web_server = WebControlServer(
+                    self.web_bus, port=getattr(self.duck_config, "web_port", 8080)
+                )
+                self.web_server.start()
+            except Exception as e:  # noqa: BLE001
+                print(f"[walk] web UI unavailable: {e}")
+                self.web_server = None
+
+    # ------------------------------------------------------ helpers (walk) ----
+    def _walk_stick_active(self, c):
+        """True if the operator is meaningfully pushing a walk stick (used to break
+        out of playback). Deadzones scaled per command range to ignore drift."""
+        return abs(c[0]) > 0.03 or abs(c[1]) > 0.04 or abs(c[2]) > 0.1
+
+    def _couple_scanner(self, now):
+        if self.scanner is None:
+            return
+        want = self.duck_config.projector and self.projector.on
+        if want and not self.scanner.is_active:
+            self.scanner.start(now)
+        elif not want and self.scanner.is_active:
+            self.scanner.stop()
+        self.scanner.update(now)
+
+    def _save_recording(self):
+        try:
+            self.recorder.save(WALK_RECORDING_PATH)
+        except Exception as e:  # noqa: BLE001
+            print(f"[walk] could not save recording: {e}")
+
+    def _handle_record_playback(self, raw_commands, now):
+        """DPAD-LEFT hold 3s = record; DPAD-RIGHT = play/stop. Mirrors head_puppet."""
+        dl = getattr(self.buttons, "dpad_left", None)
+        dr = getattr(self.buttons, "dpad_right", None)
+        if dl is None or dr is None:
+            return
+        speaker = self.duck_config.speaker
+
+        if self.recorder.state == "idle":
+            if self._record_hold.update(dl.is_pressed, now):
+                self.recorder.start_recording()
+                self._record_stop_armed = False
+                cap_s = self.recorder.max_frames / self.control_freq
+                print(f"● WALK RECORDING (max {cap_s:.0f}s) — tap DPAD-LEFT to stop")
+                if speaker:
+                    self.sounds.play("happy1.wav")
+            elif dr.triggered:
+                if self.recorder.has_recording():
+                    self.recorder.start_playback()
+                    print(f"▶ WALK PLAYBACK ({self.recorder.duration_s:.1f}s) — "
+                          "looping; DPAD-RIGHT or a stick to stop")
+                    if speaker:
+                        self.sounds.play("beep1.wav")
+                else:
+                    print("(nothing recorded — hold DPAD-LEFT 3s first)")
+        elif self.recorder.state == "recording":
+            if not dl.is_pressed:
+                self._record_stop_armed = True
+            if self._record_stop_armed and dl.triggered:
+                self.recorder.stop_recording()
+                self._record_hold.reset_require_release()
+                self._record_stop_armed = False
+                self._save_recording()
+                print(f"⏹ stored {self.recorder.duration_s:.1f}s. DPAD-RIGHT to play.")
+                if speaker:
+                    self.sounds.play("beep2.wav")
+        elif self.recorder.state == "playing":
+            if dr.triggered:
+                self.recorder.request_stop(
+                    raw_commands, self.phase_frequency_factor_offset,
+                    self.buttons.LB.is_pressed,
+                )
+                print("■ stopping playback (ramping down)")
+
+    def _commands_for_tick(self, raw_commands, sprint, now):
+        """Pick this tick's command vector: recorded playback (through the live
+        policy) or live. Recording captures the live stream; playback overrides
+        the gait params too."""
+        if self.recorder.state == "recording":
+            still = self.recorder.record(
+                raw_commands, self.phase_frequency_factor_offset, sprint
+            )
+            if not still:  # hit the length cap
+                self._save_recording()
+                print(f"⏹ walk recording full ({self.recorder.duration_s:.1f}s). "
+                      "DPAD-RIGHT to play.")
+                if self.duck_config.speaker:
+                    self.sounds.play("beep2.wav")
+            return raw_commands
+        if self.recorder.state == "playing":
+            # Operator grabs a stick -> hand live control back IMMEDIATELY (like
+            # head_puppet). The graceful ramp-to-stand is reserved for the
+            # DPAD-RIGHT "stop with no input" case (handled via request_stop).
+            if self._walk_stick_active(raw_commands):
+                self.recorder.state = "idle"
+                return raw_commands
+            pf = self.recorder.next_frame()
+            if pf is not None:
+                lc, off, spr, _fin = pf
+                self.phase_frequency_factor_offset = off
+                self.phase_frequency_factor = 1.3 if spr else 1.0
+                return list(lc)
+            return raw_commands
+        return raw_commands
+
+    def _apply_stability_governor(self, commands):
+        """Ease the DRIVE commands (lin_vel_x/y, ang_vel — indices 0:3) when the duck
+        is tipping, using the PREVIOUS tick's IMU. Head commands (3:7) are untouched.
+        Mutates `commands` in place and returns the scale applied (1.0 = full speed;
+        the governor is a pure pass-through while disabled). Stores the scale/severity
+        on self for telemetry."""
+        scale = 1.0
+        if self.governor.enabled and self._last_imu is not None:
+            pr = _accel_pitch_roll(self._last_imu.get("accelero"))
+            tilt_deg = tilt_angle_deg(pr["pitch"], pr["roll"]) if pr else 0.0
+            gyro = self._last_imu.get("gyro")
+            rate = tilt_rate(gyro) if gyro is not None else 0.0
+            scale = self.governor.update(tilt_deg, rate)
+            for k in range(3):   # lin_vel_x, lin_vel_y, ang_vel only
+                commands[k] = commands[k] * scale
+        self._gov_scale = scale
+        self._gov_severity = self.governor.severity
+        return scale
+
+    def _nudge_trim(self, axis, delta):
+        """Adjust the LIVE IMU mounting trim (the worker re-reads it every loop, so
+        this applies instantly). Clamped to +/-TRIM_LIMIT so a stuck button can't
+        drive it wild. Not persisted until _save_imu_trim()."""
+        if axis == "pitch":
+            self.imu.pitch_trim = float(np.clip(self.imu.pitch_trim + delta,
+                                                -TRIM_LIMIT, TRIM_LIMIT))
+            val = self.imu.pitch_trim
+        elif axis == "roll":
+            self.imu.roll_trim = float(np.clip(self.imu.roll_trim + delta,
+                                               -TRIM_LIMIT, TRIM_LIMIT))
+            val = self.imu.roll_trim
+        else:
+            return
+        print(f"[trim] {axis} = {val:+.4f} rad ({math.degrees(val):+.2f} deg)  "
+              f"(RB+Y or web Save to persist)")
+
+    def _save_imu_trim(self):
+        """Persist the current live trim to ~/duck_config.json (backup-first, other
+        fields untouched)."""
+        from mini_bdx_runtime.duck_config import save_config_fields
+        trim = {"pitch": float(self.imu.pitch_trim), "roll": float(self.imu.roll_trim)}
+        backup = save_config_fields({"imu_trim": trim})
+        print(f"[trim] SAVED imu_trim={trim} (backup {backup})")
+
+    # ------------------------------------------------- live web settings (walk) ---
+    def _consume_web_settings(self):
+        """Drain and apply the Web UI's live-settings edits + save requests. Cheap:
+        one lock, then plain attribute writes (no hardware in the hot path)."""
+        if self.web_bus is None:
+            return
+        settings, saves, resets = self.web_bus.consume_settings()
+        if settings.get("walk"):
+            self._apply_walk_settings(settings["walk"])
+        if settings.get("antenna"):
+            self._apply_antenna_settings(settings["antenna"])
+        if "walk" in resets:
+            self._reset_walk_settings()
+        if "imu_trim" in resets:
+            self._reset_imu_trim()
+        if "antenna" in resets:
+            self.antenna_anim.set_enabled(True)
+            self.antenna_anim.set_sync(False)
+            print("[antennas] RESET to defaults (free-anim on, sync off)")
+        if "walk" in saves:
+            self._save_walk_settings()
+        if "antenna" in saves:
+            self._save_antenna_settings()
+
+    def _apply_walk_settings(self, d):
+        """Apply live walk-tuning edits. action_scale is ramped (not stepped)."""
+        for key, v in d.items():
+            try:
+                if key == "action_scale":
+                    self._action_scale_target = float(np.clip(float(v), 0.0, 0.6))
+                elif key in ("gait_offset", "phase_frequency_factor_offset"):
+                    self.phase_frequency_factor_offset = float(np.clip(float(v), -0.5, 0.5))
+                elif key == "velocity_clip":
+                    self.velocity_clip = bool(v)
+                elif key == "max_motor_velocity_rad_s":
+                    self.max_motor_velocity = float(np.clip(float(v), 0.5, 12.0))
+                elif key in FEEL_RANGES:
+                    lo, hi = FEEL_RANGES[key]
+                    v = float(np.clip(float(v), lo, hi))
+                    self._feel_log.append((time.time(), key, v))
+                    if key == "ankle_trim_deg":
+                        self._set_ankle_trim(v)
+                    else:
+                        self._feel[key] = v
+                        if key in ("leg_kp", "head_kp"):
+                            self._feel_kp_dirty = True
+                elif key == "governor_enabled":
+                    self.governor.enabled = bool(v)
+                elif key == "governor_tilt_lo_deg":
+                    self.governor.tilt_lo_deg = float(np.clip(float(v), 0.0, 45.0))
+                elif key == "governor_tilt_hi_deg":
+                    self.governor.tilt_hi_deg = float(np.clip(float(v), 0.0, 60.0))
+                elif key == "governor_rate_lo":
+                    self.governor.rate_lo = float(np.clip(float(v), 0.0, 20.0))
+                elif key == "governor_rate_hi":
+                    self.governor.rate_hi = float(np.clip(float(v), 0.0, 30.0))
+                elif key == "governor_floor":
+                    self.governor.floor = float(np.clip(float(v), 0.0, 1.0))
+                elif key == "governor_smooth":
+                    self.governor.smooth = float(np.clip(float(v), 0.01, 1.0))
+            except (ValueError, TypeError):
+                print(f"[walk] ignoring bad setting {key}={v!r}")
+
+    def _set_ankle_trim(self, deg):
+        """Shift both ankle offsets by `deg` from their saved values (+ = lean forward)."""
+        self._feel_ankle_trim_deg = float(deg)
+        for j, base in self._feel_ankle_base.items():
+            self.hwi.joints_offsets[j] = base + np.radians(deg)
+
+    def _apply_feel_kp(self, now):
+        """Write changed servo stiffness, at most 5 times a second (it's a bus write)."""
+        if not self._feel_kp_dirty or now - self._feel_kp_t < 0.2:
+            return
+        kps = [int(round(self._feel["leg_kp"]))] * 14
+        kps[5:9] = [int(round(self._feel["head_kp"]))] * 4
+        try:
+            self.hwi.set_kps(kps)
+            print(f"[feel] stiffness legs {kps[0]} head {kps[5]}")
+        except Exception as e:  # noqa: BLE001
+            print(f"[feel] stiffness write failed: {e}")
+        self._feel_kp_dirty = False
+        self._feel_kp_t = now
+
+    def _governor_config_dict(self):
+        g = self.governor
+        return {
+            "enabled": bool(g.enabled),
+            "tilt_lo_deg": round(float(g.tilt_lo_deg), 3),
+            "tilt_hi_deg": round(float(g.tilt_hi_deg), 3),
+            "rate_lo": round(float(g.rate_lo), 3),
+            "rate_hi": round(float(g.rate_hi), 3),
+            "floor": round(float(g.floor), 3),
+            "smooth": round(float(g.smooth), 3),
+        }
+
+    def _save_walk_settings(self):
+        from mini_bdx_runtime.duck_config import save_config_fields
+        fields = {
+            "action_scale": round(float(self._action_scale_target), 4),
+            "phase_frequency_factor_offset": round(float(self.phase_frequency_factor_offset), 4),
+            "velocity_clip": bool(self.velocity_clip),
+            "max_motor_velocity_rad_s": round(float(self.max_motor_velocity), 3),
+            "stability_governor": self._governor_config_dict(),
+        }
+        fields["feel"] = {k: round(float(v), 3) for k, v in self._feel.items()}
+        if self._feel_ankle_trim_deg:
+            offs = dict(self.duck_config.json_config.get("joints_offsets", {}))
+            for j in ("left_ankle", "right_ankle"):
+                offs[j] = round(float(self.hwi.joints_offsets[j]), 4)
+            fields["joints_offsets"] = offs
+            self.duck_config.json_config["joints_offsets"] = offs
+            self._feel_ankle_base = {j: float(self.hwi.joints_offsets[j]) for j in ("left_ankle", "right_ankle")}
+            self._feel_ankle_trim_deg = 0.0      # saved into the offsets: the trim starts again from 0
+        backup = save_config_fields(fields)
+        print(f"[walk] SAVED walk tuning {fields} (backup {backup})")
+
+    def _reset_walk_settings(self):
+        """Load the known-good walk-tuning defaults live (shared source of truth;
+        NOT persisted until the user hits Save). action_scale still ramps in."""
+        d = WALK_TUNING_DEFAULTS
+        self._action_scale_target = float(d["action_scale"])
+        self.phase_frequency_factor_offset = float(d["phase_frequency_factor_offset"])
+        self.velocity_clip = bool(d["velocity_clip"])
+        self.max_motor_velocity = float(d["max_motor_velocity_rad_s"])
+        g = d["stability_governor"]
+        self.governor.enabled = bool(g["enabled"])
+        self.governor.tilt_lo_deg = float(g["tilt_lo_deg"])
+        self.governor.tilt_hi_deg = float(g["tilt_hi_deg"])
+        self.governor.rate_lo = float(g["rate_lo"])
+        self.governor.rate_hi = float(g["rate_hi"])
+        self.governor.floor = float(g["floor"])
+        self.governor.smooth = float(g["smooth"])
+        self._feel = dict(FEEL_DEFAULTS)
+        self._feel_kp_dirty = True
+        self._set_ankle_trim(0.0)
+        print(f"[walk] RESET walk tuning to known-good defaults {d} (Save to persist)")
+
+    def _reset_imu_trim(self):
+        """Reset the live IMU mounting trim to the neutral 0 baseline (not persisted
+        until Save). Applies instantly (the IMU worker re-reads it each loop)."""
+        self.imu.pitch_trim = float(IMU_TRIM_DEFAULTS["pitch"])
+        self.imu.roll_trim = float(IMU_TRIM_DEFAULTS["roll"])
+        print("[trim] RESET imu trim to 0 (nudge to re-tune, Save to persist)")
+
+    def _apply_antenna_settings(self, d):
+        if "free_anim" in d:
+            self.antenna_anim.set_enabled(bool(d["free_anim"]))
+            print(f"[antennas] free animation {'ON' if self.antenna_anim.enabled else 'OFF'}")
+        if "sync" in d:
+            self.antenna_anim.set_sync(bool(d["sync"]))
+            print(f"[antennas] sync {'ON (unison)' if self.antenna_anim.sync else 'OFF (independent)'}")
+
+    def _save_antenna_settings(self):
+        from mini_bdx_runtime.duck_config import save_config_fields
+        fields = {"antenna_free_anim": bool(self.antenna_anim.enabled),
+                  "antenna_sync": bool(self.antenna_anim.sync)}
+        backup = save_config_fields(fields)
+        print(f"[antennas] SAVED {fields} (backup {backup})")
+
+    def _publish_telemetry(self, now):
+        if self.web_bus is None or build_state is None:
+            return
+        # Voltage read = a ~0.2 s bus handoff -> only safe while PAUSED (servos hold).
+        # While walking we hold the last reading; it refreshes each time you pause.
+        allow_batt = (self.paused and self.duck_config.battery_servo_read
+                      and self.battery_guard is None)
+        batt = (self.battery_mon.sample(now, self.hwi, allow_read=allow_batt)
+                if self.battery_mon
+                else {"voltage": None, "percent": None, "charging": None})
+        flags = {
+            "projector_on": bool(self.duck_config.projector and self.projector.on),
+            "head_control": getattr(self.xbox_controller, "head_control_mode", False)
+            if self.commands else False,
+            "sprint": self.phase_frequency_factor > 1.0,
+            "tracking": False,
+        }
+        self.web_bus.set_telemetry(build_state(
+            mode="walk", paused=self.paused, battery=batt, loop_hz=self.loop_hz,
+            temp_c=(self.battery_mon.temp_c if self.battery_mon else None),
+            fallen=self.fall_detector.fallen,
+            recording_state=self.recorder.state,
+            recording_frames=len(self.recorder.frames),
+            control_hz=self.control_freq, features=self._features, flags=flags,
+            sounds=self._sound_names, uptime_s=now - self._start_t,
+            message=(self.battery_guard.message if self.battery_guard else ""),
+            imu=_accel_pitch_roll(self._last_imu.get("accelero") if self._last_imu else None),
+            gait_offset=self.phase_frequency_factor_offset,
+            imu_trim={"pitch": float(self.imu.pitch_trim),
+                      "roll": float(self.imu.roll_trim)},
+            governor={"enabled": self.governor.enabled,
+                      "scale": round(float(self._gov_scale), 3),
+                      "severity": round(float(self._gov_severity), 3)},
+            walk_params={
+                "action_scale": round(float(self.action_scale), 3),
+                "action_scale_target": round(float(self._action_scale_target), 3),
+                "velocity_clip": bool(self.velocity_clip),
+                "max_motor_velocity_rad_s": round(float(self.max_motor_velocity), 2),
+                "gait_offset": round(float(self.phase_frequency_factor_offset), 3),
+                "governor": self._governor_config_dict(),
+                **{k: round(float(v), 3) for k, v in self._feel.items()},
+                "ankle_trim_deg": round(float(self._feel_ankle_trim_deg), 2),
+            },
+            antenna_anim=bool(self.antenna_anim.enabled),
+            antenna_sync=bool(self.antenna_anim.sync),
+        ))
+
+    def get_obs(self):
+
+        imu_data = self.imu.get_data()
+        self._last_imu = imu_data
+
+        dof_pos = self.hwi.get_present_positions(
+            ignore=[
+                "left_antenna",
+                "right_antenna",
+            ]
+        )  # rad
+
+        dof_vel = self.hwi.get_present_velocities(
+            ignore=[
+                "left_antenna",
+                "right_antenna",
+            ]
+        )  # rad/s
+
+        if dof_pos is None or dof_vel is None:
+            return None
+
+        if len(dof_pos) != self.num_dofs:
+            print(f"ERROR len(dof_pos) != {self.num_dofs}")
+            return None
+
+        if len(dof_vel) != self.num_dofs:
+            print(f"ERROR len(dof_vel) != {self.num_dofs}")
+            return None
+
+        cmds = self.last_commands
+
+        feet_contacts = self.feet_contacts.get()
+
+        obs = np.concatenate(
+            [
+                imu_data["gyro"],
+                imu_data["accelero"],
+                cmds,
+                dof_pos - self.init_pos,
+                dof_vel * 0.05,
+                self.last_action,
+                self.last_last_action,
+                self.last_last_last_action,
+                self.motor_targets,
+                feet_contacts,
+                self.imitation_phase,
+            ]
+        )
+
+        return obs
+
+    def start(self):
+        feel = dict(FEEL_DEFAULTS)
+        feel.update(self.duck_config.json_config.get("feel", {}))
+        kps = [int(feel["leg_kp"])] * 14
+        kds = [self.pid[2]] * 14
+
+        # lower head kps
+        kps[5:9] = [int(feel["head_kp"])] * 4
+
+        self.hwi.set_kps(kps)
+        self.hwi.set_kds(kds)
+        self.hwi.turn_on()
+
+        time.sleep(2)
+
+    def get_phase_frequency_factor(self, x_velocity):
+
+        max_phase_frequency = 1.2
+        min_phase_frequency = 1.0
+
+        # Perform linear interpolation
+        freq = min_phase_frequency + (abs(x_velocity) / 0.15) * (
+            max_phase_frequency - min_phase_frequency
+        )
+
+        return freq
+
+    def _battery_tick(self, raw_commands, now):
+        """Low-battery failsafe (scripts/battery_guard.py). Returns the commands to use."""
+        g = self.battery_guard
+        v = g.poll(now, self.hwi, paused=self.paused, drive=raw_commands[:3])
+        if v is not None and self.battery_mon is not None:
+            from mini_bdx_runtime.battery import estimate_percent
+            self.battery_mon._cache = {
+                "voltage": v,
+                "percent": estimate_percent(v, self.battery_mon.v_min, self.battery_mon.v_max),
+                "charging": self.battery_mon.charge.update(now, v),
+            }
+        if g.beep_due and self.duck_config.speaker:
+            try:
+                self.sounds.play("beep1.wav")
+            except Exception:  # noqa: BLE001
+                pass
+        if g.state != "critical":
+            return raw_commands
+        # Flat: stand still for settle_s (walking only), then crouch, motors off, power off.
+        if self.recorder.state == "playing":
+            self.recorder.state = "idle"
+        if not self.paused and not self.fall_detector.fallen and now - g.critical_t < g.cfg["settle_s"]:
+            return [0.0] * len(raw_commands)
+        self._battery_shutdown()
+        return [0.0] * len(raw_commands)
+
+    def _battery_shutdown(self):
+        g = self.battery_guard
+        print("[battery] FLAT: crouching, motors off, shutting down")
+        if self.duck_config.speaker:
+            try:
+                self.sounds.play("beep2.wav")
+            except Exception:  # noqa: BLE001
+                pass
+        if not self.fall_detector.fallen:
+            g.crouch(self.hwi, self.motor_targets, self.init_pos, list(self.hwi.joints.keys()),
+                     self.control_freq, make_action_dict)
+        self.hwi.turn_off()
+        print("[battery] motors off")
+        for name in ("antennas", "eyes", "projector"):
+            if getattr(self.duck_config, name, False):
+                try:
+                    getattr(self, name).stop()
+                except Exception:  # noqa: BLE001
+                    pass
+        if self.scanner is not None:
+            self.scanner.stop()
+        self.feet_contacts.stop()
+        self._battery_poweroff = True
+
+    def run(self):
+        i = 0
+        try:
+            print("Starting")
+            start_t = time.time()
+            self._start_t = start_t
+            self._last_tick_t = None
+            self.fall_detector.reset(start_t)
+            while True:
+                left_trigger = 0
+                right_trigger = 0
+                t = time.time()
+
+                # loop-rate estimate for the Web UI
+                if self._last_tick_t is not None:
+                    self.loop_hz = 0.9 * self.loop_hz + 0.1 * (
+                        1.0 / max(1e-6, t - self._last_tick_t)
+                    )
+                self._last_tick_t = t
+
+                raw_commands = list(self.last_commands)
+                sprint = False
+                if self.commands:
+                    raw_commands, self.buttons, left_trigger, right_trigger = (
+                        self.xbox_controller.get_last_command()
+                    )
+                    raw_commands = list(raw_commands)
+
+                    # RB = IMU-trim modifier. While held, the D-pad tunes the trim
+                    # (up/down = pitch, right/left = roll) and Y saves it; gait and
+                    # record/playback are suppressed so nothing double-fires.
+                    trim_mode = self.buttons.RB.is_pressed
+                    if trim_mode:
+                        if self.buttons.dpad_up.triggered:
+                            self._nudge_trim("pitch", TRIM_STEP)
+                        if self.buttons.dpad_down.triggered:
+                            self._nudge_trim("pitch", -TRIM_STEP)
+                        if self.buttons.dpad_right.triggered:
+                            self._nudge_trim("roll", TRIM_STEP)
+                        if self.buttons.dpad_left.triggered:
+                            self._nudge_trim("roll", -TRIM_STEP)
+                        if self.buttons.Y.triggered:
+                            self._save_imu_trim()
+                    else:
+                        if self.buttons.dpad_up.triggered:
+                            self.phase_frequency_factor_offset += 0.05
+                            print(
+                                f"Phase frequency factor offset {round(self.phase_frequency_factor_offset, 3)}"
+                            )
+                        if self.buttons.dpad_down.triggered:
+                            self.phase_frequency_factor_offset -= 0.05
+                            print(
+                                f"Phase frequency factor offset {round(self.phase_frequency_factor_offset, 3)}"
+                            )
+
+                    sprint = self.buttons.LB.is_pressed
+                    self.phase_frequency_factor = 1.3 if sprint else 1.0
+
+                    if self.buttons.X.triggered:
+                        if self.duck_config.projector:
+                            self.projector.switch()
+
+                    if self.buttons.B.triggered:
+                        if self.duck_config.speaker:
+                            self.sounds.play_random_sound()
+
+                    if self.duck_config.antennas:
+                        # Manual trigger input (cross-wired as before) overrides; when
+                        # idle the animator adds the free-animation wiggle, or rests.
+                        ant_l, ant_r = self.antenna_anim.update(
+                            t, manual_left=right_trigger, manual_right=left_trigger
+                        )
+                        self.antennas.set_position_left(ant_l)
+                        self.antennas.set_position_right(ant_r)
+
+                    if self.buttons.A.triggered:
+                        self.paused = not self.paused
+                        if self.paused:
+                            print("PAUSE")
+                        else:
+                            print("UNPAUSE")
+                            self.fall_detector.reset(t)  # re-arm after righting
+
+                    # whole-body record / playback (DPAD left/right) -- suppressed
+                    # while RB (trim mode) borrows the D-pad.
+                    if not trim_mode:
+                        self._handle_record_playback(raw_commands, t)
+
+                # web IMU-trim tuner (drains alongside the gamepad; both nudge the
+                # SAME live IMU trim and the same save path)
+                if self.web_bus is not None:
+                    pd, rd, save_trim = self.web_bus.consume_trim()
+                    if pd:
+                        self._nudge_trim("pitch", pd)
+                    if rd:
+                        self._nudge_trim("roll", rd)
+                    if save_trim:
+                        self._save_imu_trim()
+
+                # live walk-tuning / antenna edits from the Web UI (apply + save)
+                self._consume_web_settings()
+                self._apply_feel_kp(t)
+
+                # ramp action_scale toward its web-set target (no sudden amplitude jump)
+                if self.action_scale != self._action_scale_target:
+                    self.action_scale += float(np.clip(
+                        self._action_scale_target - self.action_scale,
+                        -ACTION_SCALE_RAMP, ACTION_SCALE_RAMP))
+
+                # scanner sound follows the LED even while paused; publish telemetry
+                self._couple_scanner(t)
+                self._publish_telemetry(t)
+
+                if self.battery_guard is not None:
+                    raw_commands = self._battery_tick(raw_commands, t)
+                    if self._battery_poweroff:
+                        break
+
+                if self.paused:
+                    time.sleep(0.1)
+                    continue
+
+                # ---- fall detection -> auto-pause ----
+                feet = self.feet_contacts.get()
+                if self.fall_detector.update(feet, t):
+                    self.paused = True
+                    if self.recorder.state == "playing":
+                        self.recorder.state = "idle"  # stop playback if we fell
+                    print("⚠ FALL DETECTED — auto-paused. Right the duck, then "
+                          "press A (or web Resume) to continue.")
+                    if self.duck_config.speaker:
+                        try:
+                            self.sounds.play("beep2.wav")
+                        except Exception:  # noqa: BLE001
+                            pass
+                    time.sleep(0.1)
+                    continue
+
+                # ---- choose command source: recorded playback vs live control ----
+                self.last_commands = self._commands_for_tick(raw_commands, sprint, t)
+
+                # Throttle drive velocity if the duck is tipping (no-op unless enabled).
+                self._apply_stability_governor(self.last_commands)
+
+                obs = self.get_obs()
+                if obs is None:
+                    continue
+
+                self.imitation_i += 1 * (
+                    self.phase_frequency_factor + self.phase_frequency_factor_offset
+                )
+                self.imitation_i = self.imitation_i % self.PRM.nb_steps_in_period
+                self.imitation_phase = np.array(
+                    [
+                        np.cos(
+                            self.imitation_i / self.PRM.nb_steps_in_period * 2 * np.pi
+                        ),
+                        np.sin(
+                            self.imitation_i / self.PRM.nb_steps_in_period * 2 * np.pi
+                        ),
+                    ]
+                )
+
+                if self.save_obs:
+                    self.saved_obs.append(obs)
+                    self.saved_meta.append([t, 0.0])
+
+                if self.replay_obs is not None:
+                    if i < len(self.replay_obs):
+                        obs = self.replay_obs[i]
+                    else:
+                        print("BREAKING ")
+                        break
+
+                action = self.policy.infer(obs)
+
+                self.last_last_last_action = self.last_last_action.copy()
+                self.last_last_action = self.last_action.copy()
+                self.last_action = action.copy()
+
+                # action = np.zeros(10)
+
+                delta = action * self.action_scale
+                fe = self._feel
+                delta[[2, 11]] *= fe["hip_gain"]
+                delta[[3, 12]] *= fe["knee_gain"]
+                delta[[4, 13]] *= fe["ankle_gain"]
+                self.motor_targets = self.init_pos + delta
+                if fe["smoothing"] > 0:
+                    if self._feel_smoothed is None:
+                        self._feel_smoothed = self.motor_targets.copy()
+                    a = fe["smoothing"]
+                    self._feel_smoothed = a * self._feel_smoothed + (1 - a) * self.motor_targets
+                    self.motor_targets = self._feel_smoothed.copy()
+                else:
+                    self._feel_smoothed = None
+
+                # Optional per-tick slew clamp: bound how far any joint target can move
+                # in one control dt (a safety net against a bad policy spike). Off by
+                # default -> today's behaviour; enable via duck_config "velocity_clip".
+                if self.velocity_clip:
+                    max_delta = self.max_motor_velocity * (1 / self.control_freq)
+                    self.motor_targets = np.clip(
+                        self.motor_targets,
+                        self.prev_motor_targets - max_delta,
+                        self.prev_motor_targets + max_delta,
+                    )
+
+                if self.action_filter is not None:
+                    self.action_filter.push(self.motor_targets)
+                    filtered_motor_targets = self.action_filter.get_filtered_action()
+                    if (
+                        time.time() - start_t > 1
+                    ):  # give time to the filter to stabilize
+                        self.motor_targets = filtered_motor_targets
+
+                self.prev_motor_targets = self.motor_targets.copy()
+
+                head_motor_targets = self.last_commands[3:] + self.motor_targets[5:9]
+                self.motor_targets[5:9] = head_motor_targets
+
+                action_dict = make_action_dict(
+                    self.motor_targets, list(self.hwi.joints.keys())
+                )
+
+                self.hwi.set_position_all(action_dict)
+
+                i += 1
+
+                took = time.time() - t
+                if self.save_obs and self.saved_meta and self.saved_meta[-1][0] == t:
+                    self.saved_meta[-1][1] = took
+                # print("Full loop took", took, "fps : ", np.around(1 / took, 2))
+                if (1 / self.control_freq - took) < 0:
+                    print(
+                        "Policy control budget exceeded by",
+                        np.around(took - 1 / self.control_freq, 3),
+                    )
+                time.sleep(max(0, 1 / self.control_freq - took))
+
+        except KeyboardInterrupt:
+            if self.duck_config.antennas:
+                self.antennas.stop()
+            if self.duck_config.eyes:
+                self.eyes.stop()
+            if self.duck_config.projector:
+                self.projector.stop()
+            if self.scanner is not None:
+                self.scanner.stop()
+            if self.web_server is not None:
+                self.web_server.stop()
+            self.feet_contacts.stop()
+
+        if self.save_obs:
+            pickle.dump(self.saved_obs, open("robot_saved_obs.pkl", "wb"))
+            try:
+                # Timing and settings for the same ticks, for comparing runs.
+                import json, os
+                cfg = json.load(open(os.path.expanduser("~/duck_config.json")))
+                pickle.dump({"tick": np.array(self.saved_meta), "config": cfg,
+                             "feel_saved": dict(FEEL_DEFAULTS, **cfg.get("feel", {})), "feel_log": self._feel_log},
+                            open("robot_saved_meta.pkl", "wb"))
+            except Exception as e:
+                print("Could not save robot_saved_meta.pkl:", e)
+        print("TURNING OFF")
+        if not self._battery_poweroff and self.duck_config.json_config.get("motors_off_on_exit", True):
+            # Ctrl+C: ease into the shutdown tuck, then torque off (instead of leaving the motors holding).
+            try:
+                from battery_guard import BatteryGuard as _BG
+                g = self.battery_guard or _BG(self.duck_config.json_config.get("battery_guard", {}))
+                start = self.hwi.get_present_positions()
+                if start is None:
+                    start = self.motor_targets
+                g.crouch(self.hwi, start, self.init_pos, list(self.hwi.joints.keys()),
+                         self.control_freq, make_action_dict)
+            except Exception as e:  # noqa: BLE001 - still turn the motors off
+                print("tuck on exit failed:", e)
+            self.hwi.turn_off()
+            print("motors off")
+        if self._battery_poweroff:
+            if self.web_server is not None:
+                self.web_server.stop()
+            self.battery_guard.poweroff()
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--onnx_model_path", type=str, required=True)
+    parser.add_argument(
+        "--duck_config_path",
+        type=str,
+        required=False,
+        default=f"{HOME_DIR}/duck_config.json",
+    )
+    # default None -> fall back to duck_config "action_scale", else 0.25 (see ctor).
+    parser.add_argument("-a", "--action_scale", type=float, default=None)
+    parser.add_argument("-p", type=int, default=30)
+    parser.add_argument("-i", type=int, default=0)
+    parser.add_argument("-d", type=int, default=0)
+    parser.add_argument("-c", "--control_freq", type=int, default=50)
+    parser.add_argument("--pitch_bias", type=float, default=0, help="deg")
+    parser.add_argument(
+        "--commands",
+        action="store_true",
+        default=True,
+        help="external commands, keyboard or gamepad. Launch control_server.py on host computer",
+    )
+    parser.add_argument(
+        "--save_obs",
+        type=str,
+        required=False,
+        default=False,
+        help="save the run's observations",
+    )
+    parser.add_argument(
+        "--replay_obs",
+        type=str,
+        required=False,
+        default=None,
+        help="replay the observations from a previous run (can be from the robot or from mujoco)",
+    )
+    parser.add_argument("--cutoff_frequency", type=float, default=None)
+
+    args = parser.parse_args()
+    pid = [args.p, args.i, args.d]
+
+    print("Done parsing args")
+    rl_walk = RLWalk(
+        args.onnx_model_path,
+        duck_config_path=args.duck_config_path,
+        action_scale=args.action_scale,
+        pid=pid,
+        control_freq=args.control_freq,
+        commands=args.commands,
+        pitch_bias=args.pitch_bias,
+        save_obs=args.save_obs,
+        replay_obs=args.replay_obs,
+        cutoff_frequency=args.cutoff_frequency,
+    )
+    print("Done instantiating RLWalk")
+    rl_walk.run()

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duck Build Tracker</title>
+<base href="/build/">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/" } }
+</script>
+</head>
+<body>
+<header>
+  <div class="title">
+    <h1>Open Duck Mini v2</h1>
+    <span id="save-state" class="muted"></span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Printed</div><div class="stat-value" id="stat-print"></div><div class="bar"><span id="bar-print"></span></div></div>
+    <div class="stat"><div class="stat-label">Bought</div><div class="stat-value" id="stat-buy"></div><div class="bar"><span id="bar-buy"></span></div></div>
+    <div class="stat"><div class="stat-label">Left to spend</div><div class="stat-value" id="stat-spend"></div><div class="stat-sub muted" id="stat-spend-sub"></div></div>
+  </div>
+  <nav>
+    <button data-tab="model">3D model</button>
+    <button data-tab="print">Print list</button>
+    <button data-tab="buy">Shopping list</button>
+    <button data-tab="docs">Docs</button>
+  </nav>
+</header>
+
+<main>
+  <section id="tab-model" class="tab">
+    <div class="viewer">
+      <div class="toolbar">
+        <div class="seg" id="view-mode">
+          <button data-mode="colour" class="on">Colours</button>
+          <button data-mode="progress">Progress</button>
+        </div>
+        <label class="check"><input type="checkbox" id="show-bought" checked> Bought parts</label>
+        <button id="reset-view" class="ghost">Reset view</button>
+        <button id="show-all" class="ghost" hidden>Show all parts</button>
+      </div>
+      <div id="canvas-wrap"><div id="loading">Loading model…</div><div id="hover-tip"></div>
+        <div id="part-pop" role="dialog" aria-label="Part" hidden><button class="pop-x" aria-label="Close">×</button><div class="pop-name"></div><div class="pop-sub"></div></div></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <aside class="side">
+      <div class="card" id="selection"><p class="muted">Click a part in the model to select it.</p></div>
+      <div class="card" id="layers"></div>
+      <div class="card">
+        <div class="card-head"><h2>Filament colours</h2><button id="add-colour" class="ghost">+ Add</button></div>
+        <div id="palette"></div>
+        <button id="designer-colours" class="ghost small">Reset to designer's colours</button>
+      </div>
+      <p class="muted small">Not in the CAD model (optional expression parts): eyes, bulb, flashlight, speaker parts — colour them from the Print list.</p>
+    </aside>
+  </section>
+
+  <section id="tab-print" class="tab">
+    <div class="list-tools">
+      <div class="seg" id="print-filter">
+        <button data-f="all" class="on">All</button><button data-f="todo">To print</button><button data-f="done">Done</button>
+      </div>
+      <div class="seg" id="print-group">
+        <button data-g="section" class="on">By section</button><button data-g="colour">By colour</button>
+      </div>
+      <span class="muted small">All PLA 15% infill, soles TPU 40% (official print guide).</span>
+    </div>
+    <div id="print-list"></div>
+  </section>
+
+  <section id="tab-buy" class="tab">
+    <div class="list-tools">
+      <div class="seg" id="buy-filter">
+        <button data-f="all" class="on">All</button><button data-f="need">Need</button><button data-f="ordered">Ordered</button><button data-f="have">Have</button>
+      </div>
+      <label class="check"><input type="checkbox" id="include-optional"> Include optional expression parts</label>
+    </div>
+    <div id="buy-list"></div>
+  </section>
+
+  <section id="tab-docs" class="tab">
+    <div class="docs-list">
+      <a class="card doc-card" href="docs/pinouts.html" target="_blank" rel="noopener">
+        <h2>Pinouts</h2>
+        <p class="muted">Pi header, IMU, foot switches, ear servos, eyes, speaker, mic, servo adapter, servo IDs, power.</p>
+      </a>
+      <a class="card doc-card" href="docs/battery_pack_wiring.pdf" target="_blank" rel="noopener">
+        <h2>Battery pack wiring</h2>
+        <p class="muted">Cells, BMS pads, switch, charger, XT30 and the robot-side connections. PDF, prints on one page.</p>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

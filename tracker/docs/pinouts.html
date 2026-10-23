@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duck Pinouts</title>
+<style>
+:root {
+  --bg: #f6f5f2; --panel: #fff; --text: #1f2328; --muted: #6b7078; --line: #e2e0db;
+  --accent: #d99a00; --accent-soft: #fbefcf; --warn: #c2621d; --warn-soft: #fbe6d6;
+  --p5v: #d01818; --p3v: #e07b00; --gnd: #1f2328; --gpio: #3b6fc4; --i2c: #8a3fb8; --i2s: #2f8f5b; --free: #c9c6bf;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16181b; --panel: #1f2226; --text: #e6e6e3; --muted: #9aa0a6; --line: #30343a;
+    --accent: #f0b429; --accent-soft: #3a3120; --warn: #f08a4b; --warn-soft: #3a2619;
+    --gnd: #e6e6e3; --gpio: #6d9be6; --i2c: #b77ee0; --i2s: #4cb782; --free: #4a4e55;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16181b; --panel: #1f2226; --text: #e6e6e3; --muted: #9aa0a6; --line: #30343a;
+  --accent: #f0b429; --accent-soft: #3a3120; --warn: #f08a4b; --warn-soft: #3a2619;
+  --gnd: #e6e6e3; --gpio: #6d9be6; --i2c: #b77ee0; --i2s: #4cb782; --free: #4a4e55;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+h2 { font-size: 18px; margin: 28px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h3 { font-size: 14px; margin: 16px 0 6px; }
+p { margin: 6px 0; }
+a { color: var(--gpio); }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.note { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 6px; padding: 8px 12px; margin: 10px 0; }
+.tip { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 6px; padding: 8px 12px; margin: 10px 0; }
+table { border-collapse: collapse; width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.pin { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+code { overflow-wrap: anywhere; }
+code, kbd { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
+.wire { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: -1px; margin-right: 4px; border: 1px solid #0003; }
+
+/* Pi header */
+.header-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 8px; align-items: center; }
+.hdr-row { display: contents; }
+.lab { font-size: 12px; padding: 2px 0; min-height: 22px; display: flex; align-items: center; gap: 6px; }
+.lab.l { justify-content: flex-end; text-align: right; }
+.lab .fn { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.lab .use { font-weight: 600; }
+.lab.unused .use { font-weight: 400; color: var(--muted); }
+.pins { display: grid; grid-template-columns: 26px 26px; gap: 3px; padding: 6px; background: #1d5c3a; border-radius: 6px; grid-row: 1 / span 20; grid-column: 2; }
+.lab.l { grid-column: 1; }
+.lab.r { grid-column: 3; }
+.pinb { width: 26px; height: 19px; border-radius: 4px; display: grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; background: var(--free); }
+.pinb.p5v { background: var(--p5v); } .pinb.p3v { background: var(--p3v); } .pinb.gnd { background: #111; }
+.pinb.gpio { background: var(--gpio); } .pinb.i2c { background: var(--i2c); } .pinb.i2s { background: var(--i2s); }
+.pinb.unused { opacity: .45; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 16px; font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; background: var(--c); }
+.board-edge { font-size: 11px; color: var(--muted); text-align: center; grid-column: 2; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 760px) {
+  .two { grid-template-columns: 1fr; }
+  .lab .fn { display: none; }
+}
+@media print {
+  :root { --bg: #fff; --panel: #fff; --text: #111; --muted: #555; --line: #ccc; color-scheme: light; }
+  body { font-size: 11px; }
+  main { max-width: none; padding: 0; }
+  h2 { break-after: avoid; }
+  table, .card, .note, .tip, .two > div { break-inside: avoid; }
+  h2 { margin-top: 16px; }
+  .noprint { display: none; }
+  .pinb, .wire, .legend span::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pins { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <div>
+    <h1>Open Duck Mini v2: pinouts</h1>
+    <p class="muted">Every connection to the Raspberry Pi Zero 2 W, the servo bus and the power system, for this build.</p>
+  </div>
+  <p class="noprint small"><a href="../">← Tracker</a> · <a href="battery_pack_wiring.pdf">Battery wiring sheet (PDF)</a> · <a href="#" onclick="print();return false">Print</a></p>
+</div>
+
+<div class="note"><b>Left and right are the duck's own sides.</b> Facing the duck, its left is on your right.
+Pin numbers are <b>physical header pins</b> (1–40), not GPIO numbers. Pin 1 is the square pad, at the end nearest the microSD slot.</div>
+
+<!-- ============================================================ PI HEADER -->
+<h2>Raspberry Pi 40-pin header</h2>
+<div class="card">
+  <div class="header-wrap" id="header"></div>
+  <div class="legend">
+    <span style="--c: var(--p5v)">5 V</span><span style="--c: var(--p3v)">3.3 V</span><span style="--c: #111">Ground</span>
+    <span style="--c: var(--i2c)">I2C (IMU)</span><span style="--c: var(--i2s)">I2S (speaker / mic)</span><span style="--c: var(--gpio)">GPIO / PWM</span>
+    <span style="--c: var(--free)">Unused</span>
+  </div>
+</div>
+<p class="small muted">All ground pins (6, 9, 14, 20, 25, 30, 34, 39) are connected together on the board, so any of them works. Grounds are spread out here so no pin gets more than one or two wires.
+Both 5 V pins (2, 4) are the same rail, fed by the UBEC.</p>
+
+<!-- ============================================================ BY DEVICE -->
+<h2>By device</h2>
+
+<div class="two">
+<div>
+<h3>Power in: UBEC (5 V for the Pi)</h3>
+<table>
+  <tr><th>UBEC output</th><th>Pi pin</th><th></th></tr>
+  <tr><td><span class="wire" style="background:#d01818"></span>+5 V (red)</td><td class="pin">4</td><td>5 V</td></tr>
+  <tr><td><span class="wire" style="background:#111"></span>GND (black)</td><td class="pin">6</td><td>GND</td></tr>
+</table>
+<p class="small muted">Set the UBEC jumper to <b>5.0 V</b>. Its input comes from the battery after the switch. The Pi is powered through these header pins, so the Pi's <b>PWR IN</b> micro-USB is left empty.</p>
+</div>
+
+<div>
+<h3>IMU: BNO055</h3>
+<table>
+  <tr><th>IMU pin</th><th>Pi pin</th><th></th></tr>
+  <tr><td>VIN</td><td class="pin">1</td><td>3.3 V</td></tr>
+  <tr><td>GND</td><td class="pin">9</td><td>GND</td></tr>
+  <tr><td>SDA</td><td class="pin">3</td><td>GPIO 2 (I2C SDA)</td></tr>
+  <tr><td>SCL</td><td class="pin">5</td><td>GPIO 3 (I2C SCL)</td></tr>
+  <tr><td>ADR</td><td class="pin">—</td><td>10 kΩ to GND on the IMU board → address <b>0x28</b></td></tr>
+  <tr><td>3VO, RST, INT, PS0/1</td><td class="pin">—</td><td>not connected</td></tr>
+</table>
+<p class="small muted">The I2C bus runs at 50 kHz (<code>dtparam=i2c_arm_baudrate=50000</code> in <code>/boot/firmware/config.txt</code>) because of the Pi's clock-stretching bug with this chip.</p>
+</div>
+</div>
+
+<div class="two">
+<div>
+<h3>Foot switches</h3>
+<table>
+  <tr><th>Switch</th><th>Pi pin</th><th></th></tr>
+  <tr><td>Left foot</td><td class="pin">15</td><td>GPIO 22</td></tr>
+  <tr><td>Right foot</td><td class="pin">13</td><td>GPIO 27</td></tr>
+  <tr><td>Common (both switches)</td><td class="pin">14</td><td>GND</td></tr>
+</table>
+<p class="small muted">The switch connects the pin to GND when the foot touches down. The Pi's internal pull-up holds it high otherwise, so no resistor is needed. Each foot has two switches: wire them <b>in parallel</b> (either one pressed counts as contact). Use the switch's <b>COM</b> and <b>NO</b> (normally open) tabs.</p>
+</div>
+
+<div>
+<h3>Ear servos (9 g micro servos)</h3>
+<table>
+  <tr><th>Servo wire</th><th>Left ear</th><th>Right ear</th></tr>
+  <tr><td><span class="wire" style="background:#f08a00"></span>Signal (orange / yellow)</td><td class="pin">33 <span class="muted small">GPIO 13</span></td><td class="pin">32 <span class="muted small">GPIO 12</span></td></tr>
+  <tr><td><span class="wire" style="background:#d01818"></span>+5 V (red)</td><td class="pin">2</td><td class="pin">2 <span class="muted small">(shared)</span></td></tr>
+  <tr><td><span class="wire" style="background:#6b3d1f"></span>GND (brown / black)</td><td class="pin">34</td><td class="pin">30</td></tr>
+</table>
+<p class="small muted">The signal pins must be GPIO 12 and 13: they are the Pi's hardware PWM outputs, which drive the ears without jitter. Splice the two red wires into one lead for pin 2, or use pin 4 alongside the UBEC.</p>
+</div>
+</div>
+
+<div class="note"><b>The official assembly guide's table swaps left and right for the ears and the eyes.</b>
+This sheet follows the code that actually runs on the duck. Both the official runtime and the version on your duck use: left ear = GPIO 13, right ear = GPIO 12, left eye = GPIO 24, right eye = GPIO 23.
+If an ear moves the wrong way once it's running, swap its two signal wires.</div>
+
+<div class="two">
+<div>
+<h3>Eye LEDs and projector (optional)</h3>
+<table>
+  <tr><th>LED</th><th>Pi pin</th><th></th></tr>
+  <tr><td>Left eye + (anode)</td><td class="pin">18</td><td>GPIO 24</td></tr>
+  <tr><td>Right eye + (anode)</td><td class="pin">16</td><td>GPIO 23</td></tr>
+  <tr><td>Projector + (anode)</td><td class="pin">22</td><td>GPIO 25</td></tr>
+  <tr><td>All three − (cathodes, common)</td><td class="pin">20</td><td>GND</td></tr>
+</table>
+<p class="small muted">A GPIO pin gives 3.3 V and only about 16 mA. Put a <b>series resistor</b> (about 100 Ω) in each LED's lead unless the LED has one built in. Without it, the LED can damage the pin.</p>
+</div>
+
+<div>
+<h3>Speaker amplifier: MAX98357A (optional)</h3>
+<table>
+  <tr><th>Amp pin</th><th>Pi pin</th><th></th></tr>
+  <tr><td>VIN</td><td class="pin">2</td><td>5 V (shared)</td></tr>
+  <tr><td>GND</td><td class="pin">39</td><td>GND</td></tr>
+  <tr><td>BCLK</td><td class="pin">12</td><td>GPIO 18 (I2S clock)</td></tr>
+  <tr><td>LRC</td><td class="pin">35</td><td>GPIO 19 (I2S word select)</td></tr>
+  <tr><td>DIN</td><td class="pin">40</td><td>GPIO 21 (I2S data out)</td></tr>
+  <tr><td>GAIN, SD</td><td class="pin">—</td><td>not connected</td></tr>
+</table>
+<p class="small muted">The speaker connects to the amp's + and − screw terminal, not to the Pi.</p>
+</div>
+</div>
+
+<div class="two">
+<div>
+<h3>I2S microphone (optional)</h3>
+<table>
+  <tr><th>Mic pin</th><th>Pi pin</th><th></th></tr>
+  <tr><td>3V</td><td class="pin">17</td><td>3.3 V</td></tr>
+  <tr><td>GND</td><td class="pin">25</td><td>GND</td></tr>
+  <tr><td>BCLK</td><td class="pin">12</td><td>GPIO 18 (shared with the amp)</td></tr>
+  <tr><td>LRCL / WS</td><td class="pin">35</td><td>GPIO 19 (shared with the amp)</td></tr>
+  <tr><td>DOUT</td><td class="pin">38</td><td>GPIO 20 (I2S data in)</td></tr>
+  <tr><td>SEL</td><td class="pin">—</td><td>to GND (left channel)</td></tr>
+</table>
+<p class="small muted">The official guide doesn't give microphone pins. This is the standard Pi wiring for an I2S MEMS mic, which shares the clock lines with the amplifier.</p>
+</div>
+
+<div>
+<h3>Camera (optional)</h3>
+<p>Ribbon cable into the Pi's <b>CSI camera connector</b>. A Pi Zero needs the narrow 22-pin Zero cable. Contacts face the board on the Pi end.</p>
+<h3>Servo adapter USB</h3>
+<p>Adapter USB-C → the Pi's micro-USB port marked <b>USB</b> (the one nearer the middle, not PWR IN). Plug it in <b>before</b> powering on, or it may not show up as <code>/dev/ttyACM0</code>.</p>
+</div>
+</div>
+
+<!-- ============================================================ SERVO BUS -->
+<h2>Servo bus: Waveshare Bus Servo Adapter (A)</h2>
+<div class="two">
+<div>
+<table>
+  <tr><th>Adapter connection</th><th>Goes to</th></tr>
+  <tr><td>Screw terminal +</td><td>Battery + (XT30, after the switch), 22 AWG with a ferrule</td></tr>
+  <tr><td>Screw terminal −</td><td>Battery −, 22 AWG with a ferrule</td></tr>
+  <tr><td>Barrel jack</td><td>Not used (no reverse-polarity protection on that input)</td></tr>
+  <tr><td>USB-C</td><td>Pi micro-USB <b>USB</b> port</td></tr>
+  <tr><td>Jumper</td><td>Position <b>B</b> (USB control)</td></tr>
+  <tr><td>Servo connectors (×2)</td><td>Servo chains. Both are on the same bus, so it doesn't matter which chain goes in which socket.</td></tr>
+</table>
+<p class="small muted">The screw terminal input has reverse-polarity protection; the barrel jack doesn't. The servo sockets carry battery voltage directly (rated 6 A).</p>
+</div>
+<div>
+<table>
+  <tr><th>Joint</th><th>Right</th><th>Left</th></tr>
+  <tr><td>Hip yaw</td><td class="pin">10</td><td class="pin">20</td></tr>
+  <tr><td>Hip roll</td><td class="pin">11</td><td class="pin">21</td></tr>
+  <tr><td>Hip pitch</td><td class="pin">12</td><td class="pin">22</td></tr>
+  <tr><td>Knee</td><td class="pin">13</td><td class="pin">23</td></tr>
+  <tr><td>Ankle</td><td class="pin">14</td><td class="pin">24</td></tr>
+</table>
+<table style="margin-top:10px">
+  <tr><th>Neck and head</th><th>ID</th></tr>
+  <tr><td>Neck pitch</td><td class="pin">30</td></tr>
+  <tr><td>Head pitch</td><td class="pin">31</td></tr>
+  <tr><td>Head yaw <span class="muted small">(±20° soft limit planned, harness)</span></td><td class="pin">32</td></tr>
+  <tr><td>Head roll</td><td class="pin">33</td></tr>
+</table>
+<p class="small muted">Servo IDs set by <code>setup_all_servos.py</code>, matching the runtime's joint names.</p>
+</div>
+</div>
+
+<!-- ============================================================ POWER -->
+<h2>Power</h2>
+<table>
+  <tr><th>From</th><th>To</th><th>Notes</th></tr>
+  <tr><td>2S 18650 pack → BMS</td><td>BMS pads 0V (B−), 4.2V (midpoint), 8.4V (B+)</td><td>Cells in the holder; bridge = midpoint</td></tr>
+  <tr><td>BMS − (P−)</td><td>14 A toggle switch → XT30 −</td><td>Load and charger negative go to <b>−</b>, never to 0V</td></tr>
+  <tr><td>BMS + (P+)</td><td>XT30 +</td><td>22 AWG main leads</td></tr>
+  <tr><td>USB-C charger</td><td>BMS + and −, on the battery side of the switch</td><td>Charges with the switch off</td></tr>
+  <tr><td>XT30 (robot side)</td><td>Servo adapter screw terminals, and UBEC input</td><td>Full pack voltage, 6.0–8.4 V</td></tr>
+  <tr><td>UBEC output (5.0 V)</td><td>Pi pins 4 (+) and 6 (−)</td><td>Powers the Pi and everything on its header</td></tr>
+</table>
+<p class="small muted">Full details and checklists: <a href="battery_pack_wiring.pdf">battery pack wiring sheet</a>.</p>
+
+<!-- ============================================================ CONFIG -->
+<h2>Software switches (<code>~/duck_config.json</code>)</h2>
+<table>
+  <tr><th>Setting</th><th>Set it to</th></tr>
+  <tr><td><code>imu_upside_down</code></td><td><code>true</code> if the IMU chip's +X points right, +Y back, +Z down. <code>false</code> if +X left, +Y back, +Z up. Check with <code>imu_axes_check.py</code>.</td></tr>
+  <tr><td><code>expression_features.antennas</code></td><td><code>true</code> once the ear servos are wired</td></tr>
+  <tr><td><code>expression_features.eyes</code> / <code>projector</code> / <code>speaker</code> / <code>microphone</code> / <code>camera</code></td><td><code>true</code> for each one fitted</td></tr>
+  <tr><td><code>joints_offsets</code></td><td>Measured per servo with <code>find_soft_offsets.py</code> (each servo sits a few degrees off)</td></tr>
+</table>
+<p class="small muted">Sources: the code on the duck (Open Duck Supercharged v2.5 runtime: <code>feet_contacts.py</code>, <code>antennas.py</code>, <code>eyes.py</code>, <code>projector.py</code>), the official assembly guide's pin table, and this build's own wiring decisions.</p>
+</main>
+
+<script>
+// [pin, function, class, what it's used for (empty = unused)]
+const PINS = [
+  [1, '3.3 V', 'p3v', 'IMU VIN'],            [2, '5 V', 'p5v', 'Ears + · amp VIN'],
+  [3, 'GPIO 2 · SDA', 'i2c', 'IMU SDA'],     [4, '5 V', 'p5v', 'UBEC +5 V in'],
+  [5, 'GPIO 3 · SCL', 'i2c', 'IMU SCL'],     [6, 'GND', 'gnd', 'UBEC GND'],
+  [7, 'GPIO 4', 'gpio', ''],                 [8, 'GPIO 14 · TX', 'gpio', ''],
+  [9, 'GND', 'gnd', 'IMU GND'],              [10, 'GPIO 15 · RX', 'gpio', ''],
+  [11, 'GPIO 17', 'gpio', ''],               [12, 'GPIO 18 · PCM CLK', 'i2s', 'Amp BCLK (mic BCLK)'],
+  [13, 'GPIO 27', 'gpio', 'Right foot switch'], [14, 'GND', 'gnd', 'Foot switches common'],
+  [15, 'GPIO 22', 'gpio', 'Left foot switch'],  [16, 'GPIO 23', 'gpio', 'Right eye LED +'],
+  [17, '3.3 V', 'p3v', 'Mic 3V (optional)'], [18, 'GPIO 24', 'gpio', 'Left eye LED +'],
+  [19, 'GPIO 10', 'gpio', ''],               [20, 'GND', 'gnd', 'Eye + projector LED −'],
+  [21, 'GPIO 9', 'gpio', ''],                [22, 'GPIO 25', 'gpio', 'Projector LED +'],
+  [23, 'GPIO 11', 'gpio', ''],               [24, 'GPIO 8', 'gpio', ''],
+  [25, 'GND', 'gnd', 'Mic GND (optional)'],  [26, 'GPIO 7', 'gpio', ''],
+  [27, 'ID_SD', 'gpio', ''],                 [28, 'ID_SC', 'gpio', ''],
+  [29, 'GPIO 5', 'gpio', ''],                [30, 'GND', 'gnd', 'Right ear GND'],
+  [31, 'GPIO 6', 'gpio', ''],                [32, 'GPIO 12 · PWM0', 'gpio', 'Right ear signal'],
+  [33, 'GPIO 13 · PWM1', 'gpio', 'Left ear signal'], [34, 'GND', 'gnd', 'Left ear GND'],
+  [35, 'GPIO 19 · PCM FS', 'i2s', 'Amp LRC (mic LRCL)'], [36, 'GPIO 16', 'gpio', ''],
+  [37, 'GPIO 26', 'gpio', ''],               [38, 'GPIO 20 · PCM DIN', 'i2s', 'Mic DOUT (optional)'],
+  [39, 'GND', 'gnd', 'Amp GND'],             [40, 'GPIO 21 · PCM DOUT', 'i2s', 'Amp DIN'],
+];
+const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+const h = document.getElementById('header');
+let pins = '', labels = '';
+for (let row = 0; row < 20; row++) {
+  const [lp, lf, lc, lu] = PINS[row * 2], [rp, rf, rc, ru] = PINS[row * 2 + 1];
+  labels += `<div class="lab l${lu ? '' : ' unused'}" style="grid-row:${row + 1}"><span class="use">${esc(lu || '—')}</span><span class="fn">${esc(lf)}</span></div>`;
+  labels += `<div class="lab r${ru ? '' : ' unused'}" style="grid-row:${row + 1}"><span class="fn">${esc(rf)}</span><span class="use">${esc(ru || '—')}</span></div>`;
+  pins += `<div class="pinb ${lc}${lu ? '' : ' unused'}" title="${esc(lf)}">${lp}</div><div class="pinb ${rc}${ru ? '' : ' unused'}" title="${esc(rf)}">${rp}</div>`;
+}
+h.innerHTML = labels + `<div class="pins">${pins}</div>`;
+</script>
+</body>
+</html>

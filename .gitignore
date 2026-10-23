@@ -1,0 +1,14 @@
+# environments and upstream checkouts (reproducible, huge)
+sim/.venv/
+sim/train_pg/
+official_repo/
+sim/Open_Duck_Playground/
+__pycache__/
+*.pyc
+# training outputs and media
+*.mp4
+*.pkl
+*.npz
+walk_recordings/
+tracker/data/progress.json.bak
+.DS_Store

@@ -1,0 +1,68 @@
+{
+  "items": [
+    {
+      "ITEM": "Raspberry Pi Zero 2 W (SBC)",
+      "qty": 1,
+      "link": "https://www.pishop.ca/product/raspberry-pi-zero-2-w/",
+      "CAD_price": 21.95,
+      "store": "PiShop.ca (Toronto, ships Canada-wide)",
+      "caveat": "No markup - official reseller, in stock, ships ~1-2 days from Canada. Buy the -with-header variant if you want to avoid soldering."
+    },
+    {
+      "ITEM": "microSD card 32GB (for Pi)",
+      "qty": 1,
+      "link": "https://www.amazon.ca/SanDisk-Ultra%C2%AE-microSDHC-120MB-Class/dp/B08L5HMJVW",
+      "CAD_price": 29.82,
+      "store": "Amazon.ca",
+      "caveat": "This exact ASIN is an international/US import (~$30). Any A1/A2 UHS-I 32GB card works; cheaper local-brand 32GB cards run ~$10-15. 16GB is enough."
+    },
+    {
+      "ITEM": "Waveshare Serial Bus Servo Adapter (Adapter A / BUS servo adapter)",
+      "qty": 1,
+      "link": "https://www.amazon.ca/Waveshare-Integrates-Control-Applicable-Integrate/dp/B0CJ6TP3TP",
+      "CAD_price": 16.99,
+      "store": "Amazon.ca (sold by Waveshare, Amazon-fulfilled, in stock)",
+      "caveat": "This is the official 'Adapter A' board that ties the STS3215/FEETECH bus to the Pi over USB/UART. Amazon.ca = ~$17, Prime/free. OE on waveshare.com is ~US$4.99 but ships from China (~$7 + 2-4 wks)."
+    },
+    {
+      "ITEM": "BNO055 9-DOF absolute orientation IMU",
+      "qty": 1,
+      "link": "https://www.pishop.ca/product/adafruit-9-dof-absolute-orientation-imu-fusion-breakout-bno055/",
+      "CAD_price": 53.95,
+      "store": "PiShop.ca (genuine Adafruit board, in stock)",
+      "caveat": "Genuine Adafruit part. Adafruit.com direct is US$34.95 (~C$48)+shipping. Budget clone option: AliExpress ~US$13 (~C$18) but risky (rocky firmware/solder quality, may need rework)."
+    },
+    {
+      "ITEM": "MAX98357A I2S digital audio amplifier module",
+      "qty": 1,
+      "link": "https://www.amazon.ca/MAX98357-MAX98357A-Decoding-Amplifier-Electronic/dp/B0H27L8SHZ",
+      "CAD_price": 8.59,
+      "store": "Amazon.ca (in stock)",
+      "caveat": "Generic clone board - fine for a 3W I2S speaker. 'Small chip' option on same listing is C$7.59."
+    },
+    {
+      "ITEM": "Raspberry Pi Camera Module v2 (optional)",
+      "qty": 1,
+      "link": "https://www.amazon.ca/Raspberry-Pi-Camera-Module-Megapixel/dp/B01ER2SKFS",
+      "CAD_price": 35.42,
+      "store": "Amazon.ca (sold by PiShop ca, Amazon-fulfilled, free delivery)",
+      "caveat": "Genuine RPi v2 8MP. Optional for the Duck - usually omitted unless you want vision."
+    },
+    {
+      "ITEM": "I2S microphone (INMP441) (optional)",
+      "qty": 1,
+      "link": "https://www.amazon.ca/Microphone-Supports-Connection-Sensitivity-Consumption/dp/B0H4T7JS8C",
+      "CAD_price": 6.98,
+      "store": "Amazon.ca (in stock)",
+      "caveat": "Generic INMP441 MEMS module. Free but slow delivery (Oct 7-19). DAOKI brand runs ~C$25 if you want same-week."
+    },
+    {
+      "ITEM": "Small speaker ~1.5-2in, 4 ohm/3W",
+      "qty": 1,
+      "link": "https://www.amazon.ca/uxcell-JST-PH2-0-Interface-Electronic-Advertising/dp/B0D9QXMKWG",
+      "CAD_price": 11.09,
+      "store": "Amazon.ca (in stock, Amazon-fulfilled)",
+      "caveat": "uxcell 3W 4 ohm micro speaker w/ JST-PH2.0. Amplifier is 4-ohm rated, so 4-ohm driver is the right match."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+--- xbox_controller.orig.py	2026-10-12 22:22:01.930116423 -0400
++++ xbox_controller.py	2026-10-12 22:22:13.100734061 -0400
+@@ -60,11 +60,15 @@
+ 
+     While the web is `active` its axes OVERRIDE the pad's (so you can drive from
+     the phone); otherwise the pad wins. Triggers take the max of both (either
+-    source can raise an antenna). Both sources use the same normalized
+-    convention (up/right = +). Returns (l_x, l_y, r_x, r_y, left_trig, right_trig).
++    source can raise an antenna). Y axes are up = + on both; X is left = +
++    on the pad, so the web X axes (right = +) are negated here.
++    Returns (l_x, l_y, r_x, r_y, left_trig, right_trig).
+     """
+     if web_active:
+-        l_x, l_y, r_x, r_y = web_axes
++        # The web sticks report right = +, but the gamepad path negates its X axes
++        # (so left = +), which is what the drive mapping expects: +lin_vel_y = step
++        # left, +ang_vel = turn left. Flip the web X axes to match the pad.
++        l_x, l_y, r_x, r_y = -web_axes[0], web_axes[1], -web_axes[2], web_axes[3]
+     else:
+         l_x, l_y, r_x, r_y = pad_axes
+     lt = max(pad_trig[0], web_trig[0])

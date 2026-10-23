@@ -1,0 +1,400 @@
+{
+ "version": 1,
+ "print": {
+  "foot_top": {
+   "done": 2,
+   "printing": 0,
+   "notes": "Plate: foot_top + foot_side, ~1h40m"
+  },
+  "foot_side": {
+   "done": 2,
+   "printing": 0,
+   "notes": "Printed together with foot_top"
+  },
+  "foot_bottom_pla": {
+   "done": 2,
+   "printing": 0,
+   "notes": ""
+  },
+  "foot_bottom_tpu": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "knee_to_ankle_left_sheet": {
+   "done": 4,
+   "printing": 0,
+   "notes": ""
+  },
+  "knee_to_ankle_right_sheet": {
+   "done": 4,
+   "printing": 0,
+   "notes": ""
+  },
+  "leg_spacer": {
+   "done": 4,
+   "printing": 0,
+   "notes": ""
+  },
+  "left_cache": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "right_cache": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "left_roll_to_pitch": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "right_roll_to_pitch": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "roll_motor_bottom": {
+   "done": 2,
+   "printing": 0,
+   "notes": ""
+  },
+  "roll_motor_top": {
+   "done": 2,
+   "printing": 0,
+   "notes": ""
+  },
+  "trunk_bottom": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "trunk_top": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "body_front": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "body_middle_bottom": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "body_middle_top": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "body_back": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "battery_pack_lid": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "neck_left_sheet": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "neck_right_sheet": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "head_pitch_to_yaw": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "head_yaw_to_roll": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "head_roll_mount": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "head": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "head_bot_sheet": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "left_antenna_holder": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "right_antenna_holder": {
+   "done": 1,
+   "printing": 0,
+   "notes": ""
+  },
+  "left_eye": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "right_eye": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "bulb": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "flash_light_module": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "flash_reflector_interface": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "speaker_interface": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  },
+  "speaker_stand": {
+   "done": 0,
+   "printing": 0,
+   "notes": ""
+  }
+ },
+ "buy": {
+  "pla": {
+   "status": "have",
+   "notes": ""
+  },
+  "servo_sts3215": {
+   "status": "have",
+   "notes": ""
+  },
+  "servo_adapter": {
+   "status": "have",
+   "notes": ""
+  },
+  "pi_zero_2w": {
+   "status": "have",
+   "notes": ""
+  },
+  "microsd": {
+   "status": "have",
+   "notes": ""
+  },
+  "imu_bno055": {
+   "status": "have",
+   "notes": ""
+  },
+  "foot_switch": {
+   "status": "have",
+   "notes": ""
+  },
+  "servo_9g": {
+   "status": "have",
+   "notes": ""
+  },
+  "cell_18650": {
+   "status": "have",
+   "notes": ""
+  },
+  "holder_2s": {
+   "status": "have",
+   "notes": ""
+  },
+  "bms_2s": {
+   "status": "have",
+   "notes": ""
+  },
+  "ubec_5v": {
+   "status": "have",
+   "notes": ""
+  },
+  "power_switch": {
+   "status": "have",
+   "notes": ""
+  },
+  "usbc_charger": {
+   "status": "have",
+   "notes": ""
+  },
+  "barrel_jack": {
+   "status": "have",
+   "notes": ""
+  },
+  "xt30": {
+   "status": "have",
+   "notes": ""
+  },
+  "bearing_6804": {
+   "status": "have",
+   "notes": ""
+  },
+  "cable_sleeve": {
+   "status": "have",
+   "notes": ""
+  },
+  "usb_15cm": {
+   "status": "have",
+   "notes": ""
+  },
+  "usb_50cm": {
+   "status": "have",
+   "notes": ""
+  },
+  "m3_inserts": {
+   "status": "have",
+   "notes": ""
+  },
+  "m3_screws": {
+   "status": "have",
+   "notes": ""
+  },
+  "loctite_243": {
+   "status": "have",
+   "notes": ""
+  },
+  "wire": {
+   "status": "have",
+   "notes": ""
+  },
+  "tpu": {
+   "status": "have",
+   "notes": ""
+  },
+  "reflector": {
+   "status": "need",
+   "notes": ""
+  },
+  "speaker": {
+   "status": "need",
+   "notes": ""
+  },
+  "leds": {
+   "status": "need",
+   "notes": ""
+  },
+  "mic": {
+   "status": "need",
+   "notes": ""
+  },
+  "eye_diffusers": {
+   "status": "need",
+   "notes": ""
+  },
+  "amp": {
+   "status": "need",
+   "notes": ""
+  },
+  "camera": {
+   "status": "need",
+   "notes": ""
+  }
+ },
+ "ui": {
+  "viewMode": "colour",
+  "buyFilter": "all",
+  "showBought": true,
+  "printFilter": "all",
+  "printGroup": "colour",
+  "layers": {
+   "print:body_middle_top": "hidden",
+   "print:body_middle_bottom": "hidden",
+   "print:body_front": "hidden"
+  }
+ },
+ "palette": [
+  {
+   "id": "white",
+   "name": "White PLA",
+   "hex": "#eaeaea"
+  },
+  {
+   "id": "yellow",
+   "name": "Yellow PLA",
+   "hex": "#fab601"
+  },
+  {
+   "id": "orange",
+   "name": "Orange PLA",
+   "hex": "#e8922a"
+  },
+  {
+   "id": "charcoal",
+   "name": "Charcoal PLA",
+   "hex": "#393838"
+  },
+  {
+   "id": "grey",
+   "name": "Grey PLA",
+   "hex": "#a5a5a5"
+  },
+  {
+   "id": "blue",
+   "name": "Blue PLA",
+   "hex": "#3b61b4"
+  },
+  {
+   "id": "black_tpu",
+   "name": "Black TPU",
+   "hex": "#4e4c47"
+  },
+  {
+   "id": "cmuokj1t4",
+   "name": "Purple",
+   "hex": "#813d9c"
+  }
+ ],
+ "colours": {
+  "body_back": "white",
+  "body_middle_bottom": "blue",
+  "body_middle_top": "blue",
+  "head": "white",
+  "left_cache": "white",
+  "right_cache": "white",
+  "roll_motor_top": "blue",
+  "foot_side": "charcoal",
+  "foot_top": "charcoal",
+  "left_antenna_holder": "blue",
+  "right_antenna_holder": "blue",
+  "left_roll_to_pitch": "blue",
+  "right_roll_to_pitch": "blue",
+  "knee_to_ankle_left_sheet": "blue",
+  "knee_to_ankle_right_sheet": "blue",
+  "neck_left_sheet": "blue",
+  "neck_right_sheet": "blue",
+  "trunk_bottom": "charcoal",
+  "trunk_top": "charcoal",
+  "head_pitch_to_yaw": "blue",
+  "head_bot_sheet": "charcoal",
+  "head_roll_mount": "charcoal",
+  "leg_spacer": "white",
+  "roll_motor_bottom": "blue",
+  "head_yaw_to_roll": "blue",
+  "battery_pack_lid": "blue",
+  "foot_bottom_pla": "black_tpu",
+  "foot_bottom_tpu": "black_tpu"
+ },
+ "updated": "2026-10-12T01:33:34.287Z"
+}

@@ -1,0 +1,68 @@
+category,part,action,qty,detail,canadian_link,est_cad_each,est_cad_total,official_eur,notes
+Print,Foot Top,Print,2,PLA 15%,,,,,STL in /home/hermes/open_duck_mini/SHARE_THIS
+Print,Foot Side,Print,2,PLA 15%,,,,,STL in bundle
+Print,Foot Bottom PLA,Print,2,PLA 15%,,,,,STL in bundle
+Print,Foot Bottom TPU (soles),Print,2,TPU 40%,,,,,STL in bundle
+Print,Knee-to-Ankle Sheet L,Print,4,PLA 15%,,,,,STL in bundle
+Print,Knee-to-Ankle Sheet R,Print,4,PLA 15%,,,,,STL in bundle
+Print,Leg Spacer,Print,4,PLA 15%,,,,,STL in bundle
+Print,Roll-to-Pitch L,Print,1,PLA 15%,,,,,STL in bundle
+Print,Roll-to-Pitch R,Print,1,PLA 15%,,,,,STL in bundle
+Print,Roll Motor Bottom,Print,2,PLA 15%,,,,,STL in bundle
+Print,Roll Motor Top,Print,2,PLA 15%,,,,,STL in bundle
+Print,Trunk Bottom,Print,1,PLA 15%,,,,,STL in bundle
+Print,Trunk Top,Print,1,PLA 15%,,,,,STL in bundle
+Print,Neck Sheet L,Print,1,PLA 15%,,,,,STL in bundle
+Print,Neck Sheet R,Print,1,PLA 15%,,,,,STL in bundle
+Print,Head Pitch-to-Yaw,Print,1,PLA 15%,,,,,STL in bundle
+Print,Head Yaw-to-Roll,Print,1,PLA 15%,,,,,STL in bundle
+Print,Head Roll Mount,Print,1,PLA 15%,,,,,STL in bundle
+Print,Head,Print,1,PLA 15%,,,,,STL in bundle
+Print,Head Bottom Sheet,Print,1,PLA 15%,,,,,STL in bundle
+Print,Antenna Holder L,Print,1,PLA 15%,,,,,STL in bundle
+Print,Antenna Holder R,Print,1,PLA 15%,,,,,STL in bundle
+Print,Cache L,Print,1,PLA 15%,,,,,STL in bundle
+Print,Cache R,Print,1,PLA 15%,,,,,STL in bundle
+Print,Body Front,Print,1,PLA 15%,,,,,STL in bundle
+Print,Body Middle Top,Print,1,PLA 15%,,,,,STL in bundle
+Print,Body Middle Bottom,Print,1,PLA 15%,,,,,STL in bundle
+Print,Body Back,Print,1,PLA 15%,,,,,STL in bundle
+Print,Battery Pack Lid,Print,1,PLA 15%,,,,,STL in bundle
+Print,Bulb,Print,1,PLA 15%,,,,,STL in bundle
+Print,Flashlight Module,Print,1,PLA 15%,,,,,STL in bundle
+Print,Flash Reflector Interface,Print,1,PLA 15%,,,,,STL in bundle
+Print,Eye L,Print,1,PLA 15%,,,,,STL in bundle
+Print,Eye R,Print,1,PLA 15%,,,,,STL in bundle
+Print,Speaker Interface,Print,1,PLA 15%,,,,,STL in bundle
+Print,Speaker Stand,Print,1,PLA 15%,,,,,STL in bundle
+Drivetrain,Feetech STS3215 7.4V servo (19kg),Buy,14,CRITICAL: must be 7.4V not 6V/12V,https://www.aliexpress.com/item/1005009612814872.html,32.72,392.67,14,12-pc pack $278.61 USD free ship; +2 singles from item/1005009390989235 (6-pc). China ship ~2-4wk
+Drivetrain,9g SG90 micro servo (antennas),Buy,2,,https://www.amazon.ca/ALMOCN-Helicopter-Airplane-Controls-Project/dp/B09CGYX76S/,3.25,12.99,3.33,4-pc pack Prime ~free next-day
+Brain,Raspberry Pi Zero 2 W,Buy,1,,https://www.pishop.ca/product/raspberry-pi-zero-2-w/,21.95,21.95,26.08,PiShop.ca legit; avoid marked-up Amazon
+Brain,microSD 32GB (SanDisk),Buy,1,,https://www.amazon.ca/raspberry-pi-micro-sd/s?k=raspberry+pi+micro+sd,15,15,10,Genuine SanDisk class10
+Brain,Waveshare BUS Servo Adapter A,Buy,1,,https://www.waveshare.com/bus-servo-adapter-a.htm,19,19,5,Also on Amazon.ca B0CJ6TP3TP ~$25
+Brain,BNO055 9-DOF IMU,Buy,1,real vs ~$18 clone,https://www.pishop.ca/product/adafruit-9-dof-absolute-orientation-imu-fusion-breakout-bno055/,53.95,53.95,40,Clone GY-BNO055 ~$18 Ali shorter life
+Brain,MAX98357A I2S amp,Buy,1,,https://www.amazon.ca/MAX98357-MAX98357A-Amplifier-Decoding-Replacement/dp/B0GXTLZ1HS,4.79,4.79,5,~$10/3.5W class-D
+Brain,speaker 1.5-2in 4-8ohm,Buy,1,,https://www.amazon.ca/speaker-module/s?k=speaker+module,12,12,6,Match 3W amp
+Brain,[opt] Pi Camera v2,Buy,1,needs mini-CSI ribbon + Zero cable,https://www.amazon.ca/Raspberry-Pi-Camera-Module-Megapixel/dp/B01ER2SKFS,35.42,35.42,5,Optional expression feature
+Brain,[opt] INMP441 I2S mic,Buy,1,,https://www.amazon.ca/inmp441-microphone-module/s?k=inmp441+microphone+module,16.4,16.4,15,Optional expression feature
+Power,18650 cell (Molicel P28A 35A) x2,Buy,2,genuine > fake,https://mpandw.ca/products/molicell-p28a-18650-battery-cell-set-of-6-with-holders,8.67,17.34,5,Set of 6 w/holders $52 CA battery shop. No-solder 2S LIONPACK $39.99 Great Hobbies
+Power,2S 18650 holder,Buy,1,comes with mpandw cells if bought,https://www.amazon.ca/ACEIRMC-Battery-Plastic-Storage-Connect/dp/B0986Y597G,2.2,10.99,4.99,5pk $10.99
+Power,2S BMS protection,Buy,1,,https://www.amazon.ca/JAGTRADE-Li-ion-Lithium-Battery-Charger/dp/B0CS6697WZ,7.38,7.38,8.4,7.4V/8.4V 20A balanced
+Power,5V UBEC regulator (5A),Buy,1,,https://www.greathobbies.com/productinfo/?prod_id=HBW30607000,22.99,22.99,4,Hobbywing 2-8S. RC store
+Power,power switch (rocker),Buy,1,10pk,https://www.amazon.ca/dp/B07SPVPQPL,1.7,16.99,4.49,KCD1 10A presoldered
+Power,USB-C charger (2S 8.4V),Buy,1,,https://www.amazon.ca/Adeept-Lithium-Battery-Charging-Step-Up/dp/B0BWTK7SVN,20.14,20.14,9.99,Type-C boost board ~3 left
+Power,2.1mm barrel jack,Buy,2,6-pc set,https://www.amazon.ca/Borsuer-5-5x2-1mm-Threaded-Connectors-Electronics/dp/B0GGN5MWH5,2,11.99,1,5.5x2.1 panel-mount
+Power,XT30 connector pair,Buy,2,order 1 M + 1 F,https://mpandw.ca/products/amass-xt-style-connectors-xt30-xt150,0.4,0.8,8,AMASS-spec 30A
+Power,bearing (verify bore ~4mm),Buy,3,10-pc pack,https://www.amazon.ca/Flange-Bearing-F623ZZ-Flanged-Bearings/dp/B0H2DWSC17,2.86,28.58,3.5,F623ZZ 3mm bore - confirm vs shaft; F624 if 4mm
+Power,cable sheath,Buy,1,per metre,https://www.amazon.ca/Expandable-Braided-Sleeve-Electrical-Protection/dp/B07YGVQ5ZM,3.95,3.95,9,qty2=2m
+Power,15cm microUSB-USB-C cable,Buy,2,,https://www.amazon.ca/HOTNOW-Micro-Cable-15cm-Pack/dp/B0GZP275HN,4.33,8.66,7,2-pk chargedata
+Power,50cm microUSB-USB-C cable,Buy,1,,https://www.amazon.ca/HOTNOW-Micro-Cable-15cm-Pack/dp/B0GZP275HN,8,8,6,Search HOTNOW Micro USB C longer variant
+Fix,M3 heat-set inserts (100pk),Buy,1,brass metric knurled,https://www.amazon.ca/threaded-inserts-3d-printing/s?k=threaded+inserts+3d+printing,13.99,13.99,5.99,initeq M3-0.5
+Fix,M3 screws assorted x6/x8/x10,Buy,1,,https://www.amazon.ca/s?k=m3+button+head+screws+assorted,10,10,,Get 100+ pack
+Fix,foot contact switch,Buy,4,SS-10 class,https://www.aliexpress.com/w/wholesale-ss10-switch.html,0.5,2,1,~$0.40-1 ea Ali
+Fix,PLA filament 1kg,Buy,1,standard PLA 15% infill,https://www.amazon.ca/s?k=pla+filament+1kg+black,25,25,20,ELEGOO/OVERTURE
+Fix,TPU filament 1kg (soles),Buy,1,95A flexible,https://www.amazon.ca/TPU-Filament/s?k=TPU+Filament,25.99,25.99,0,TURE/ELEGOO 95A
+Expr,LEDs (eyes+projector),Buy,3,50pk ~$10,https://www.amazon.ca/s?k=5mm+led+white+100+pack,0.2,10,0.2,Cree class
+Expr,eye diffusers,Buy,4,60pk ~$10,https://www.amazon.ca/s?k=acrylic+half+sphere+8mm,0.17,10,0.16,
+Expr,projector reflector,Buy,1,,https://www.aliexpress.com/item/1005004447866125.html,2,2,2,Ali
+Expr,100 ohm resistors x2,Buy,2,100pk,https://www.amazon.ca/s?k=100+ohm+resistors+pack,0.05,5,0,1/4W carbon

@@ -1,0 +1,247 @@
+<title>Duck Walking Curriculum</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column of text about 68ch wide; videos and tables break out to a wider plate. */
+:root {
+  --bg: #f6f4ee;        /* warm paper, a shade toward the duck's yellow */
+  --panel: #ffffff;
+  --fg: #1f2124;
+  --muted: #5c6066;
+  --rule: #d9d5ca;
+  --accent: #c98a00;    /* the duck's feet and beak */
+  --accent-ink: #7a5300;
+  --good: #2f7d4f;
+  --bad: #b2402f;
+  --next: #2e5f99;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17181b; --panel: #202226; --fg: #ebe8e0; --muted: #a39e93; --rule: #34373d;
+    --accent: #e6ad2a; --accent-ink: #f0c45a; --good: #5cb985; --bad: #e0705b; --next: #6fa2e0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17181b; --panel: #202226; --fg: #ebe8e0; --muted: #a39e93; --rule: #34373d;
+  --accent: #e6ad2a; --accent-ink: #f0c45a; --good: #5cb985; --bad: #e0705b; --next: #6fa2e0;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.55;
+       padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+       padding-block: 0 64px; }
+.wrap { max-width: 980px; margin: 0 auto; }
+header { padding-block: 40px 24px; border-bottom: 2px solid var(--accent); margin-bottom: 32px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0 0 10px; text-wrap: balance; letter-spacing: -0.01em; }
+.stamp { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+h2 { font-family: var(--display); font-weight: 600; font-size: 26px; margin: 48px 0 12px; line-height: 1.15; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 0 0 6px; }
+p, li { max-width: 68ch; }
+p { margin: 0 0 14px; }
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }
+.status > div { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; min-width: 0; }
+.status ul { margin: 6px 0 0; padding-left: 18px; font-size: 15px; }
+.status li { margin: 0 0 6px; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px; color: #fff; }
+.pill.good { background: var(--good); } .pill.bad { background: var(--bad); } .pill.next { background: var(--next); }
+figure { margin: 22px 0 26px; }
+.plate { background: #111; border-radius: 6px; overflow: hidden; }
+.plate video, .plate img { display: block; width: 100%; max-width: 100%; height: auto; }
+figcaption { font-size: 14.5px; color: var(--muted); margin-top: 8px; max-width: 80ch; line-height: 1.5; }
+figcaption b { color: var(--fg); font-weight: 600; }
+.tablebox { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); margin: 16px 0 22px; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 640px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.ok { color: var(--good); } td.no { color: var(--bad); }
+code { font-family: var(--mono); font-size: 0.9em; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 0 4px; }
+.note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; color: var(--fg); margin: 18px 0; }
+.note p:last-child { margin-bottom: 0; }
+a { color: var(--accent-ink); }
+@media (max-width: 520px) { h2 { font-size: 22px; } body { font-size: 15px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Duck Walking Curriculum</h1>
+  <div class="stamp">Open Duck Mini v2 · scaffold training, 21–22 October 2026 · RTX 4060, about 1 h per 100 M steps · rounds 4–6 (the leading hand) stopped stepping · round 7 (the puppeteered stride) finished 16:12 and walks it while held</div>
+</header>
+
+<section>
+  <h2>Where it stands</h2>
+  <div class="status">
+    <div><span class="pill good">works</span><h3>Held, it walks</h3><ul><li>At full weight with a balance spring of 1 N·m/rad or more, the s2a brain walks forward at 0.07 m/s, four steps a second, and turns at the commanded rate.</li><li>Feet on the floor 98 % of the time: walking, not hanging.</li></ul></div>
+    <div><span class="pill good">works</span><h3>Smooth and steady unheld</h3><ul><li>Standing jitter 0.02–0.2 against 4–6 for the earlier brain.</li><li>Turns 50–57 deg/s with no falls, where the earlier brain fell in the head-swing test.</li></ul></div>
+    <div><span class="pill bad">not yet</span><h3>Let go, it marches in place</h3><ul><li>Every curriculum brain stands on a forward command at real servo torque: 0.00 m/s against the earlier brain's 0.11.</li><li>Without the spring, the env's pushes end every episode, so standing is the safe optimum.</li></ul></div>
+    <div><span class="pill good">works held</span><h3>Round 7: your stride as the reference</h3><ul><li>The stride puppeteered on the real duck replaced the generated gait. Held by the spring at real servo torque it walks that stride at 0.044 m/s, 1.5 steps a second, and never fell in training.</li><li>Let go it falls backwards within two seconds, and turning was trained out because this round had no turning reference. The hybrid reference for the next round fixes the second part.</li></ul></div>
+    <div><span class="pill good">works held</span><h3>Round 8: your stride plus s2a's turn</h3><ul><li>Highest reward of any round, never fell in training, smoothest actions yet. Held by the spring at real servo torque it walks the stride at 0.04 m/s and turns at 46–48 deg/s, so turning is back without losing the walk.</li><li>Let go it still cannot stand against the env's pushes, but it turns at 40 deg/s for eight seconds unheld. Side-step and backward were off: no example exists for them.</li></ul></div>
+    <div><span class="pill bad">regressed</span><h3>Rounds 4–6: the leading hand</h3><ul><li>Three rounds from the s2a checkpoint with a hand leading it: a 30 cm drop, then a dense lead cost, then the ankles filtered less. Every one trained the stepping out and ended standing on every speed command, even held.</li><li>The common factor: no stepping prior since the reference gait was retired. s2a's 0.06 m/s walk does not survive 100 M steps of PPO without one.</li></ul></div>
+  </div>
+</section>
+
+<section id="video">
+  <h2>Old, best and new, let go</h2>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/393a3b53172c472500efa23bbbcfea68"></video></div>
+  <figcaption>Full gravity, real servo torque (1.86 N·m), the same command routine for every brain: stand, forward, backward, turn left, turn right, side-steps, head moves. <b>Left</b> the earlier brain from report 1, which walks at 0.11 m/s but jitters. <b>Middle</b> s2a, the best walker while held, which stands smoothly and turns but does not walk at this torque. <b>Right</b> the round 7 brain trained on the puppeteered stride: stands on forward commands, turns slowly the wrong way, falls in the speed test. Its walk only shows while it is held, below.</figcaption></figure>
+</section>
+
+<section id="hand">
+  <h2>The leading hand, tried on the s3 brain before training with it</h2>
+  <p>The hand is a horizontal spring from a point 10 cm above the trunk's centre of mass to a point that walks ahead at the commanded speed in the duck's own heading. It is capped at a fraction of body weight (the duck weighs 2.1 kg, so 10 % is 2.1 N), reaches its cap 3 cm behind the hand, and in these tests the hand never gets more than 8 cm ahead. It is drawn as the blue string. Everything below is the final s3 brain, which never trained with a hand, at real servo torque.</p>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/ceba1829592c5a73385e5448da8ee11e"></video></div>
+  <figcaption><b>The hand alone.</b> Any strength from 10 % to 50 % tips the duck over forward within two seconds of the forward command. A stronger hand only falls more slowly. Without the hand it marches in place until the first push.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/b825b548cb312918ad8914d15bd2ec16"></video></div>
+  <figcaption><b>The hand with the upright spring.</b> At 5–10 % with a spring of 3 or 6, the duck trots after the hand at 0.05 m/s for the whole routine without falling, the hand at its 8 cm limit the whole time. Spring 1.5 is not enough. A hand of 15 % or more with the spring drags the duck along at the commanded speed without steps, crouching, until it falls.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>s3 brain, 1.86 N·m, forward 0.15 m/s</th><th>forward m/s</th><th>steps / s</th><th>outcome</th></tr>
+    <tr><td>no help</td><td class="n">0.00</td><td class="n">4.4</td><td class="no">marches in place, falls at the first push (7.7 s)</td></tr>
+    <tr><td>hand 10 %</td><td class="n">–</td><td class="n">–</td><td class="no">tips forward, down in 1.2 s</td></tr>
+    <tr><td>hand 50 %</td><td class="n">–</td><td class="n">–</td><td class="no">tips forward, down in 1.8 s</td></tr>
+    <tr><td>hand 5 % + spring 3</td><td class="n">0.048</td><td class="n">4.5</td><td class="ok">walks, no fall, hand 8 cm ahead</td></tr>
+    <tr><td>hand 10 % + spring 3</td><td class="n">0.045</td><td class="n">5.8</td><td class="ok">walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 6</td><td class="n">0.049</td><td class="n">5.8</td><td class="ok">walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 3 + roll 0.1</td><td class="n">0.058</td><td class="n">4.9</td><td class="ok">walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 1.5</td><td class="n">–</td><td class="n">–</td><td class="no">falls at 2.0 s</td></tr>
+    <tr><td>hand 15 % + spring 3</td><td class="n">0.21</td><td class="n">2.2</td><td class="no">dragged, crouches, falls at 2.7 s</td></tr>
+    <tr><td>hand 35 % + spring 3</td><td class="n">0.18</td><td class="n">1.2</td><td class="no">dragged, falls at 2.6 s</td></tr>
+  </table></div>
+  <div class="note">
+    <p><b>Why the second spring stays.</b> A pull at the top of the trunk rights the duck only toward the hand, and the hand is ahead by design, so while it leads the lever-arm torque is a forward pitch, never a correction. A parent's hand also holds the child's arm up, which is an orientation constraint. The upright spring is that second half of the grip. It should be the last thing faded, not the first. Fading the hand first costs nothing, since the hand force is already zero whenever the duck keeps up.</p>
+  </div>
+  <h3>Round 4 settings</h3>
+  <p>Restored from the s2a checkpoint. Hand 3–10 % of weight, spring 3–6, roll bias 0–0.1 rad, sampled per episode. The hand may get 30 cm ahead; at 30 cm the episode ends, so a duck that stands on a forward command loses the alive reward instead of earning it. Real servo torque (1.6–2.1 N·m) from the start, pushes capped at 0.4 m/s, imitation reward off. 100 M steps.</p>
+  <h3>Round 4 result</h3>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/044ea7b8a05ae3eea3a50b7d33f860a2"></video></div>
+  <figcaption><b>The round 4 brain in its own harness and let go.</b> On the forward command it does not move a foot. Held, the hand walks away and drops it at 2.2 s; let go, it stands until the turn, then falls. Before this round the s2a brain in the same harness trotted after the hand at 0.06 m/s and lasted 3.2 s. (The footer says fallen for the drop too.)</figcaption></figure>
+  <figure><div class="plate"><img src="/_blob/643c3a01e55fbe8f7818bfab020cf4e4" alt="Round 4 curves after s2a: reward falling, episode length falling, foot lift collapsing to zero"></div>
+  <figcaption>s2a (blue) then round 4 (green). Reward per step fell for the whole run, episodes shortened from 470 to 310 steps, and foot lift collapsed from 1.8 mm to 0.3 mm: the stepping was trained out. Speed tracking per step looks better only because the forward episodes end early and the standing ones run their full 1000 steps.</figcaption></figure>
+  <div class="note">
+    <p><b>What went wrong.</b> The drop was a cliff, not a slope. The s2a brain can manage 0.06 m/s at real torque, so on a 0.15 m/s command the hand dropped it after about three seconds no matter what it did. Walking and standing earned the same short episode, walking cost more in action rate and fall risk, and freezing won. Turning went with it. A reward that fell for 100 M steps also says the restored optimizer state did not cope with the changed episodes.</p>
+  </div>
+  <h3>Rounds 5 and 6</h3>
+  <p>Round 5 (h2) replaced the cliff with a dense cost of 5 reward points per metre of lead every step, the drop moved out to a metre, on the model servos. Round 6 (a2) kept that and let the two ankles move faster: a 20 Hz filter and 8 rad/s against 8 Hz and 4 rad/s for every other joint, with 30 % of the smoothness cost, on the measured servos. A probe before round 6 showed the s2a brain at real torque walks at 0.067 m/s held only by the spring, and 0.075 m/s with the faster ankles, so the servos are not what stops it walking unheld; balance is. Both rounds ended the same way as round 4: standing on every speed command from 0.05 to 0.2 m/s, even in the harness, with turning kept.</p>
+  <figure><div class="plate"><img src="/_blob/fa87396795301f2a6b4b955b0396ad67" alt="Curves of rounds 4 to 6 after s2a: foot lift falling in every round, turn tracking lower, episode length below s2a"></div>
+  <figcaption>s2a (blue) and the three hand rounds that each restarted from it. Foot lift while swinging falls in every round. The reward per step never rises above where s2a left it. Speed tracking looks better in h1 only because its forward episodes end early and the standing ones run their full length.</figcaption></figure>
+  <div class="note">
+    <p><b>What three rounds say.</b> The hand did what it was built to do: standing became expensive and the returns favoured walking. PPO still trained the stepping out, three times, with three different scorings. The thing all three lack, and attempt 3 had, is a reward that holds a stepping pattern in place while the rest is learned. In attempt 3 the imitation reward did that, and s2c recovered the walk after s2b lost it. With the reference gait gone there is no stepping prior at all, and a 0.06 m/s walk is fragile in the policy's parameters.</p>
+    <p><b>The candidate fix.</b> A gait-clock foot-swing reward: the clock is already in the observation, and the reward asks only that each foot be off the floor during its half of the cycle and down during the other half, with no joint-angle target. That restores the prior without the hand-animated legs. Hand, spring, lead cost and the ankle settings stay as they are.</p>
+  </div>
+</section>
+
+<section id="puppet">
+  <h2>Round 7: the stride you puppeteered, as the reference</h2>
+  <p>The generated gait is gone. The reference is now a stride recorded and edited in the puppet tool on the real duck: 1.72 s after trimming, both legs, looping, the left foot in swing 21 % of the cycle and the right 29 %. The imitation reward follows it whenever a forward speed above 0.03 m/s is commanded and asks for its standing frame otherwise. The legs were allowed ±0.5 rad from home instead of ±0.25, because the stride swings the hips 20 degrees past home. Held by a spring of 3–6 with up to 20 % lift, real servo torque, forward commands only, from the s2a checkpoint.</p>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/d1db50183f985f8b064386566f749a0b"></video></div>
+  <figcaption><b>The stride itself</b>, played open-loop in MuJoCo with no policy at real torque and a spring of 4: it shuffles forward at 0.03 m/s and stays up; without the spring it falls at 1.8 s, as on the robot. The generated gait in the same test managed 0.016 m/s with three times the steps.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/ec6a153bf59cb13f25ec456445574491"></video></div>
+  <figcaption><b>Held, best versus new.</b> Left s2a in the harness (spring 4, 10 % lift). Then the round 7 brain in the same harness, with a spring of 1.5 only, and let go. Held it walks the puppet stride at 0.044 m/s and 1.5 steps a second, against the stride's own 0.03 m/s open loop. Spring 1.5 is still enough. Let go it lunges backwards and falls in 1.5 s, and it no longer turns on a turn command.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>round 7 brain, real torque, forward 0.15 m/s</th><th>forward m/s</th><th>steps / s</th><th>outcome</th></tr>
+    <tr><td>spring 4 + 10 % lift</td><td class="n">0.044</td><td class="n">1.5</td><td class="ok">walks the stride, no fall</td></tr>
+    <tr><td>spring 4 only</td><td class="n">0.039</td><td class="n">1.5</td><td class="ok">walks, no fall</td></tr>
+    <tr><td>spring 1.5 only</td><td class="n">0.039</td><td class="n">2.0</td><td class="ok">walks, no fall</td></tr>
+    <tr><td>nothing</td><td class="n">–</td><td class="n">–</td><td class="no">lunges backwards, down in 1.5 s</td></tr>
+    <tr><td>turn command, held</td><td class="n">0</td><td class="n">0.2</td><td class="no">stands: no turning reference this round</td></tr>
+  </table></div>
+  <figure><div class="plate"><img src="/_blob/267c0ee9209bec9a4bdc4c2d93b6ec7c" alt="Round 7 curves after s2a: imitation climbing to its highest value, episodes never ending in a fall, turn tracking lower"></div>
+  <figcaption>s2a (blue) then round 7 (green). Imitation of the new reference climbs to the highest value of any round, episodes never end in a fall, and the smoothness cost halves. Turn tracking sits below s2a because the reference asks for standing during turns. The dip at the handover is the leg range doubling under a restored policy.</figcaption></figure>
+  <div class="note">
+    <p><b>What this round says.</b> A puppeteered stride works as a reference: the policy learned it in 100 M steps, follows it faithfully, and improves on it (0.044 m/s against 0.03 open loop). What it did not learn is balance without the spring, and it lost turning because nothing in this round asked for it. Two things for the next round: the hybrid reference, your stride for forward and a recorded example for turning (the next section), and a longer or faster stride if 0.04 m/s is not enough, which is a clip edit rather than a training change.</p>
+  </div>
+</section>
+
+<section id="round8">
+  <h2>Round 8: the puppet stride forward, s2a's recorded turn left and right</h2>
+  <p>Same harness and servos as round 7, restored from the round 7 checkpoint. The reference is now two examples: your stride whenever forward is commanded, s2a's own recorded turn whenever a turn is, blended by the command, with the gait clock's period following the blend (1.72 s walking, 0.54 s turning). Side-step and backward commands were switched off because there is no example for them. 100 M steps, one hour.</p>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/eb932402f5d2202739455bd8891d1607"></video></div>
+  <figcaption><b>Held, previous versus new.</b> Round 7 with a spring of 4, then round 8 with a spring of 4, a spring of 1.5, and let go. Both walk the stride; round 8 also turns on the turn command, which round 7 had lost. In this run the let-go column stayed up; in the longer four-command rollouts below it fell within a second on forward and on standing, so balance without the spring is still not there.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>round 8 brain, real torque, 8 s per command</th><th>forward m/s</th><th>steps / s</th><th>turn left deg/s</th><th>outcome</th></tr>
+    <tr><td>spring 4 + 10 % lift</td><td class="n">0.042</td><td class="n">1.5</td><td class="n">48</td><td class="ok">walks and turns, no fall</td></tr>
+    <tr><td>spring 4 only</td><td class="n">0.038</td><td class="n">1.8</td><td class="n">46</td><td class="ok">walks and turns, no fall</td></tr>
+    <tr><td>spring 1.5 only</td><td class="n">0.14, lunging</td><td class="n">3.5</td><td class="n">43</td><td class="no">falls forward at 3.7 s; stands and turns fine</td></tr>
+    <tr><td>nothing</td><td class="n">–</td><td class="n">–</td><td class="n">40</td><td class="no">down in a second on forward and on standing; turns for 8 s</td></tr>
+    <tr><td>round 7, spring 4 only, for comparison</td><td class="n">0.039</td><td class="n">1.5</td><td class="n">0</td><td class="ok">walks, does not turn</td></tr>
+  </table></div>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/43a4a835e325bb22f73d24c5f0f575a2"></video></div>
+  <figcaption><b>Let go, old, best and new.</b> The earlier brain, s2a and round 8 at real servo torque, no help. Round 8 stands with the lowest standing jitter so far (0.01) and turns left at 48 deg/s, but still stands on a forward command and falls in the speed test. Backward, never trained this round, is where it tips.</figcaption></figure>
+  <figure><div class="plate"><img src="/_blob/2f6c6cf11498c586629c5e34e6c40ee8" alt="Curves of s2a, round 7 and round 8 end to end: reward highest in round 8, episodes never ending in a fall, turn tracking climbing back to s2a's level, imitation highest"></div>
+  <figcaption>s2a (blue), round 7 (green), round 8 (orange). Reward per step 0.555 is the highest of any round, episodes never end in a fall, turn tracking climbs from 3.2 back to 3.6 against s2a's 3.7, imitation keeps rising, and the smoothness cost is the lowest yet. Foot lift grows through the round.</figcaption></figure>
+  <div class="note">
+    <p><b>What this round says.</b> Two recorded examples blend fine: the brain kept the puppet stride and got s2a's turn back in the same 100 M steps, with nothing lost on smoothness. The remaining gap is the same as every round: without the spring it does not recover from the env's pushes, and let go it prefers standing to walking. The lever that has not been pulled yet is the push strength and the alive reward during the spring fade, which is the attempt 4 idea from before. A side-step example, puppeteered or recorded, would bring that command back.</p>
+  </div>
+</section>
+
+<section id="turnexample">
+  <h2>How the turning example was made</h2>
+  <p>Rather than the generated grid, the turning reference for the next round is the smoothest turn any brain has produced: s2a's. A new recorder runs a brain in the simulator at real servo torque, lets it settle for three seconds, then averages its joint angles over 13 cycles of its gait clock into one 0.54 s loop. The result is saved in the puppet tool's clip format, so it also appears in the clip list there and can be played on the duck. The two clips are near mirrors of each other, which is a good sign that the recording is clean.</p>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/a352ffa68d27ddc5932a864157248644"></video></div>
+  <figcaption><b>The example itself.</b> The s2a brain, unheld at real servo torque, turning left then right on command. This is what was recorded: +56 deg/s left, −53 deg/s right, no drift forward or sideways.</figcaption></figure>
+  <figure><div class="plate"><img src="/_blob/5c57ecfb926206e785410c20ef80f3d3" alt="Ten leg joints over one 0.54 s turn cycle, turn-left clip solid and turn-right clip dashed, near mirror images"></div>
+  <figcaption>The ten leg joints over one cycle of each clip, relative to the first frame. The turn is mostly hip yaw, 12 degrees each way, with the hip roll shifting weight and the knee and ankle lifting the foot. Left and right mirror each other.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>command</th><th>example for the next round</th><th>period</th><th>what s2a does unheld</th></tr>
+    <tr><td>forward</td><td>your puppet stride</td><td class="n">1.72 s</td><td>0.053 m/s, but only when commanded from the start, never from a settled stand</td></tr>
+    <tr><td>turn left / right</td><td>s2a's recorded turn</td><td class="n">0.54 s</td><td class="ok">56 / 53 deg/s</td></tr>
+    <tr><td>side-step, backward</td><td>none, command switched off</td><td class="n">–</td><td class="no">stands still (0.000 m/s)</td></tr>
+  </table></div>
+  <div class="note">
+    <p><b>Alignment check.</b> The training env scores each step's pose against the reference a few control steps later than the recorder stamps it (step order plus the env's action delay), so the recorder shifts its frames. Measured inside the env with the s2a brain held by a spring of 4 and turning left: a shift of 0 steps gives an imitation reward of 0.30, 1 gives 0.65, 2 gives 0.89, 3 gives 1.01, 4 gives 0.97. Three is the default. The same brain against the puppet stride scores −8.2, so the reward does tell the two apart. When several directions are commanded at once the turn example wins over walking and walking over side-stepping, and the gait clock's period follows the same blend.</p>
+    <p><b>One correction.</b> The unheld scores and videos of the round 7 brain so far used the generated gait's 0.54 s clock, not the 1.72 s clock it was trained with. Re-scored on its own clock it still stands on a forward command and still falls in the speed test, so nothing changes in substance; the scorer now reads the reference settings and sets its clock to match.</p>
+  </div>
+</section>
+
+<section id="reference">
+  <h2>The reference gait, now retired</h2>
+  <figure><div class="plate"><video controls muted playsinline preload="metadata" src="/_blob/dab7e808fa281b75e496c2041c33ea6d"></video></div>
+  <figcaption>The imitation target every brain so far was scored against, played back kinematically with the base fixed. Period 0.54 s, 3.7 steps a second, which is what every curriculum brain does. The caption shows the reference's own foot-contact flags. It has no sway or weight shift, and the zero-command reference also marches in place, which is where the shuffling and standing jitter come from. Round 4 drops it.</figcaption></figure>
+</section>
+
+<section id="scorecard">
+  <h2>Every brain, let go at real servo torque</h2>
+  <div class="tablebox"><table>
+    <tr><th>brain</th><th>forward m/s</th><th>turn deg/s</th><th>standing jitter</th><th>15 N pushes survived</th><th>falls in test</th></tr>
+    <tr><td>earlier brain (report 1)</td><td class="n">0.11</td><td class="n">40–50</td><td class="n">4–6</td><td class="n">–</td><td class="no">head-swing test</td></tr>
+    <tr><td>attempt 2 · s1</td><td class="n">0.00</td><td class="n">44 / 48</td><td class="n">0.08</td><td class="n">–</td><td class="ok">none</td></tr>
+    <tr><td>attempt 2 · s3</td><td class="n">0.00</td><td class="n">44 / 46</td><td class="n">0.16</td><td class="n">–</td><td class="ok">none</td></tr>
+    <tr><td>attempt 3 · s2a</td><td class="n">0.00</td><td class="n">48 / 53</td><td class="n">0.02</td><td class="n">8 / 8</td><td class="ok">none</td></tr>
+    <tr><td>attempt 3 · s2b</td><td class="n">0.00</td><td class="n">52 / 42</td><td class="n">0.11</td><td class="n">5 / 8</td><td class="no">two</td></tr>
+    <tr><td>attempt 3 · s2c</td><td class="n">0.00</td><td class="n">48 / 52</td><td class="n">0.02</td><td class="n">2 / 8</td><td class="no">two</td></tr>
+    <tr><td>attempt 3 · s2d</td><td class="n">0.00</td><td class="n">57 / 57</td><td class="n">0.03</td><td class="n">3 / 8</td><td class="ok">none</td></tr>
+    <tr><td>attempt 3 · s3</td><td class="n">0.00</td><td class="n">56 / 49</td><td class="n">0.20</td><td class="n">3 / 8</td><td class="ok">none</td></tr>
+    <tr><td>round 4 · h1 (hand, drop at 30 cm)</td><td class="n">0.00</td><td class="n">27 / 28</td><td class="n">0.18</td><td class="n">4 / 8</td><td class="no">head-swing test</td></tr>
+    <tr><td>round 5 · h2 (hand, lead cost, model servos)</td><td class="n">0.00</td><td class="n">27 / 30</td><td class="n">0.05</td><td class="n">4 / 8</td><td class="no">head-swing test</td></tr>
+    <tr><td>round 6 · a2 (hand, lead cost, ankles 20 Hz)</td><td class="n">0.00</td><td class="n">37 / 38</td><td class="n">0.09</td><td class="n">4 / 8</td><td class="no">head-swing test</td></tr>
+    <tr><td>round 7 · p1 (puppet stride, spring), on its own 1.72 s clock</td><td class="n">0.00</td><td class="n">−38 / −27</td><td class="n">0.06</td><td class="n">3 / 8</td><td class="no">speed test</td></tr>
+    <tr><td>round 8 · p2 (puppet stride + s2a's turn, spring)</td><td class="n">0.00</td><td class="n">48 / −23</td><td class="n">0.01</td><td class="n">4 / 8</td><td class="no">speed test (backward)</td></tr>
+  </table></div>
+  <p>Scores from <code>eval_policy.py</code> on the backlash model with the 8 Hz action filter and the 4 rad/s motor speed limit, the same settings the runtime needs.</p>
+</section>
+
+<section id="curves">
+  <h2>What the curves say about attempt 3</h2>
+  <figure><div class="plate"><img src="/_blob/b6187797f30f5a9ebbf191e7d040b7e9" alt="Attempt 3 training curves: eval reward, episode length, foot lift, imitation, speed and turn tracking, smoothness, airborne fraction, per stage"></div>
+  <figcaption>Stages end to end on one time axis; each eval metric divided by the episode length so a duck that falls early does not look worse on everything. s2a (orange) never fell at full weight. s2b (purple) stood still for a stage. s2c (brown) walked again but fell to pushes once per episode. s2d (pink), without the spring, hit the 600-step plateau that attempt 2 also hit. s3 (red), real servos, episodes of 350–480 steps.</figcaption></figure>
+  <p><b>What attempt 3 showed.</b> The weight support stopped mattering after s2a: the s2a brain walked with no weight carried as long as any spring was present. The spring then came off in three steps and the walk survived down to 1 N·m/rad. What never transferred is recovery from the env's pushes (0.1–1.0 m/s every 5–10 s). With no spring a push ends the episode, and with 20 reward per step for staying alive against at most 2.5 for speed, the optimizer settles on stepping in place. The hand attacks that directly: standing still is now also a way to lose the episode.</p>
+</section>
+
+<section id="harness">
+  <h2>The harness</h2>
+  <p>Four forces on the duck, each sampled once per episode so one stage already contains the next stage's easiest cases. The policy never sees them; it feels them through the IMU and the joints.</p>
+  <div class="tablebox"><table>
+    <tr><th>term</th><th>what it does</th><th>attempt 3 ladder</th></tr>
+    <tr><td>weight carried</td><td>upward force on the trunk, a fraction of this duck's own weight, with vertical damping</td><td class="n">20–40 % → 5–20 % → 0–10 % → 0</td></tr>
+    <tr><td>upright spring</td><td>torque turning the trunk back to vertical, damped near critical</td><td class="n">3–6 → 2–4 → 1–2 → 0–1 N·m/rad</td></tr>
+    <tr><td>head strings</td><td>how much of the carried weight goes in at the head instead of the trunk</td><td class="n">0–30 % → 0–15 % → 0</td></tr>
+    <tr><td>hand (round 4)</td><td>capped horizontal spring to a point walking ahead at the commanded speed; episode ends 30 cm behind it</td><td class="n">3–10 % of weight</td></tr>
+  </table></div>
+  <p>Smoothing is constant and is a deployment setting: 8 Hz action low-pass, 4 rad/s motor speed limit, and a cost on action acceleration. The runtime must run the same low-pass (<code>cutoff_frequency=8</code>).</p>
+  <p class="stamp">sim/curriculum.sh · sim/train_pg/playground/open_duck_mini_v2/joystick.py (scaffold) · sim/train_pg/held_rollout.py, render_held.py, render_ref_gait.py · sim/make_curriculum_plots.py · runs in sim/train_pg/runs, runs3, runs4</p>
+</section>
+</div>

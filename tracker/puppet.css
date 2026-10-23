@@ -1,0 +1,55 @@
+/* Duck Puppet: layout and controls on top of the tracker's tokens (style.css). */
+main.puppet { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding: 16px; align-items: start; }
+@media (max-width: 900px) { main.puppet { grid-template-columns: 1fr; } }
+.topbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 0 12px; }
+.big-btns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+button.big.clay { border-color: var(--accent); }
+.chip.clay { background: var(--info-soft); color: var(--info); }
+.joint-list .j.clay .dot { background: var(--info); }
+@media (max-width: 1100px) { .big-btns { grid-template-columns: 1fr; } }
+button.big { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 600; text-align: left; }
+button.big small { font-weight: 400; color: var(--muted); font-size: 12px; }
+button.big:hover { border-color: var(--accent); background: var(--accent-soft); }
+.topbar .sep { flex: 1; }
+.btn { display: inline-block; text-decoration: none; }
+button.danger { background: #b42318; color: #fff; border-color: #b42318; font-weight: 700; letter-spacing: 0.04em; padding: 6px 18px; }
+button.danger:hover { background: #d92d20; }
+.viewer { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+#canvas-wrap { position: relative; height: 62vh; min-height: 380px; background: var(--viewer); border-radius: 10px; overflow: hidden; }
+#canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+#loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
+#hover-tip { position: absolute; pointer-events: none; background: var(--panel); color: var(--text); border: 1px solid var(--line); padding: 3px 8px; border-radius: 6px; font-size: 12px; display: none; }
+.editor { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+.tl-bar { display: flex; gap: 6px 8px; align-items: center; flex-wrap: wrap; }
+.tl-bar .sep { flex: 1; }
+.tl-bar input[type=number] { width: 60px; }
+.tl-bar input[type=range] { width: 200px; }
+.tl-bar select { max-width: 160px; }
+.tl-help { margin: 0; }
+#tl { width: 100%; display: block; background: var(--bg); border-radius: 6px; touch-action: none; cursor: crosshair; }
+#canvas-wrap { height: 48vh; min-height: 320px; }
+.side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.row { display: grid; grid-template-columns: 70px 1fr auto; gap: 10px; align-items: center; margin: 8px 0; font-size: 14px; }
+.row.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.row.btns input[type=number] { width: 48px; margin: 0 2px; }
+.row.btns input[type=text] { flex: 1; min-width: 120px; }
+.row input[type=range] { width: 100%; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.chip { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--line); color: var(--muted); }
+.chip.on { background: var(--good-soft); color: var(--good); }
+.chip.timer { background: var(--accent-soft); color: var(--accent); }
+.joint-list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
+.joint-list .j { display: grid; grid-template-columns: 10px 1fr auto; gap: 8px; align-items: center; padding: 4px 6px; border-radius: 6px; cursor: pointer; font-size: 13px; border: 1px solid transparent; }
+.joint-list .j:hover { background: var(--accent-soft); }
+.joint-list .j.sel { border-color: var(--accent); background: var(--accent-soft); }
+.joint-list .j .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.joint-list .j.hold .dot { background: var(--good); }
+.joint-list .j.timer .dot { background: var(--accent); }
+.joint-list .j.bad .dot { background: var(--warn); }
+.joint-list .j .deg { color: var(--muted); }
+.clip-list .c { display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.clip-list .c:first-child { border-top: 0; }
+.clip-list .c .m { color: var(--muted); font-size: 12px; }
+.clip-list .c.sel .n { color: var(--accent); font-weight: 600; }
+#status.ok { color: var(--good); } #status.bad { color: var(--warn); }
+.stat-row { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }

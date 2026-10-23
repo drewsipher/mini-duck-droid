@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duck Harness Curriculum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column of lab-notebook entries; figures sit on their own light plates so the white-background graphs read in both themes. */
+:root {
+  --bg: #f3f4f2; --panel: #ffffff; --fg: #1d2326; --muted: #5b666b; --rule: #d7dcd9;
+  --accent: #d9822b; --accent-ink: #9a5410; --good: #2a8a52; --bad: #b23b3b; --plate: #ffffff;
+  --display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161a1c; --panel: #1f2427; --fg: #e6e9e7; --muted: #9aa5a8; --rule: #323a3e;
+  --accent: #e9963f; --accent-ink: #f2b26e; --good: #5cc28a; --bad: #e07070; --plate: #f4f5f3; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161a1c; --panel: #1f2427; --fg: #e6e9e7; --muted: #9aa5a8; --rule: #323a3e;
+  --accent: #e9963f; --accent-ink: #f2b26e; --good: #5cc28a; --bad: #e07070; --plate: #f4f5f3; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; gap: 40px; }
+header { display: grid; gap: 6px; border-bottom: 2px solid var(--fg); padding-bottom: 16px; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+h1 { font: 700 clamp(34px, 6vw, 52px)/1 var(--display); margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font: 700 26px/1.15 var(--display); margin: 0; text-wrap: balance; }
+h3 { font: 600 17px/1.3 var(--body); margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); font-size: 18px; }
+section { display: grid; gap: 14px; }
+.stamp { font: 13px var(--mono); color: var(--muted); }
+figure { margin: 0; display: grid; gap: 8px; }
+.plate { background: var(--plate); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.plate img, .plate video { display: block; width: 100%; height: auto; max-width: 100%; }
+figcaption { font-size: 14px; color: var(--muted); max-width: 75ch; }
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.status div { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.pill { justify-self: start; font: 600 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; color: #fff; }
+.pill.good { background: var(--good); } .pill.bad { background: var(--bad); } .pill.next { background: var(--accent); }
+.status ul { margin: 0; padding-left: 18px; font-size: 15.5px; }
+.tablebox { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 640px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.verdict-good { color: var(--good); font-weight: 600; } .verdict-bad { color: var(--bad); font-weight: 600; }
+ol.plan { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 72ch; }
+ol.plan li::marker { font: 700 16px var(--display); color: var(--accent-ink); }
+.note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; max-width: 72ch; }
+code { font: 0.9em var(--mono); }
+a { color: var(--accent-ink); }
+a:focus-visible, video:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head><body><div class="wrap">
+<header>
+  <div class="eyebrow">Duck training log · report 2</div>
+  <h1>Teaching the duck to walk in a harness</h1>
+  <p class="lede">A curriculum that holds the duck up like a toddler, then lets go a little per stage. Smoother, slower joints throughout (8 Hz action filter, 4 rad/s motor limit, acceleration cost) so the real duck's jitter goes away.</p>
+  <div class="stamp">2026-10-21 · attempt 2 complete (s0 → s3, 400 M steps, 4 h on the RTX 4060) · attempt 3 complete 2026-10-22 02:03 (s2a → s3, 500 M steps, 4.6 h)</div>
+</header>
+
+<section>
+  <h2>Where it stands</h2>
+  <div class="status">
+    <div><span class="pill good">works</span><h3>Held, it walks</h3><ul><li>Carrying only 20 % of its weight at 0.85 g, the s1 brain walks forward at 0.07 m/s, steps 4 times a second, turns at the full commanded rate.</li><li>Both feet on the floor 98 % of the time, so it is walking, not hanging.</li></ul></div>
+    <div><span class="pill good">works</span><h3>Smooth and steady unheld</h3><ul><li>Standing jitter 0.1–0.2 (earlier brains 4–6).</li><li>Turns 44–50 deg/s with no falls, where the earlier brain fell in the head-swing test.</li></ul></div>
+    <div><span class="pill bad">not yet</span><h3>Let go, it steps in place</h3><ul><li>At full gravity it still lifts its feet on a forward command, but does not move: 0.00–0.01 m/s against the earlier brain's 0.11.</li><li>It rises onto its toes when stepping, a habit from leaning on the harness.</li></ul></div>
+    <div><span class="pill bad">not yet</span><h3>Attempt 3: the gait transfers, push recovery does not</h3><ul><li>Full weight from s2a on, spring faded over s2a–s2d, then real servos. The walk survived down to a spring of 1 N·m/rad (0.03–0.08 m/s held), then became marching in place once the spring was gone.</li><li>Every stage without a spring ends its episodes at the first push. Next attempt: ramp the pushes with the spring and rebalance alive (20/step) against speed (2.5/step).</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>The harness</h2>
+  <p>Three strings, each sampled fresh per episode from the stage's range so a stage always contains the next stage's easiest cases: an upward force on the trunk that carries a fraction of the duck's weight (with vertical damping, like a jolly jumper), a spring-damper torque that turns the trunk back upright (hands on the shoulders), and a string on the head that takes part of the carried weight through the head. Gravity itself was also reduced in the first two stages. Nothing pushes it along: it has to walk by itself.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>stage</th><th>gravity</th><th>weight carried</th><th>upright spring (N·m/rad)</th><th>head strings</th><th>servos</th><th>unheld result</th></tr></thead>
+    <tbody>
+    <tr><td>s0</td><td>0.7 g</td><td>50–80 %</td><td>3–6</td><td>50–100 %</td><td>model</td><td>stands, turns 30 deg/s, falls when turning</td></tr>
+    <tr><td>s1</td><td>0.85 g</td><td>20–50 %</td><td>1–3</td><td>0–50 %</td><td>model</td><td>stands, turns 44/48 deg/s, no falls</td></tr>
+    <tr><td>s2</td><td>1 g</td><td>0–20 %</td><td>0–1</td><td>0</td><td>model</td><td>stands, turns 47/50, no falls, steps in place</td></tr>
+    <tr><td>s3</td><td>1 g</td><td>none</td><td>none</td><td>none</td><td>real (1.6–2.1 N·m, kp 1.1–1.8)</td><td>stands, turns 44/46, no falls</td></tr>
+    </tbody></table></div>
+</section>
+
+<section>
+  <h2>What each brain does when let go</h2>
+  <figure><div class="plate"><video controls muted playsinline src="unheld_old_vs_s1_s2_s3.mp4"></video></div>
+  <figcaption>Full gravity, real servo torque (1.86 N·m), the same command routine for every brain. Left: the earlier brain from report 1, which walks forward but jitters. Then s1, s2 and s3 of the curriculum: smooth, upright, turning well, not going anywhere.</figcaption></figure>
+</section>
+
+<section>
+  <h2>What it does while held</h2>
+  <figure><div class="plate"><video controls muted playsinline src="held_s1.mp4"></video></div>
+  <figcaption>The s1 brain inside the training simulator at 0.85 g. The yellow strings are the harness; thicker means more weight carried. Held by 50 % (left) or 20 % (middle) of its weight it walks forward and turns on command. Let go (right) it lunges forward and falls within two seconds.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="held_s2.mp4"></video></div>
+  <figcaption>The s2 brain at full gravity with the most help s2 ever gave (left) and none (right). It steps but stays in place, and the fall on the right is the simulator's periodic shove (0.1–1 m/s every 5–10 s), which also ends most training episodes.</figcaption></figure>
+</section>
+
+<section>
+  <h2>Training curves</h2>
+  <figure><div class="plate"><img src="curriculum_curves.png" alt="Eight panels of evaluation metrics per step across the four stages, with the earlier brain's final values as dashed lines"></div>
+  <figcaption>Evaluation metrics per step, the four stages end to end. Held (blue, green) the duck beats the earlier brain on reward, turning and imitation with half the action change. The hand-over to full gravity (orange) is where it stalls: episodes shorten to about 600 of 1000 steps and stay there, foot lift and imitation drop, and the real-servo stage (red) does not recover them. The step from s1 to s2 removed gravity relief, most of the support and the balance spring at once; attempt 3 takes them away one at a time.</figcaption></figure>
+</section>
+
+<section id="attempt3">
+  <h2>Attempt 3: full weight first, hands held, then let go</h2>
+  <p>Restarted from the s1 brain. Gravity goes to 1 g at once; the duck carries 60–80 % of its weight in s2a, then all of it, while the upright spring (hands on the shoulders) stays at 3–6 N·m/rad and is faded over s2b (2–4), s2c (1–2) and s2d (0–1) before the real-servo stage.</p>
+  <figure><div class="plate"><video controls muted playsinline src="held_s2a.mp4"></video></div>
+  <figcaption>The s2a brain at full gravity. Held as in s2a (left) and with hands only (middle, no weight carried, spring 2) it walks forward at about 0.07 m/s and turns on command. Let go (right) it lunges forward and falls within two seconds. Measured over the whole ladder: any spring from 1 to 4.5 N·m/rad is enough for it to walk, none at all and it falls. The spring is the crutch the next stages take away.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="held_s2b.mp4"></video></div>
+  <figcaption>The s2b brain (held 5–20 %, spring 2–4), one stage later. It has stopped stepping forward: on the 0.15 m/s command it stands in all three columns, lifting a foot about once every two seconds instead of four times a second. It still turns on command. With a spring of 1 or less it drifts backwards at 0.05 m/s and tips over; let go (right) it falls during the turn. Unheld score: no forward speed, turn 52/42 deg/s, survived 5 of 8 pushes, two falls.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="held_s2c.mp4"></video></div>
+  <figcaption>The s2c brain (held 0–10 %, spring 1–2). The forward walk is back: 0.08 m/s held, 0.05–0.06 m/s with only a spring of 0.5 to 1, and 0.04 m/s with no help at all until the first push knocks it over. Standing without a spring it shuffles backwards at 0.05 m/s and falls at the first push, so the balance it still lacks is the standing kind. Unheld at real servo torque it stands instead of stepping (1.86 N·m is below what the model servos gave it in training), turns 48/52 deg/s, standing jitter 0.02, survived 2 of 8 pushes.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="held_s2d.mp4"></video></div>
+  <figcaption>The s2d brain (nothing carried, spring 0–1). With a spring of 1 it still walks at 0.03 m/s; with less it steps at 4.7 steps/s but gains no ground, and standing it shuffles backwards at 0.05 m/s. Every column without the spring of 1 falls at the first push. Unheld at real servo torque: stands on every speed command, turns 57/57 deg/s, standing jitter 0.03, survived 3 of 8 pushes, no falls in the speed test.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="unheld_old_vs_s2a_s2d_s3.mp4"></video></div>
+  <figcaption>Attempt 3 let go: full gravity, real servo torque (1.86 N·m), the same routine for every brain. Left the earlier brain from report 1, then s2a, s2d and the final s3. The three curriculum brains stand smoothly, turn at 50–57 deg/s and do not walk at this torque.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>stage, unheld at 1.86 N·m</th><th>forward m/s</th><th>turn deg/s</th><th>standing jitter</th><th>15 N pushes survived</th><th>falls in test</th></tr>
+    <tr><td>earlier brain (report 1)</td><td>0.11</td><td>40–50</td><td>4–6</td><td>–</td><td>head-swing test</td></tr>
+    <tr><td>s2a</td><td>0.00</td><td>48 / 53</td><td>0.02</td><td>8 / 8</td><td>none</td></tr>
+    <tr><td>s2b</td><td>0.00</td><td>52 / 42</td><td>0.11</td><td>5 / 8</td><td>two</td></tr>
+    <tr><td>s2c</td><td>0.00</td><td>48 / 52</td><td>0.02</td><td>2 / 8</td><td>two</td></tr>
+    <tr><td>s2d</td><td>0.00</td><td>57 / 57</td><td>0.03</td><td>3 / 8</td><td>none</td></tr>
+    <tr><td>s3</td><td>0.00</td><td>56 / 49</td><td>0.20</td><td>3 / 8</td><td>none</td></tr>
+  </table></div>
+  <figure><div class="plate"><img src="curriculum3_curves.png" alt="Attempt 3 training curves: s0, s1, then s2a onward"></div>
+  <figcaption>Attempt 3 curves, updated after each stage. s2a (orange): never fell while held at full weight, imitation and turn tracking above every earlier stage. s2b (purple): still never falls while held, but imitation and speed tracking fall back to s1 levels while turn tracking keeps climbing. It traded the walk for a safer stand, with 20 reward per step for staying alive against at most 2.5 for speed. s2c (brown): the walk returned, but with the spring down to 1–2 it falls to pushes about once per episode (length 830) and the per-step rewards drop with it. s2d (pink): without the spring episodes last about 600 steps, the same plateau attempt 2's s2 hit, and speed tracking is now below the earlier unheld brain. s3 (red): real servo torque on top, episodes of 350–480 steps, every per-step reward at its lowest of the run. In the s3 env it steps 4.3 times a second on a forward command and gains nothing, then falls at the first push.</figcaption></figure>
+  <p><strong>What attempt 3 showed.</strong> The weight support stopped mattering after s2a: the s2a brain walked with no weight carried as long as any spring was present. The spring then came off in three steps and the walk survived down to 1 N·m/rad. What never transferred is recovery from the env's pushes (0.1–1.0 m/s every 5–10 s). With no spring a push ends the episode, and with 20 reward per step for staying alive against at most 2.5 for speed, the optimizer settles on stepping in place. Attempt 2 reached the same 600-step plateau by a different route. The next attempt should leave the harness as it is and change what the harness was hiding: start the pushes small and ramp them up as the spring fades, and cut the alive reward so that a walk that risks a push is still worth more than a stand that does not.</p>
+</section>
+
+<section id="hand">
+  <h2>The leading hand, tried on the s3 brain before training with it</h2>
+  <p>A new scaffold term (<code>HAND</code>, 2026-10-22): a horizontal spring from a point 10 cm above the trunk's centre of mass to a "hand" that walks ahead at the commanded speed, capped at a fraction of body weight (the duck weighs 2.1 kg, so 10 % is 2.1 N), reaching its cap 3 cm behind the hand, the hand never more than 8 cm ahead. <code>HAND_ROLL</code> tilts the upright target toward the reference gait's stance foot. Both are drawn below as the blue string. Everything here is the final s3 brain, untrained for the hand, at real servo torque (1.86 N·m).</p>
+  <figure><div class="plate"><video controls muted playsinline src="hand_s3_real_torque.mp4"></video></div>
+  <figcaption>The hand alone. Any strength from 10 % to 50 % tips the duck over forward within two seconds of the forward command; a stronger hand only falls more slowly. Without the hand it marches in place until the first push.</figcaption></figure>
+  <figure><div class="plate"><video controls muted playsinline src="hand_s3_with_spring.mp4"></video></div>
+  <figcaption>The hand with the upright spring. At 5–10 % with a spring of 3 or 6 the duck trots after the hand at 0.05 m/s for the whole routine without falling, the hand at its 8 cm limit the whole time. Spring 1.5 is not enough (falls at two seconds). A hand of 15 % or more with the spring drags the duck along at the commanded speed without steps, crouching, until it falls.</figcaption></figure>
+  <div class="tablebox"><table>
+    <tr><th>s3 brain, 1.86 N·m, forward 0.15 m/s</th><th>forward m/s</th><th>steps / s</th><th>outcome</th></tr>
+    <tr><td>no help</td><td>0.00</td><td>4.4</td><td>marches in place, falls at the first push (7.7 s)</td></tr>
+    <tr><td>hand 10 %</td><td>–</td><td>–</td><td>tips forward, down in 1.2 s</td></tr>
+    <tr><td>hand 50 %</td><td>–</td><td>–</td><td>tips forward, down in 1.8 s</td></tr>
+    <tr><td>hand 5 % + spring 3</td><td>0.048</td><td>4.5</td><td>walks, no fall, hand 8 cm ahead</td></tr>
+    <tr><td>hand 10 % + spring 3</td><td>0.045</td><td>5.8</td><td>walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 6</td><td>0.049</td><td>5.8</td><td>walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 3 + roll 0.1</td><td>0.058</td><td>4.9</td><td>walks, no fall</td></tr>
+    <tr><td>hand 10 % + spring 1.5</td><td>–</td><td>–</td><td>falls at 2.0 s</td></tr>
+    <tr><td>hand 15 % + spring 3</td><td>0.21</td><td>2.2</td><td>dragged, crouches, falls at 2.7 s</td></tr>
+    <tr><td>hand 35 % + spring 3</td><td>0.18</td><td>1.2</td><td>dragged, falls at 2.6 s</td></tr>
+  </table></div>
+  <figure><div class="plate"><video controls muted playsinline src="reference_gait.mp4"></video></div>
+  <figcaption>The imitation reference gait, played back kinematically with the base fixed: the motion the imitation reward compares against. Period 0.54 s, so 3.7 steps a second. The caption shows the reference's own foot-contact flags. Note the zero-command reference also marches in place.</figcaption></figure>
+</section>
+
+<section>
+  <h2>Two bugs found on the way</h2>
+  <p>Both showed up as the duck floating with its feet off the floor, visible only by rolling the brain out inside the scaffolded simulator (<code>train_pg/held_rollout.py</code>). First, the support used the nominal weight while the mass randomiser makes some ducks 28 % lighter, so light ducks were lifted clean off the floor and attempt 1 learned to hang. Second, the trunk and head supports added up, so the top of s0's range carried 99 % of the weight. Both are fixed; the per-episode "both feet off the floor" metric now stays near zero.</p>
+</section>
+
+<section>
+  <h2>Files</h2>
+  <p class="stamp">sim/curriculum.sh (stages) · sim/train_pg/runs/cur_s*.score (scorecards) · sim/train_pg/runs3/ (attempt 3) · sim/make_curriculum_plots.py · sim/render_video.py · sim/train_pg/render_held.py · deploy with cutoff_frequency=8 and max motor velocity 4 rad/s</p>
+</section>
+</div></body></html>

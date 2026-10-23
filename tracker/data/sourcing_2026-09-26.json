@@ -1,0 +1,893 @@
+[
+ {
+  "spec_notes": "Buy only the 7.4 V C001 (1:345) version. The 12 V '30 kg' listings (e.g. Amazon.ca B0FMY17QRT, RobotShop 'FeeTech 12V 30kg.cm') are the wrong part, and so are the 7.4 V C044 (1:191) and C046 (1:147) gear options that appear on the same multi-SKU pages. Horns and screws: the Open Duck v2 assembly guide says to mount the servos 'with the plastic screws that came with the motors', so each servo normally comes with its horn and screws. None of the AliExpress pages I checked lists the contents, though. Cheapest verified way to get 14 that ships to Canada: 2 x the 6-pack plus 1 x the 2-pack from the Feetech Official Store (C$147.38 x 2 + C$54.68 = C$349.44, plus C$5.43 shipping as shown). That listing's title says 'with URT-1', and one review suggests a URT board comes with each order, but I did not confirm that. A 10-pack exists (STEM Hub Store, item 1005009271883998, C$247.24 with free shipping) but it is capped at 1 per shopper, and 10-pack + 2 x 2-pack comes to C$356.60, so it is not cheaper. vvhobby (item 1005008324714964, C$23.18 each) showed 'This product can't be shipped to your address' for Canada, so skip it. Canadian in-stock fallback: Stemedu on Amazon.ca (B0FKH518LC) at C$46.02 each, shipped by Amazon, which is about C$644 for 14. RobotShop CA's 7.4 V page (search snippet: C$40.71, 're-stocking soon') blocked my fetch. The previous 6-pc link (1005009390989235, RCmall) is still valid but costs more: C$158.38 per 6. AliExpress shows prices before tax; HST is added at checkout.",
+  "best": {
+   "store": "Feetech Official Store (AliExpress)",
+   "url": "https://www.aliexpress.com/item/3256808207233802.html",
+   "price_cad": 147.38,
+   "pack_size": 6,
+   "ships_from": "China Mainland",
+   "verified": "Rendered page 2026-09-26 with the currency set to CAD and the region set to Canada. Seller shown as 'Feetech Official Store'. Title: 'STS3215 SO-ARM100 Servo 7.4V 20KG ... with URT-1'. SKU '6pcs STS3215' = C$147.38 (864 available). SKU '2pcs STS3215' = C$54.68 (9967 available). Standard shipping C$5.43, delivery Oct 4-14. 2x6 + 1x2 = C$349.44 before shipping and tax."
+  },
+  "alt": {
+   "store": "RCmall Store (AliExpress)",
+   "url": "https://www.aliexpress.com/item/1005009612814872.html",
+   "price_cad": 325.38,
+   "pack_size": 12,
+   "ships_from": "China Mainland",
+   "verified": "Rendered page 2026-09-26. Title '12PCS Feetech STS3215 SO-ARM100 7.4V 19KG Servo'. C$325.38 (C$27.12 each). 1670 available. Standard shipping C$3.30. Add 2 more servos (e.g. Feetech Official 2-pack at C$54.68), for about C$380 total for 14."
+  },
+  "est_total_cad": 354.87,
+  "id": "servo_sts3215",
+  "summary": "Must be the 7.4 V C001 (1:345) version. Cheapest: 2× 6-pack + 1× 2-pack from Feetech Official ≈ C$349 + shipping."
+ },
+ {
+  "spec_notes": "Controls the ST/SC serial bus servos. Jumper position A = UART (for the Pi Zero, wired TX-TX and RX-RX), position B = USB-C (for a PC). Waveshare headlines '9~12.6V input', but that is for the 12 V ST servos; its own spec line adds 'actually 5 ~ 8.4 V can also be input'. The schematic shows the DC jack and screw terminal feed the servo headers directly, with no regulation, so the input must match the servos. For these 7.4 V servos feed it from the 2S pack (about 6-8.4 V), as the official Open Duck wiring does. Never feed it 12 V. Over USB the board's logic runs from USB, but the servos still need the pack connected. The official Waveshare page lists it at US$4.99 (about C$6.89) plus international shipping.",
+  "best": {
+   "store": "Amazon.ca (sold by Waveshare, shipped by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0CJ6TP3TP",
+   "price_cad": 16.99,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca (Canada)",
+   "verified": "Fetched 2026-09-26: 'In Stock', C$16.99, merchant waveshare, ships from Amazon. Model WSH-SBS-01. The bullets match the Bus Servo Adapter (A) spec word for word (9~12.6V, 253 servos). The '(A)' label itself does not appear on the listing."
+  },
+  "alt": {
+   "store": "FireChip Hardware Store (AliExpress)",
+   "url": "https://www.aliexpress.com/item/1005012794471621.html",
+   "price_cad": 11.18,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Rendered 2026-09-26. Title 'FireChip Waveshare Serial Bus Servo Adapter (A)'. Regular price C$11.18. A new-shopper promo shows C$2.87, limited to 1 per shopper. Free shipping, delivery Oct 3-9. Only 64 sold; this is a reseller, not Waveshare's own store."
+  },
+  "est_total_cad": 16.99,
+  "id": "servo_adapter",
+  "summary": "Jumper A = UART (Pi), B = USB (PC). Runs off the 2S pack; the 9-12.6 V spec is for 12 V servos. Never feed it 12 V."
+ },
+ {
+  "spec_notes": "Supply is very tight as of 2026-09-26. Every Canadian authorized reseller I checked is out of stock: PiShop.ca Zero 2 W C$21.95 and WH (SC0721) C$25.95; CanaKit board C$21.95 and WH C$25.95; Canada Robotix C$21.99; BC Robotics W C$28.95 / WH C$32.95 (backorder); Digi-Key.ca SC1176 C$21.98 (not orderable); Digi-Key.ca SC0721 C$26.38 (backorder, ETA June 7 2027). The WH version is only about C$4 more and saves soldering the 40-pin header, which is worth it. On AliExpress, Zero 2 W boards are C$110-155, so avoid those. If you need one now: CanaKit's 'Pi Zero 2 W Starter Kit with Pre-Soldered Header' (PI-Z2WH-STR32-C4-BLK, CA$129.95) showed 'Add to Cart' on https://www.canakit.com/raspberry-pi-zero-2-w.html. The 'STR32' in the SKU suggests a 32 GB card is included, which I did not verify.",
+  "best": {
+   "store": "Newark Canada (Zero 2 WH, SC0721)",
+   "url": "https://canada.newark.com/raspberry-pi/sc0721/single-board-computer-rp3a0-au/dp/11AM9745",
+   "price_cad": 25.56,
+   "pack_size": 1,
+   "ships_from": "Newark (Canada/US distributor)",
+   "verified": "Rendered 2026-09-26: 'Available to Order – Deliveries start from 2026-11-06', 1+ C$25.56. This is a backorder, not in stock. Shipping charges not checked."
+  },
+  "alt": {
+   "store": "PiShop.ca (Zero 2 W, SC1176, no header)",
+   "url": "https://www.pishop.ca/product/raspberry-pi-zero-2-w/",
+   "price_cad": 21.95,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Fetched 2026-09-26: C$21.95, OUT OF STOCK (schema OutOfStock). Use the store's notify option. The WH version (https://www.pishop.ca/product/raspberry-pi-zero-2-w-with-header/) is C$25.95 and also out of stock."
+  },
+  "est_total_cad": 25.56,
+  "id": "pi_zero_2w",
+  "summary": "Out of stock at every Canadian reseller right now. Backorder it (Newark, ~Nov 6) or use PiShop's notify. Get the WH (pre-soldered header) if you can.",
+  "flag": "out of stock"
+ },
+ {
+  "spec_notes": "32 GB is the right size (it ships FAT32 and flashes easily with Raspberry Pi Imager). The official BOM references a SanDisk Ultra 32 GB. Flash prices are high right now: 32 GB cards are about C$25-30 at every Canadian store I checked. PiShop's SanDisk High Endurance 32 GB (C$39.95, in stock) is an option if you want extra durability. Order the card together with the IMU and SG90s from PiShop to share shipping.",
+  "best": {
+   "store": "PiShop.ca",
+   "url": "https://www.pishop.ca/product/class-10-microsd-card-extreme-pro-32-gb-blank-bulk/",
+   "price_cad": 29.45,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Fetched 2026-09-26: in stock, C$29.45. SanDisk Extreme Pro 32 GB SDSQXCG-032G, bulk (no retail packaging). Page lists 'C10, U3, A1, V30'."
+  },
+  "alt": {
+   "store": "PiShop.ca",
+   "url": "https://www.pishop.ca/product/sandisk-ultra-microsdhc-32gb-class-10-blank/",
+   "price_cad": 27.95,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Fetched 2026-09-26: in stock, C$27.95, SanDisk Ultra microSDHC 32 GB UHS-I, 100 MB/s. The page does not state A1. If you want A1 confirmed, Amazon.ca B08L5HMJVW (SanDisk Ultra 32 GB 'A1', C$29.91, in stock, third-party seller, shipped by Amazon) is the fallback."
+  },
+  "est_total_cad": 29.45,
+  "id": "microsd",
+  "summary": "Any 32 GB A1 card. Order it with the IMU and SG90s from PiShop to share shipping."
+ },
+ {
+  "spec_notes": "The Open Duck runtime uses adafruit_bno055.BNO055_I2C(i2c) with the default address 0x28, and the printed IMU mount was designed around the Adafruit board. Risks with GY-BNO055 clones (these are widely reported community issues that I did not test myself): (1) many boards default to address 0x29, so check with i2cdetect and pass address=0x29 or change the ADR jumper; (2) the board outline and hole pattern differ from Adafruit's, so it may not fit the mount without modification; (3) crystal and parts quality varies, and there are reports of dead or relabelled chips, so buy a spare. Any BNO055, genuine or clone, can throw I2C errors on the Pi because of clock stretching; the runtime README just says to enable I2C in raspi-config. Adafruit is C$71.54 on Amazon.ca, so PiShop is clearly cheaper.",
+  "best": {
+   "store": "PiShop.ca (Adafruit #2472, genuine)",
+   "url": "https://www.pishop.ca/product/adafruit-9-dof-absolute-orientation-imu-fusion-breakout-bno055/",
+   "price_cad": 53.95,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Fetched 2026-09-26: in stock (schema InStock), C$53.95, MPN 2472."
+  },
+  "alt": {
+   "store": "MT Technology Co., Ltd. (AliExpress) – GY-BNO055 clone",
+   "url": "https://www.aliexpress.com/item/1005005499172228.html",
+   "price_cad": 11.36,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Rendered 2026-09-26. Title 'GY-BNO055 9DOF ... Absolute Orientation Breakout'. 1PCS regular price C$11.36; a new-shopper promo shows C$3.05, limited to 1 per shopper. 5PCS C$40.27. Free shipping, delivery Oct 3-9. 4.4 stars, 1,000+ sold."
+  },
+  "est_total_cad": 53.95,
+  "id": "imu_bno055",
+  "summary": "The genuine Adafruit board fits the printed mount. Clones are often address 0x29 and a different shape."
+ },
+ {
+  "spec_notes": "The official AliExpress link in the BOM (1005006164610609) is dead. The v2 foot CAD in the assembly guide shows a subminiature 19.8 x 10.2 x 6.4 mm switch with a pin plunger (no lever) and 3 terminals, press-fit pointing down. Get the plain 'SS-10' or 'SS-5' part, not the 'GL' lever versions; SS-5 has the same body. The wiring table only uses 2 GPIOs (left foot GPIO22, right foot GPIO27), so the two switches in each foot presumably go in parallel on COM and NO. Newark Canada also has the genuine Omron SS-5 at C$2.63 (1,012 in stock): https://canada.newark.com/omron-electronic-components/ss-5/microsw-subminiature-pin-plunger/dp/36K7635",
+  "best": {
+   "store": "Digi-Key.ca (genuine Omron/Aratas SS-10)",
+   "url": "https://www.digikey.ca/en/products/detail/omron-electronics-inc-emc-div/SS-10/369860",
+   "price_cad": 4.31,
+   "pack_size": 1,
+   "ships_from": "Digi-Key (ships to Canada, CAD pricing)",
+   "verified": "Fetched 2026-09-26: 3,179 in stock. C$4.31 each at qty 1, C$3.56 each at qty 10. Pin plunger, solder lug terminals. Price is per switch, so 4 cost C$17.24. Shipping charge on a small order not checked."
+  },
+  "alt": {
+   "store": "Easyeach Store (AliExpress)",
+   "url": "https://www.aliexpress.com/item/1005007018723180.html",
+   "price_cad": 2.26,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Rendered 2026-09-26: SKU 'SS-10' C$2.26 each (844 available); SKU 'SS-5' (same body) C$0.62 each. Standard shipping C$8.08. For 4 x SS-10 that is about C$17 with shipping, no cheaper than Digi-Key unless combined with other AliExpress items."
+  },
+  "est_total_cad": 17.24,
+  "id": "foot_switch",
+  "summary": "Pin-plunger SS-10 (or SS-5), with no lever. The official AliExpress link is dead."
+ },
+ {
+  "spec_notes": "5 V PWM hobby servos, part of the 'expression' package (antennas). Any SG90 or MG90S fits the 9 g form factor. PiShop also has the Waveshare MG90S metal-gear servo at C$4.95 (in stock). The previous Amazon.ca link is still valid.",
+  "best": {
+   "store": "PiShop.ca (Tower Pro SG90)",
+   "url": "https://www.pishop.ca/product/sg90-180-degrees-9g-micro-servo-motor-tower-pro/",
+   "price_cad": 4.95,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Fetched 2026-09-26: in stock, C$4.95 each, so 2 cost C$9.90. Can ship with the IMU and SD card order."
+  },
+  "alt": {
+   "store": "Amazon.ca (ALMOCN, shipped by Amazon)",
+   "url": "https://www.amazon.ca/ALMOCN-Helicopter-Airplane-Controls-Project/dp/B09CGYX76S/",
+   "price_cad": 12.99,
+   "pack_size": 4,
+   "ships_from": "Amazon.ca (Canada)",
+   "verified": "Fetched 2026-09-26: '4PCS SG90 9G Micro Servo Motor Kit', In Stock, C$12.99, merchant 'Almocn US', ships from Amazon. You get 2 spares."
+  },
+  "est_total_cad": 9.9,
+  "id": "servo_9g",
+  "summary": "Any SG90/MG90S. PiShop can ship them with the IMU order.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005006782828910.html",
+   "price_cad": 8.49,
+   "pack_size": 6,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "6-pack at a deal price; cheaper per servo either way.",
+   "verified": "Seen in AliExpress search-result JSON (CAD, ship-to Canada, logged out): '6pcs Sg90 9g Micro Servo Motor...' sale price C$ 8.49 (flagged real_super_deals), seller regular price C$26.21, crossed-out C$26.21. Alternative 2-pc-min listing 32863714315 '2/5/10/20/50pcs ... SG90 9G' shows C$ 9.26 (seller regular C$16.02, 600+ sold, 4.9, Choice); 2-pc listing 1005007171043395 shows C$1.72 welcome price / seller regular C$15.93 (800+ sold, 4.9)."
+  }
+ },
+ {
+  "spec_notes": "Official BOM links nkon.nl Molicel INR18650-P30B. Molicel P30B and P28A are sold only as unprotected flat-top cells. That is fine in a standard spring holder, but Universal-Solder describes its 2x18650 holder as made for flat-top cells. Don't buy button-top 'protected' cells: they are longer (about 67-70 mm) and have a built-in protection circuit you don't need behind a BMS. Charge both cells to the same voltage before installing them (the assembly guide says so). Cells ship as dangerous goods, so expect ground shipping. A second Canadian source: flashlightworld.com (fulfilment in Boisbriand, QC) has P28A at $18.95 CAD, 7 left, final sale. Involt showed P30B at $9.99, but its page said sold out, so it is not used here.",
+  "best": {
+   "store": "Rotor Village (Molicel P28A 2-pack)",
+   "url": "https://rotorvillage.ca/molicell-18650-2800mah-p28a-35a-li-ion-2pc/",
+   "price_cad": 23.99,
+   "pack_size": 2,
+   "ships_from": "Winkler, Manitoba",
+   "verified": "Fetched 2026-09-27: C$23.99 for 2, 26 in stock. Shipping at carrier rates."
+  },
+  "alt": {
+   "store": "Savour the Vapour (KW, in-store pickup) - Samsung 30Q",
+   "url": "https://www.savourthevapour.ca/",
+   "price_cad": 12.99,
+   "pack_size": 1,
+   "ships_from": "Kitchener-Waterloo, free store pickup",
+   "verified": "Seen 2026-09-27: genuine Samsung 30Q 3000 mAh, C$12.99, 21 in stock. 15 A continuous - enough for the duck, less headroom than Molicel."
+  },
+  "est_total_cad": 23.99,
+  "id": "cell_18650",
+  "summary": "Rotor Village Molicel P28A 2-pack is cheapest per cell but shipping is high. No-shipping option: Samsung 30Q pickup at Savour the Vapour in KW (15 A, adequate). Ask them for Molicel too."
+ },
+ {
+  "spec_notes": "Official part is CABLEPELADO 2x MR18650, 74x42x20 mm, 200 mm leads, 7.4 V series (checked on amazon.fr). The balanced BMS needs a mid-point wire (B1), so solder it to the metal bridge between the cells at the far end of the holder. Check that the holder fits under the printed battery_pack_lid.",
+  "best": {
+   "store": "Canada Robotix",
+   "url": "https://www.canadarobotix.com/products/2914",
+   "price_cad": 2.99,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Page fetched: $2.99 CAD, 'In-stock! Over 50+ remaining', wired in series with a bridge at one end and leads at the other. Dimensions and wire length are not listed."
+  },
+  "alt": {
+   "store": "Universal-Solder.ca",
+   "url": "https://www.universal-solder.ca/product/lithium-battery-holder-2-x-18650-with-open-wire-ends/",
+   "price_cad": 1.99,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Page fetched: C$1.99, 'In stock (can be backordered)', 76x41x19 mm (very close to the official 74x42x20), about 12 cm leads, for flat-top cells. Series wiring is not stated explicitly."
+  },
+  "est_total_cad": 2.99,
+  "id": "holder_2s",
+  "summary": "2-cell series holder. Solder the BMS mid-wire (B1) to the bridge between the cells.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005005691348601.html",
+   "price_cad": 0.62,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": null,
+   "note": "2-slot price not readable; many listings are parallel-wired, not 2S. Canada Robotix is safer.",
+   "verified": "Search-result JSON: 'New 18650 Power Bank Cases 1X 2X 3X 4X 18650 Battery Holder Storage Box Case 1 2 3 4 Slot Batteries Container' sale C$0.62, seller regular C$0.86, crossed-out C$0.89 - this is the listing's lowest SKU (probably the 1-slot); the 2-slot SKU price was not visible. Alternative Choice listing 1005007108697610 '1-10pcs 18650 Power Bank Cases 1X 2X 3X 4X ...' shows C$1.72 welcome price / seller regular C$2.99 (408 sold, 4.8)."
+  }
+ },
+ {
+  "spec_notes": "Official link is a shorturl.at link; Cloudflare blocked it, so I couldn't resolve it. Get the 'Balance' version, not 'Standard' (Plumflex B0BM8ZV4YM on amazon.ca is Standard, $6.23). Wiring: B- to pack -, B1 to the mid-point, B+ to pack +, P+/P- to the load and charger. Many of these boards need a brief charge to 'wake up' before they give output. Cutoffs on the pick: 8.4 V overcharge, 5.6 V over-discharge.",
+  "best": {
+   "store": "Amazon.ca",
+   "url": "https://www.amazon.ca/dp/B0HGQTMMXK",
+   "price_cad": 10.89,
+   "pack_size": 1,
+   "ships_from": "Not shown (likely a third-party seller)",
+   "verified": "amazon.ca page scraped: '2S 20A BMS Balanced Board 7.4V/8.4V for 18650 (Balanced Version)', $10.89, In Stock. Pack size assumed to be 1 because the title gives no count. Seller could not be read."
+  },
+  "alt": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005001969463015.html",
+   "price_cad": null,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Listing exists (og:title '2S 20A 7.4V 8.4V 18650 Lithium Battery Protection Board BMS Standard Balance'). A search snippet showed about US$0.72, which is probably the Standard variant. Price and stock could not be verified because the page renders with JavaScript. Pick the Balance variant."
+  },
+  "est_total_cad": 10.89,
+  "id": "bms_2s",
+  "summary": "Get the Balanced version, not Standard."
+ },
+ {
+  "spec_notes": "Official part is HENGE 4-12 A UBEC from Alibaba. The earlier Great Hobbies link HBW30607000 is the Hobbywing UBEC 5A V2 Air, not a 3 A model. It is jumper-selectable 5.0/6.0/7.4 V, 5 A continuous and 15 A burst, 2-8S input. Set the jumper to 5.0 V before connecting the Pi. The Hobbywing 3A UBEC (HBW3AUBEC) is discontinued at Great Hobbies. The Adafruit alternate needs at least 6 V input, so it may drop out near the bottom of 2S discharge; the BMS cuts off at 5.6 V.",
+  "best": {
+   "store": "Great Hobbies (Kitchener store / online)",
+   "url": "https://www.greathobbies.com/productinfo/?prod_id=HBW30607000",
+   "price_cad": 22.99,
+   "pack_size": 1,
+   "ships_from": "Canada (Ontario; in-store pickup available)",
+   "verified": "Page fetched with curl: $22.99 CAD. Live stock feed: online warehouse amber (temporarily out); Kitchener, Stratford and Oshawa stores green (in stock). The feed itself says there is no guarantee."
+  },
+  "alt": {
+   "store": "PiShop.ca (Adafruit UBEC 5V 3A, #1385)",
+   "url": "https://www.pishop.ca/product/ubec-dcdc-step-down-buck-converter-5v-3a-output/",
+   "price_cad": 14.94,
+   "pack_size": 1,
+   "ships_from": "Canada",
+   "verified": "Page fetched: $14.94, 'Current Stock: 34', IN STOCK. 5 V at 3 A (5 A peak), 6-16 V input."
+  },
+  "est_total_cad": 22.99,
+  "id": "ubec_5v",
+  "summary": "Hobbywing 5 A. Set its jumper to 5.0 V before connecting the Pi. In stock at Great Hobbies Kitchener.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005006044090399.html",
+   "price_cad": 4.78,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Hobbywing 3A clone. Bare output wires; set jumper to 5 V.",
+   "verified": "Search-result JSON: 'HOBBYWING 3A UBEC 5V/6V Max 5A Lowest RF Noise BEC Full Shielding Antijamming Switching Regulator' sale C$ 2.21, seller regular C$4.78, crossed-out C$4.92, no new-user flag. Alternatives seen: 1005002346550736 '1/2/5pcs Hobbywing 3A Switch Mode UBEC' C$1.72 welcome / seller C$5.67 (179 sold, 4.8, Choice); HENGE 6A UBEC 4000053458533 C$8.93 (seller C$8.67, 233 sold, 5.0); HENGE 6A 1005005269925833 C$1.72 welcome / seller C$11.14 (364 sold, 4.8, Choice); HENGE 4A 1005005615251263 C$11.99 (seller C$34.78, 21 sold, 5.0)."
+  }
+ },
+ {
+  "spec_notes": "Official amazon.fr B0CH3JCQM5 is 'Toggle Switch Control 6 Terminals 2P2T 6 mm, 10 pcs'. It is really a 6-pin DPDT mini slide switch, SS22F32 type: 6 mm knob, 1.6 mm mounting holes. The robot's CAD model (power_switch.stl) measures 23.4 x 7.4 x 16.8 mm, which matches SS22F32G5 (23 x 7 x 16 mm). Problem: this switch is rated only 0.5-1 A at 50 VDC, so it is under-rated for 14 servos drawing several amps. There is no few-amp switch in this footprint. Options: (a) use the drop-in part with both poles in parallel (about 2 A, still marginal); (b) use the 6 A alternate and enlarge the printed cutout; (c) keep the slide switch and have it drive a MOSFET or relay that carries the load.",
+  "best": {
+   "store": "Amazon.ca (Aexit SS22F32G5, exact CAD fit)",
+   "url": "https://www.amazon.ca/dp/B07L9Q93TC",
+   "price_cad": 10.73,
+   "pack_size": 20,
+   "ships_from": "Third-party ('Usually ships within 2 to 3 days')",
+   "verified": "amazon.ca page scraped: SS22F32G5 DPDT on/on, 23 x 7 x 16 mm, DC50V 1A, 20 pcs, $10.73. Does not meet the few-amp requirement on its own (see notes)."
+  },
+  "alt": {
+   "store": "Amazon.ca (6 A DPDT slide switch, needs a modified print)",
+   "url": "https://www.amazon.ca/dp/B07Q5H1L6B",
+   "price_cad": 12.0,
+   "pack_size": 5,
+   "ships_from": "Amazon (sold by LUOYIMAO)",
+   "verified": "amazon.ca page scraped: $12.00, In Stock. Rated AC 125V 6A / 250V 3A, 35 x 13 x 18 mm, 3 mm holes. Too big for the stock cutout."
+  },
+  "est_total_cad": 10.73,
+  "id": "power_switch",
+  "summary": "The official switch fits the print but is rated ~1 A, and all 14 servos draw through it. Options are in Details.",
+  "flag": "rated 1 A",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005006411600507.html",
+   "price_cad": 3.74,
+   "pack_size": 10,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Same 0.5 A rating issue. For the real load use an MTS-202 mini toggle (bigger than the cutout).",
+   "verified": "Search-result JSON: '10Pcs/set 2 Position DPDT 2P2T Panel Mount Vertical Slide Switch 6 Pin 0.5A 50V DC Accessories' sale C$ 1.72 (new-user welcome price), seller regular C$3.74, crossed-out C$3.85. Cheapest non-Choice: 1005006141240380 same part, C$ 1.29 (seller C$1.46, 91 sold, 4.9). Exact 'SS22F32' 10-pc listing 1005003660190950: C$1.72 welcome / seller C$5.05 (155 sold, 5.0, Choice). Higher-current option: 32737746738 'UXCELL 250Vac 3A 125Vac 6A 6 Pins 2 Positions DPDT On/On Mini Slide Switch' C$1.72 welcome / seller C$3.63 (211 sold, 4.9, Choice; pack size not visible). Mini toggle alternative 1005008304283071 '10pcs MTS-102/103/202/203 Toggle Switch 6A 125VAC' C$4.81 (seller C$4.67, 2,000+ sold, 4.9, Choice)."
+  }
+ },
+ {
+  "spec_notes": "Official amazon.fr B0BWTK7SVN is the Adeept 2S 2A USB-C charge module, 2-pack. The same ASIN is on amazon.ca. The robot's CAD model of this board (usb_c_charger.stl) is 38.2 x 18.1 mm. The 2A version charges at 1.1 A, has no balancing (the BMS does that), takes 5 V only, and needs a 5 V/2 A or better USB supply. Another option is MECCANIXITY 2S boost charger B0DY184KTQ, $9.99 for 2 (39 x 18 mm), but that listing is the 4A version, which needs a 5 V/4 A source.",
+  "best": {
+   "store": "Amazon.ca (Adeept, single)",
+   "url": "https://www.amazon.ca/dp/B0BJTW4QBR",
+   "price_cad": 13.48,
+   "pack_size": 1,
+   "ships_from": "Amazon (sold by Adeept Official)",
+   "verified": "amazon.ca page scraped: Adeept Type-C 2S 2A charge module, $13.48, 'Only 8 left in stock', ships from Amazon."
+  },
+  "alt": {
+   "store": "Amazon.ca (Adeept 2-pack, the official ASIN)",
+   "url": "https://www.amazon.ca/dp/B0BWTK7SVN",
+   "price_cad": 20.14,
+   "pack_size": 2,
+   "ships_from": "Amazon (sold by Adeept Official)",
+   "verified": "Confirmed on amazon.ca: '...USB C to 8.4V - 2PCS', $20.14, 'Only 3 left in stock', ships from Amazon, sold by Adeept Official."
+  },
+  "est_total_cad": 13.48,
+  "id": "usbc_charger",
+  "summary": "Adeept 2S USB-C board, the same as the official part. Needs a 5 V/2 A USB supply.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005006148886377.html",
+   "price_cad": 1.62,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Better: the 15 W IP2326 board, ~C$9.31, 10,000+ orders.",
+   "verified": "Search-result JSON: 'Type-C Micro USB 2S 7.4V 8.4V Lithium Battery Charging Module Usb Booster Charging Board 5V 2A To 8.4V Charging' sale C$ 1.15, seller regular C$1.62, crossed-out C$1.66. Higher-volume alternative 1005010706867355 'Type-C USB 2S/3S BMS 15W 8.4V 12.6V 1.5A Lithium Battery Charging Boost Module With Balanced Support Fast Charge With Indicator' C$1.72 welcome / seller regular C$9.31 (10,000+ sold, 4.9, Choice); IP2326 board 1005009151428340 C$1.72 welcome / seller C$5.13 (490 sold, 4.5, Choice)."
+  }
+ },
+ {
+  "spec_notes": "Official amazon.fr B07VQ6VFDN is AERZETIX C42283: 10 straight male DC plugs to solder, 5.5 mm OD, 44 mm long, 9 mm insertion. Probably used to power the Waveshare bus servo adapter's DC jack (my inference, not checked). Centre pin is normally +.",
+  "best": {
+   "store": "Sayal Electronics (Kitchener store / online)",
+   "url": "https://shop.sayal.com/products/gaj-261-2",
+   "price_cad": 2.95,
+   "pack_size": 2,
+   "ships_from": "Canada (Sayal; Kitchener location)",
+   "verified": "Shopify product JSON: 'QK-1027A - DC POWER PLUG 2.1X5.5X9MM (2 pcs/pkg)', $2.95, available online. Solder type assumed from the form factor; the listing has no photo text to confirm."
+  },
+  "alt": {
+   "store": "Amazon.ca",
+   "url": "https://www.amazon.ca/dp/B0CSYRLXZH",
+   "price_cad": 6.38,
+   "pack_size": 10,
+   "ships_from": "Not shown",
+   "verified": "amazon.ca page scraped: 10 pcs 5.5x2.1 mm male solder DC barrel plugs, straight, 4.5 cm long, $6.38, 'Only 5 left in stock'."
+  },
+  "est_total_cad": 2.95,
+  "id": "barrel_jack",
+  "summary": "Male 5.5×2.1 mm solder plugs. Sayal in Kitchener has them.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/4001169264790.html",
+   "price_cad": 3.44,
+   "pack_size": 10,
+   "ships_from": "China",
+   "cheaper": false,
+   "note": "10 for C$3.44 - only as a free-shipping add-on; Sayal is cheaper for 2.",
+   "verified": "Search-result JSON: '10PCS DC Power Adapter plug 5.5*2.1mm DC Plug Connector Welding Line Male Plug 5.5x2.5 4.8 1.7 1.35 0.7MM' sale C$ 1.72 (new-user welcome price), seller regular C$3.44, crossed-out C$3.55. Same product non-Choice 1005006182259124: C$ 3.08 (seller C$2.98, 221 sold, 4.8). A Google snippet for listing 4000194710902 '10pcs 5.5x2.1mm Dc Power Male Plug Solder Connector' showed 'US $0.82' (= C$1.13 at x1.38) but that price was not seen on a rendered page."
+  }
+ },
+ {
+  "spec_notes": "One pair needed. XT30 is rated 15 A continuous, 30 A burst. Authenticity of 'Amass'-branded Amazon packs can't be confirmed from the listing. MP&W (mpandw.ca) sells generic 'AMASS-style' XT30s: male $0.40, female $0.35, available.",
+  "best": {
+   "store": "Amazon.ca (FLY RC Amass XT30U)",
+   "url": "https://www.amazon.ca/dp/B08H1JP7NW",
+   "price_cad": 12.79,
+   "pack_size": 20,
+   "ships_from": "Amazon (sold by FLYRC)",
+   "verified": "amazon.ca page scraped: 'FLY RC 20 Pairs Amass XT30U', $12.79, In Stock, ships from Amazon. Genuine AMASS is claimed by the listing, not independently verified."
+  },
+  "alt": {
+   "store": "Great Hobbies (Kitchener store / online)",
+   "url": "https://www.greathobbies.com/productinfo/?prod_id=TGHXXT30",
+   "price_cad": 3.99,
+   "pack_size": 1,
+   "ships_from": "Canada (Ontario; in-store pickup)",
+   "verified": "Page fetched: 'XT30 Connector 1 Pair Male/Female By TEAM GREAT HOBBIES', $3.99 CAD. Warehouse and Kitchener store both green (in stock). House brand, not AMASS."
+  },
+  "est_total_cad": 12.79,
+  "id": "xt30",
+  "summary": "One pair needed. Any pack is fine.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/32905221589.html",
+   "price_cad": 4.19,
+   "pack_size": 5,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "5 pairs. Confirm the XT30U variant.",
+   "verified": "Search-result JSON: '10 x Amass XT60+ XT60H XT30U XT90H Plug Connector With Sheath Housing 5 Male 5 Female (5 Pair)' sale C$ 4.19, seller regular C$4.07, no new-user flag. Also seen: 1005008963955138 'XT30U XT60 XT90 Male Female Bullet Connectors Plugs' C$ 3.43 (seller C$4.17, 402 sold, 4.7); 1005005994522058 '10/20/50 Pairs Amass XT30U XT30 Upgrade' C$ 2.67 with crossed-out C$42.36 (260 sold, 4.6, Choice - price looks promo/uncertain); 1005008144968215 '5 Pairs XT30 XT-30U Yellow Black' C$1.72 welcome / crossed-out C$11.97 (1,000+ sold, 4.9, Choice)."
+  }
+ },
+ {
+  "spec_notes": "Confirmed from the repo: roll_bearing.stl measures 32 x 32 x 7 mm, and the official amazon.fr B0CXXSVFTV is 'Kozelo 6804ZZ 20x32x7mm' (2 pcs). Do not use F623ZZ. 2RS (rubber seals) is preferred, but ZZ works too.",
+  "best": {
+   "store": "Amazon.ca (uxcell)",
+   "url": "https://www.amazon.ca/dp/B0FNWGRJQ2",
+   "price_cad": 13.99,
+   "pack_size": 4,
+   "ships_from": "Amazon (sold by Amadeo City)",
+   "verified": "amazon.ca page scraped: 'uxcell 4 Pcs 6804-2RS ... 20x32x7mm', $13.99, 'Only 3 left in stock', ships from Amazon. If it sells out, uxcell 2-packs B08H28D7X8 ($11.69) or SYOWADA 10 pcs ($17.59) were in the same search."
+  },
+  "alt": {
+   "store": "AliExpress (MOCHU)",
+   "url": "https://www.aliexpress.com/item/32609018220.html",
+   "price_cad": null,
+   "pack_size": 10,
+   "ships_from": "China",
+   "verified": "Listing exists (og:title '10pcs Bearing 6804-2RS 61804-2RS1 ... 20x32x7 MOCHU'). A search snippet showed about US$4.50 for 10 (about $6.20 CAD), but current price and stock could not be verified. VXB (vxb.com, US) sells a single 6804-2RS at $19.99, currency unclear."
+  },
+  "est_total_cad": 13.99,
+  "id": "bearing_6804",
+  "summary": "6804-2RS, 20×32×7 mm, measured from the CAD. Not F623 as on the old list."
+ },
+ {
+  "spec_notes": "The official 'cable sheath' (amazon.fr B07PGMKC3T) is actually AGPTEK spiral wrap (4 m of Ø4 mm plus 6 m of Ø6 mm), not braided sleeve. Either kind works for the leg servo cables. Voltatek's 6 mm x 5 m spiral wrap ($5.95) is the closest match to the official part but is not in stock (pre-order, 2-4 weeks). Seal cut ends of braided sleeve with a hot knife or lighter.",
+  "best": {
+   "store": "Amazon.ca (Alex Tech)",
+   "url": "https://www.amazon.ca/dp/B071JH14WZ",
+   "price_cad": 9.99,
+   "pack_size": 1,
+   "ships_from": "Amazon (sold by LukPick)",
+   "verified": "amazon.ca page scraped: '25ft - 1/4 inch PET Expandable Braided Sleeving - Black - Alex Tech', $9.99, In Stock, ships from Amazon."
+  },
+  "alt": {
+   "store": "Amazon.ca (CBAZY)",
+   "url": "https://www.amazon.ca/dp/B07S74QMG6",
+   "price_cad": 10.25,
+   "pack_size": 1,
+   "ships_from": "Amazon (sold by CBAZY)",
+   "verified": "amazon.ca page scraped: '30ft PET Expandable Braided Sleeving (1/4\", Black)', $10.25, In Stock, ships from Amazon."
+  },
+  "est_total_cad": 9.99,
+  "id": "cable_sleeve",
+  "summary": "¼″ braided sleeve or spiral wrap for the leg cables.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005004808522289.html",
+   "price_cad": 2.92,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 6 mm × 5 m variant.",
+   "verified": "Search-result JSON: '5/10M Braided Cable Sleeve 3mm 4mm 6mm 8mm 10mm 12mm 14mm PET Expandable Cover Insulation Nylon Sheath Wire Wrap Protection' sale C$ 1.72 (new-user welcome price), seller regular C$2.92, crossed-out C$3.01 - this is the lowest SKU (likely 3 mm x 5 m); the 6 mm x 5 m SKU price was not visible. Alternatives: 1005007486025295 '1/5/10M Black Insulated Braid Sleeving 6/8/10/30mm' C$1.72 welcome / crossed-out C$6.32 (10,000+ sold, 4.8, Choice); 4000111680202 '5/10M Black ... 2-25mm' crossed-out C$5.46 (1,000+ sold, 4.8, Choice)."
+  }
+ },
+ {
+  "spec_notes": "Official BOM links an Amazon Basics 'USB-C (Source) to Micro-B (Device)' cable. A normal USB-C to Micro-B data cable works whichever way it is labelled, because the Pi Zero's micro-USB port runs as host and supplies VBUS. It must be a data cable (480 Mbps), not charge-only. Plug the micro end into the Pi's USB port, not its PWR port.",
+  "best": {
+   "store": "Amazon.ca (HOTNOW)",
+   "url": "https://www.amazon.ca/dp/B0GZP275HN",
+   "price_cad": 8.66,
+   "pack_size": 2,
+   "ships_from": "Amazon (sold by HOTNOW Official)",
+   "verified": "amazon.ca page scraped: 'USB C to Micro USB OTG Cable 15cm 2 Pack', $8.66, 'Only 3 left in stock', 480 Mbps data."
+  },
+  "alt": {
+   "store": "Amazon.ca (CableCreation 0.2 m)",
+   "url": "https://www.amazon.ca/dp/B01M72GS0H",
+   "price_cad": 12.49,
+   "pack_size": 1,
+   "ships_from": "Amazon (sold by CableCreation)",
+   "verified": "amazon.ca page scraped: 'CableCreation Short Micro USB to USB C Cable 0.2M', $12.49, In Stock, 480 Mbps data."
+  },
+  "est_total_cad": 8.66,
+  "id": "usb_15cm",
+  "summary": "Must be a data cable. The micro end goes in the Pi's USB port, not PWR.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005006081854008.html",
+   "price_cad": 3.07,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Must say OTG/data/480 Mbps. CableCreation 0.2 m ~C$5.69 is the safe pick.",
+   "verified": "Search-result JSON: 'Type C USB-C To Micro USB Fast Charging Micro OTG Adapter Cable Quick Charger Data Cable For Macbook' sale C$ 1.58 (new-user welcome price), seller regular C$3.07, crossed-out C$3.16. Branded alternative 1005010391943574 'CableCreation Short USB C to Micro USB Cable 0.2M, Braided USBC to MicroUSB OTG 480Mbps Cord' sale C$ 5.69, seller regular C$17.22 (500+ sold, 4.8). Also 1005008551689335 'USB C to Micro USB Cable 1M/0.3M ... OTG Data Cord' C$1.72 welcome / crossed-out C$5.28 (800+ sold, 4.9, Choice)."
+  }
+ },
+ {
+  "spec_notes": "Official amazon.fr B0BFWSP4PP ('USB C to Micro USB Cable 50 cm, pack of 2, OTG'). The same ASIN is on amazon.ca, listed as 1.5 ft (about 45 cm). It must be a data cable.",
+  "best": {
+   "store": "Amazon.ca (HOTNOW, the official ASIN)",
+   "url": "https://www.amazon.ca/dp/B0BFWSP4PP",
+   "price_cad": 9.99,
+   "pack_size": 2,
+   "ships_from": "Amazon (sold by HOTNOW Official)",
+   "verified": "amazon.ca page scraped: 'USB C to Micro USB Cable 1.5FT 2Pack ... Data sync', $9.99, In Stock, USB 2.0 480 Mbps."
+  },
+  "alt": {
+   "store": "Amazon.ca (StarTech 0.5 m)",
+   "url": "https://www.amazon.ca/dp/B071J2VSBL",
+   "price_cad": 14.99,
+   "pack_size": 1,
+   "ships_from": "Not shown",
+   "verified": "amazon.ca page scraped: 'STARTECH USB C to Micro USB Cable, 0.5m', $14.99, 'Only 9 left in stock (more on the way)', USB 2.0 data."
+  },
+  "est_total_cad": 9.99,
+  "id": "usb_50cm",
+  "summary": "Must be a data cable.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005011750099848.html",
+   "price_cad": 3.91,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 0.5 m option; must be a data cable.",
+   "verified": "Search-result JSON: 'Type C To Micro USB Cable Adapter Mobile Phone Charging Data Transfer Cords for Samsung Xiaomi Huawei' sale C$ 1.72 (new-user welcome price), seller regular C$3.91, crossed-out C$4.03. Branded alternative 1005002951536412 'Vention Type C to Micro USB Cable Fast USB Type-C Adapter ... OTG' C$1.72 welcome price, crossed-out C$4.56, seller regular price not readable (1,000+ sold, 4.9). Also 1005005737171020 'USB-C to Micro USB Converter Cable ... Data Charging Cable' C$1.72 welcome / seller C$5.37 (48 sold, 5.0, Choice)."
+  }
+ },
+ {
+  "spec_notes": "The official part, amazon.fr B09ZPF48VK, is FENGYING 50 pcs M3 knurled brass inserts. Its listing gives the size as 5.7 mm x 4.6 mm, which is the CNC Kitchen/ruthex 'standard' M3. I sliced the v2 STLs (trunk_bottom, head, foot_bottom_pla, leg_spacer, body_middle_bottom) and the insert holes are 4.0 mm across, which is the recommended hole for M3x5.7/OD4.6 inserts. So buy that size, not Voron M3x5x4 (5 mm OD, 4 mm long). Voron inserts would be oversized for 4.0 mm holes, and many Amazon.ca 'M3 heat-set' packs default to them (e.g. HANGLIFE B0CS6VZYL8 is M3x5x4). Upstream bought 50; a pack of 100 leaves spares for mistakes. Middle option: B0BVMMBG2N (4.6 x 5.7 mm, 100 pcs), CAD 24.58, shipped by Amazon US, arrives about Oct 7.",
+  "best": {
+   "store": "Amazon.ca (sold by DELOVA LLC, third-party seller)",
+   "url": "https://www.amazon.ca/dp/B08BCRZZS3",
+   "price_cad": 36.85,
+   "pack_size": 100,
+   "ships_from": "Third-party seller (DELOVA LLC); delivery estimate Sep 29 - Oct 1",
+   "verified": "Fetched 2026-09-26: title 'ruthex M3 Threaded Inserts - 100 Pieces RX-M3x5.7', CAD 36.85, In Stock. Brand-name exact match, but expensive."
+  },
+  "alt": {
+   "store": "Amazon.ca (sold and shipped by ubestsky, marketplace)",
+   "url": "https://www.amazon.ca/dp/B087N4LVD1",
+   "price_cad": 11.59,
+   "pack_size": 100,
+   "ships_from": "Marketplace seller shipping from overseas; delivery estimate Oct 20 - Nov 9",
+   "verified": "Fetched 2026-09-26: title 'iplusmile ... 100pcs, M3*4.6*5.69', CAD 11.59, In Stock. Dimensions match the official insert; delivery is slow."
+  },
+  "est_total_cad": 36.85,
+  "id": "m3_inserts",
+  "summary": "M3 × 5.7 mm long × 4.6 mm OD, because the holes are 4.0 mm. Not Voron M3×5×4. The alt is C$11.59 but slow.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005007995311296.html",
+   "price_cad": 8.19,
+   "pack_size": 100,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Title says M3×5.7-OD4.6, the right size. Avoid M3×5×4 listings.",
+   "verified": "AliExpress search-result JSON (region CA, currency CAD): title '100pcs M3 M3*5.7-OD4.6 Thread Knurled Brass Threaded Heat Set ... Insert', sale C$ 8.19, original C$ 15.53, 'Best price in similar deals'"
+  }
+ },
+ {
+  "spec_notes": "The assembly guide calls for M3x6 (foot) and M3x10 (trunk). Exact counts are TODO upstream, so get a kit with several of each length. Screws into motor metal get Loctite; do not use Loctite on the plastic servo screws. The best pick has 30 each of M3x6/8/10/12/16/20 plus nuts and washers. Its bullet text contains a copy-paste error ('Thread Dia: 2mm; Pitch 0.4mm'), but the title and packing list say M3. Many stainless kits on Amazon.ca skip 10 mm (e.g. Mywish 550 pcs is 6/8/12/14...), so check before buying another kit.",
+  "best": {
+   "store": "Amazon.ca (mxuteuk, sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0C7ZPZ214",
+   "price_cad": 15.99,
+   "pack_size": 620,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: '620PCS M3 x 6/8/10/12/16/20mm ... 12.9 Grade Alloy Steel Black Zinc', CAD 15.99, In Stock. Packing list: 30 pcs of each length, 180 nuts, 80 washers."
+  },
+  "alt": {
+   "store": "Amazon.ca (Walfront, sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0742DR9WP",
+   "price_cad": 18.68,
+   "pack_size": 160,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: 304 stainless M3 socket head kit, 6/8/10/12/16/20/25/30 mm, 20 pcs per length, CAD 18.68. Listing says only 10 left."
+  },
+  "est_total_cad": 15.99,
+  "id": "m3_screws",
+  "summary": "Kit with M3×6/8/10/12. The guide uses M3×6 (feet) and M3×10 (trunk); exact counts aren't published.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005012437951096.html",
+   "price_cad": 9.69,
+   "pack_size": 420,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Mixed M2/M3/M4 420-pc kit; confirm socket-head style. M3-only kits weren't cheaper.",
+   "verified": "Search-card JSON: '420pcs/1260pcs Metric Bolt Assortment - M2 M3 M4, 21 Sizes 4MM To 30MM 12.9 Alloy Steel Bolts And Nuts', sale C$ 9.69, original C$ 20.75, 'Top selling on AliExpress'"
+  }
+ },
+ {
+  "spec_notes": "The guide specifies Loctite 243 blue for metal-to-metal screws into the servos. Canadian Tire only seems to list Loctite 242 blue 6 mL (not 243); I could not load their page (bot-blocked), so their price and stock are unconfirmed. 242 is the older medium-strength blue and works for this job. Better value if the 6 mL sells out: Loctite 243 50 mL bottle, Amazon.ca B00D5W7KBM, CAD 20.10, fulfilled by Amazon, delivery Oct 2 (fetched). Industrial suppliers (Grainger, Aircraft Spruce at CAD 36.90 for 10 mL) cost much more.",
+  "best": {
+   "store": "Amazon.ca (fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B004L439FE",
+   "price_cad": 17.95,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: 'Loctite 1330799 243 Blue Oil Resistant Threadlocker Tube - 6 ml', CAD 17.95. Listing says only 1 left, so it may sell out."
+  },
+  "alt": {
+   "store": "Amazon.ca (fulfilled by Amazon); the same 242 product is listed at Canadian Tire",
+   "url": "https://www.amazon.ca/dp/B019GIS13O",
+   "price_cad": 13.99,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: 'Loctite Threadlocker Blue 242 Removable Screw Glue, 6 mL', CAD 13.99, In Stock. This is 242, not 243 (see notes)."
+  },
+  "est_total_cad": 17.95,
+  "id": "loctite_243",
+  "summary": "Blue, for metal-into-servo screws only, never the plastic screws. 242 works too."
+ },
+ {
+  "spec_notes": "Upstream only says 'some wire'. Amazon.ca has no single kit with both 22 and 26 AWG silicone wire, so this is two small kits. Best pair: BNTECHGO 26 AWG (10 colours x 10 ft, URL below) plus a 22 AWG 6 colours x 10 ft kit at https://www.amazon.ca/dp/B08P4BPMZD (CAD 12.98, In Stock, fulfilled by Amazon, delivery Oct 2), about CAD 30.40 together. Budget pair: DAOKI 26 AWG (URL below) plus 22 AWG red/black 2 x 10 ft at https://www.amazon.ca/dp/B0746HG158 (CAD 7.68, In Stock, fulfilled by Amazon), about CAD 22.67 together. Tinned, fine-strand silicone wire is much better than PVC for wiring through moving joints.",
+  "best": {
+   "store": "Amazon.ca (BNTECHGO, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B01M9800TG",
+   "price_cad": 17.42,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Tue Oct 6",
+   "verified": "Fetched 2026-09-26: 'BNTECHGO 26 Gauge Silicone Wire Kit ... 10 Color each 10ft', CAD 17.42; the stock line did not render, but a delivery date was offered. The 22 AWG companion B08P4BPMZD was fetched: CAD 12.98, In Stock."
+  },
+  "alt": {
+   "store": "Amazon.ca (DAOKI, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B08PBLTYD8",
+   "price_cad": 14.99,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Mon Oct 5",
+   "verified": "Fetched 2026-09-26: 'DAOKI 26 Gauge Silicone Wire ... 3 Color 7M/23ft Each', CAD 14.99, only 4 left. Pair with B0746HG158 (22 AWG, CAD 7.68, In Stock)."
+  },
+  "est_total_cad": 30.4,
+  "id": "wire",
+  "summary": "Silicone 22 AWG (power) + 26 AWG (signal): two kits, ~C$30 together (see Details).",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005011692969059.html",
+   "price_cad": 4.29,
+   "pack_size": 6,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 22 AWG and 26 AWG SKUs (~C$8.60 for both, 1.5 m per colour). Longer 5–10 m kits ≈ C$26 for both.",
+   "verified": "Search-card JSON: '16 18 20 22 24 26 28 30 Gauge Silicone Electrical Wire Kit 6 Color Each 5ft Flexible ... Stranded Tinned Copper Wire', sale C$ 4.29, original C$ 12.90 (min-SKU price; gauge is a SKU choice)"
+  }
+ },
+ {
+  "spec_notes": "The only TPU part is foot_bottom_tpu.stl x2, printed at 40% infill. The STL volume is 23.6 cm³ each, so about 57 g for two solid soles; at 40% infill you need roughly 30-40 g. Amazon.ca 250 g spools (about CAD 14.8) are all no-name marketplace sellers with 1-6 week delivery, so a 0.5 kg spool from a known brand shipped by Amazon is the practical smallest size. A 1 kg spool costs only about CAD 6 more. Polymaker's Amazon.ca option is TPU95 0.75 kg at CAD 30.99 (B09KL2FXNJ, In Stock, fulfilled by Amazon). Your Voron's direct-drive extruder handles 95A fine: print slowly and turn retraction down.",
+  "best": {
+   "store": "Amazon.ca (ERYONE, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0BNQGCXML",
+   "price_cad": 19.99,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Wed Oct 7",
+   "verified": "Fetched 2026-09-26: 'ERYONE TPU Filament 1.75mm ... 95A, 0.5kg/Spool, Black', CAD 19.99, In Stock."
+  },
+  "alt": {
+   "store": "Amazon.ca (OVERTURE, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0841CKM6F",
+   "price_cad": 25.99,
+   "pack_size": 1,
+   "ships_from": "Amazon.ca fulfillment; delivery Oct 4-5",
+   "verified": "Fetched 2026-09-26: 'OVERTURE TPU 95A ... 1.75mm, 1kg Black', CAD 25.99, In Stock. Cheaper per gram, but a 1 kg spool."
+  },
+  "est_total_cad": 19.99,
+  "id": "tpu",
+  "summary": "Only ~40 g needed for the two soles. Smallest spool from a known brand."
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official AliExpress item 1005004447866125 is titled 'Diameter 20mm Height 12mm LED Hole 7mm Aluminum Smooth Reflector Flashlight Reflective Cup' (title read from the page source). The 7 mm hole fits the dome of the 1 W LED in item 8. The printed flash_reflector_interface.stl is about 23 x 23 x 12.7 mm, so get the 20 x 12 mm version. Many Amazon.ca listings are 20 x 15 x 7 mm, which is taller and may not fit. Upstream BOM price was about EUR 2.",
+  "best": {
+   "store": "Amazon.ca (sold by Cosyhat, marketplace)",
+   "url": "https://www.amazon.ca/dp/B0CQNX3YQ5",
+   "price_cad": 15.18,
+   "pack_size": 1,
+   "ships_from": "Marketplace seller, 'usually ships within 3 to 4 days'; delivery Oct 9-19",
+   "verified": "Fetched 2026-09-26: '1PC Aluminum Smooth Reflector Size 20mm X12mm X 7mm ... LED Hole 7mm', CAD 15.18. Exact dimensional match, but pricey for one reflector."
+  },
+  "alt": {
+   "store": "AliExpress (the official upstream listing)",
+   "url": "https://www.aliexpress.com/item/1005004447866125.html",
+   "price_cad": null,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Page fetched 2026-09-26 and the product title (20 mm dia, 12 mm high, 7 mm LED hole, smooth) confirmed. Price and stock load by JavaScript and could not be read, so not verified. Upstream BOM listed about EUR 2 (about CAD 3 at x1.50)."
+  },
+  "est_total_cad": 15.18,
+  "id": "reflector",
+  "summary": "20 mm × 12 mm tall with a 7 mm LED hole. The taller 15 mm ones may not fit.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005004447866125.html",
+   "price_cad": 2.69,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "The official listing. Not a Choice item, so seller shipping may apply.",
+   "verified": "Official listing seen twice in AliExpress search-card JSON (region CA/CAD): 'Diameter 20mm Height 12mm LED Hole 7mm Aluminum Smooth Reflector Flashlight Reflective Cup Reflector Bow', sale C$ 2.69, original C$ 3.20, 'Best price in similar deals'. og:title from the item page matched."
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official amazon.fr B086JH2BTD is ANGEEK '4 ohms 3 W, diameter 36/40 mm', a 2-pack: 40 mm max diameter, 22 mm magnet, 20 mm thick. The print has a speaker_interface/speaker_stand sized for it (about 38.6 x 36.9 mm interface). It is driven by the MAX98357A (item 11), which puts out up to 3.2 W into 4 Ω. Avoid the Adafruit 3968 '40 mm' speaker: it has a square-ish frame and may not fit the round mount.",
+  "best": {
+   "store": "Amazon.ca (sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B07DDHC5SN",
+   "price_cad": 11.78,
+   "pack_size": 2,
+   "ships_from": "Amazon.ca fulfillment; delivery Thu Oct 8",
+   "verified": "Fetched 2026-09-26: '2Pcs Diameter 4cm 4ohm 3W Loudspeaker', bullets list 40 mm diameter and 20 mm height (matches official), CAD 11.78, only 5 left."
+  },
+  "alt": {
+   "store": "Amazon.ca (sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0BW92LSXQ",
+   "price_cad": 10.89,
+   "pack_size": 2,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: '2PCS Micro 3W 4Ohm 40mm Loudspeaker Round Shape', CAD 10.89, only 8 left. Height not stated; check it against the 20 mm official part."
+  },
+  "est_total_cad": 11.78,
+  "id": "speaker",
+  "summary": "40 mm round, 4 Ω 3 W, ~20 mm deep.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005007634960531.html",
+   "price_cad": 4.59,
+   "pack_size": 2,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 4 cm SKU; confirm ~20 mm depth on the listing.",
+   "verified": "Search-card JSON: '2pcs Mini Speaker 3W 4R Diameter 5CM/4CM ... 3 Watt 4 Ohm 40mm Speakers for Arduino Kit', sale C$ 4.59, original C$ 11.22"
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official amazon.fr B07C97WKHD is NOT a 3 mm or 5 mm LED. It is a 50 pcs pack of 1 W 'high power' LED beads: bare emitters about 7 mm body and 15 mm across the leads, no star PCB, about 3.0-3.4 V at 350 mA; the listing offers warm and cool white. The 7 mm body is what fits the reflector's 7 mm hole. Wiring gotcha: upstream wires each anode straight to a Pi GPIO (GPIO23/24/25, common cathode to GND). A 3.3 V GPIO is barely above this LED's forward voltage and can only safely source a few mA, so they will be dim and uneven. Add about a 47-100 Ω series resistor, or switch them from 5 V with a small logic-level MOSFET or NPN for real brightness. At GPIO currents no heatsink is needed.",
+  "best": {
+   "store": "Amazon.ca (sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B07C95VKN5",
+   "price_cad": 10.79,
+   "pack_size": 50,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: 'High Power Led Chip, 50 Pcs Super Bright SMD COB Light Emitter Components Diode 1W ... (Cool White)', CAD 10.79, In Stock. Same product family and wording as the official amazon.fr listing."
+  },
+  "alt": {
+   "store": "Amazon.ca (sold by Chanzon)",
+   "url": "https://www.amazon.ca/dp/B01DBZHR1U",
+   "price_cad": 7.99,
+   "pack_size": 10,
+   "ships_from": "Chanzon (merchant-fulfilled); delivery Oct 8-20",
+   "verified": "Fetched 2026-09-26: 'Chanzon 10 pcs High Power Led Chip 1W White 6000K-6500K (300-350mA / 3V-3.4V)', CAD 7.99, In Stock. Better-documented specs; smaller pack."
+  },
+  "est_total_cad": 10.79,
+  "id": "leds",
+  "summary": "1 W bare emitters (7 mm body), not 5 mm LEDs. A Pi pin alone makes them dim; add a resistor or transistor (Details).",
+  "flag": "wiring note",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005002603986947.html",
+   "price_cad": 5.12,
+   "pack_size": 50,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 1 W cold/natural white SKU; check 3.0–3.4 V / 350 mA, ~7 mm body.",
+   "verified": "Search-card JSON: '50PCS 1W 3w High power LED beads cold white 6000k warm Natural 4000k red 660nm green blue 460nm yellow 590 full spectrum Chips', original C$ 5.12, first-order sale C$ 1.72 ('New shoppers save C$3.4')"
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official amazon.fr B06XNL2GBW is the genuine Adafruit I2S MEMS Microphone Breakout SPH0645LM4H (Adafruit 3421). The upstream BOM notes 'not integrated yet', meaning the runtime code does not use it, so it can be skipped. The Pi has one I2S bus: the mic shares BCLK (GPIO18) and LRCLK (GPIO19) with the MAX98357A and puts its data on GPIO20 (PCM_DIN). The SPH0645 has a known I2S timing quirk. The INMP441 alternate is a different chip that needs a generic I2S-mic overlay; it works but is not a drop-in software match. The same Adafruit 3421 on Amazon.ca (B06XNL2GBW) costs CAD 31.07 from Amazon US, so avoid it.",
+  "best": {
+   "store": "PiShop.ca (Canadian; Elmwood Electronics orders now go here)",
+   "url": "https://www.pishop.ca/product/adafruit-i2s-mems-microphone-breakout-sph0645lm4h/",
+   "price_cad": 11.95,
+   "pack_size": 1,
+   "ships_from": "Canada (PiShop.ca)",
+   "verified": "Fetched 2026-09-26: CAD 11.95, In stock, SKU 1673-2, genuine Adafruit."
+  },
+  "alt": {
+   "store": "Amazon.ca (sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0CXTF9FKN",
+   "price_cad": 16.99,
+   "pack_size": 3,
+   "ships_from": "Amazon.ca fulfillment; delivery Thu Oct 8",
+   "verified": "Fetched 2026-09-26: 'INMP441 Omnidirectional Microphone Module I2S Interface MEMS ... 3pcs', CAD 16.99, In Stock. Cheaper single: DAOKI INMP441 B0821521CV, CAD 10.99, but delivery Oct 26-30."
+  },
+  "est_total_cad": 11.95,
+  "id": "mic",
+  "summary": "Not used by the duck's software yet. Skip it unless you want it for later.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/4000964400783.html",
+   "price_cad": 5.2,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "SPH0645 clone, same pinout as the Adafruit board.",
+   "verified": "Search-card JSON: 'SPH0645 I2S MEMS Microphone Breakout Sensor Board Module SPH0645LM4H Microphone Module 1.6-3.6V for Arduino Raspberry Pi', sale C$ 5.20, 'Best price in similar deals'"
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official amazon.fr B0C4H3PT7W is 'FINGERINSPIRE 60Pcs ... Acrylique 30mm ... 2mm d'épaisseur': clear (not frosted) acrylic miniature bases, 30 mm across and 2 mm thick. That exact ASIN does not exist on Amazon.ca. The eye parts (left_eye/right_eye/bulb.stl) are 35 mm across. You need 4, so any pack is mostly spares. Sand one face with 400-grit for real diffusion. You could also print 30 mm discs in natural PETG/PLA (about 0.6-1 mm thick) on the Voron instead of buying.",
+  "best": {
+   "store": "Amazon.ca (GORGECRAFT, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0H3NC1YTH",
+   "price_cad": 18.39,
+   "pack_size": 80,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 9",
+   "verified": "Fetched 2026-09-26: 'GORGECRAFT 80Pcs Clear Round Miniature Bases 3cm Acrylic Circle Blanks 2mm Thick', bullets state 30 mm diameter and 2 mm thick, CAD 18.39. Listing says only 1 left."
+  },
+  "alt": {
+   "store": "Amazon.ca (FINGERINSPIRE, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0C9X6FFLH",
+   "price_cad": 17.89,
+   "pack_size": 140,
+   "ships_from": "Amazon.ca fulfillment; delivery Fri Oct 2",
+   "verified": "Fetched 2026-09-26: FINGERINSPIRE 140 pcs clear 2 mm discs in mixed sizes (80 x 24.5 mm, 30 x 30 mm, 20 x 40 mm, 10 x 50 mm), CAD 17.89. Only 4 left. Same brand as official; 30 of the discs are the needed 30 mm size."
+  },
+  "est_total_cad": 18.39,
+  "id": "eye_diffusers",
+  "summary": "30 mm × 2 mm clear acrylic discs. You could also print thin natural PETG discs.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005008492853952.html",
+   "price_cad": 5.04,
+   "pack_size": 10,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Pick the 30 mm SKU; confirm clear, not frosted.",
+   "verified": "Search-card JSON: '10PCS Clear Acrylic Miniature Bases 30mm 40mm 50mm 60mm Round Model Base 2mm Thick Circular Figure Stands', original C$ 5.04, first-order sale C$ 1.43 ('New shoppers save C$3.61')"
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional. The official amazon.fr B08SM2MR9Z is a Youmile 2-pack MAX98357 clone, not Adafruit. Wiring per the guide: LRC to GPIO19, BCLK to GPIO18, DIN to GPIO21, VIN to 5V, GND to GND; GAIN and SD not connected (defaults to 9 dB, (L+R)/2 mono). Genuine Adafruit 3006 in Canada: Digi-Key.ca has it; Elmwood's page no longer takes orders and I found no PiShop.ca page for 3006. Digi-Key charges CAD 15 shipping under CAD 100, so the Digi-Key pick only makes sense combined with other parts; otherwise the Amazon 2-pack is cheaper delivered.",
+  "best": {
+   "store": "Digi-Key.ca (genuine Adafruit 3006)",
+   "url": "https://www.digikey.ca/en/products/detail/adafruit-industries-llc/3006/6058477",
+   "price_cad": 9.3,
+   "pack_size": 1,
+   "ships_from": "Digi-Key (Thief River Falls, MN) to Canada, duties included; CAD 15 shipping on orders under CAD 100",
+   "verified": "Fetched 2026-09-26: CAD 9.30 each, 1,063 in stock, Active."
+  },
+  "alt": {
+   "store": "Amazon.ca (sold by third party, fulfilled by Amazon)",
+   "url": "https://www.amazon.ca/dp/B0DPJRLMDJ",
+   "price_cad": 15.83,
+   "pack_size": 2,
+   "ships_from": "Amazon.ca fulfillment; delivery Wed Oct 7",
+   "verified": "Fetched 2026-09-26: '2PCS MAX98357 MAX98357A I2S 3W Class D Amplifier Breakout', CAD 15.83, In Stock. Clone 2-pack, equivalent to the official Youmile part."
+  },
+  "est_total_cad": 9.3,
+  "id": "amp",
+  "summary": "Genuine Adafruit via Digi-Key only makes sense in a bigger order. The Amazon 2-pack is fine.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/1005011822741798.html",
+   "price_cad": 3.69,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Adafruit-layout clone with screw terminal.",
+   "verified": "Search-card JSON: 'New High Quality MAX98357 MAX98357A I2S 3W Class D Amplifier Breakout Interface I2S DAC Decoder For Audio', sale C$ 3.69, original C$ 11.63"
+  }
+ },
+ {
+  "spec_notes": "EXPRESSION PACKAGE, optional, 'not integrated yet' upstream. The official AliExpress item 32988983058 is titled 'Raspberry Pi 3 Model B+ (B Plus) Camera 5MP Mini Webcam with 16cm FFC Cable suitable for Raspberry Pi 3/Raspberry Pi Zero W/1.3'. Its photos show the standard 25 x 24 mm OV5647 'Rev 1.3' board with a 15-pin connector plus a 16 cm 15-pin to 22-pin Zero ribbon. The Pi Zero 2 W has the narrow 22-pin 0.5 mm-pitch CSI connector, so the 15-to-22-pin ribbon is required; a standard 15-15 cable will not fit. On AliExpress pick the Zero-cable variant. Cheaper Amazon.ca combo: Arducam OV5647 board B012V1HEP4 (CAD 14.00, In Stock, fulfilled by Amazon) plus Zero cable set B0B33YCSY2 (CAD 12.99, 40/80/150 mm 15-to-22-pin, In Stock), about CAD 27, delivery Oct 2. PiShop.ca's 'Zero V1.3 mini camera' (CAD 29.99) is a different 60 x 11.5 mm long-strip form factor and probably won't fit the head.",
+  "best": {
+   "store": "Amazon.ca (Arducam, shipped by Amazon US)",
+   "url": "https://www.amazon.ca/dp/B01LY05LOE",
+   "price_cad": 29.61,
+   "pack_size": 1,
+   "ships_from": "Amazon US to Canada; delivery Wed Oct 7",
+   "verified": "Fetched 2026-09-26: 'Arducam 5 Megapixels 1080p Sensor OV5647 Mini Camera Video Module with 15 Pin 1.0mm Pitch to 22 Pin 0.5mm and 15pin to 15pin 1.0mm Ribbon Cable ... Pi ZERO', CAD 29.61, In Stock; both cables included."
+  },
+  "alt": {
+   "store": "AliExpress (the official upstream listing)",
+   "url": "https://www.aliexpress.com/item/32988983058.html",
+   "price_cad": null,
+   "pack_size": 1,
+   "ships_from": "China",
+   "verified": "Page fetched 2026-09-26; title and product photos (OV5647 board plus 16 cm Zero FFC) confirmed. Price, variants and stock load by JavaScript and could not be read, so not verified. Upstream BOM listed EUR 4.82 (about CAD 7.25 at x1.50) when bought."
+  },
+  "est_total_cad": 29.61,
+  "id": "camera",
+  "summary": "Not used by the software yet. OV5647 with the 22-pin Pi Zero ribbon.",
+  "ali": {
+   "store": "AliExpress",
+   "url": "https://www.aliexpress.com/item/32988983058.html",
+   "price_cad": 14.48,
+   "pack_size": 1,
+   "ships_from": "China",
+   "cheaper": true,
+   "note": "Confirm the Zero (22-pin) cable variant on the page. Cheaper Choice options with the Zero cable ≈ C$8–11.",
+   "verified": "Official listing seen in AliExpress search-card JSON: 'Raspberry Pi 3 Model B+(B Plus) Camera 5MP Mini Webcam with 16cm FFC Cable suitable for Raspberry Pi 3/Raspberry Pi Zero W/1.3', sale C$ 14.48, original C$ 28.96. og:title from the item page matched."
+  }
+ },
+ {
+  "id": "pla",
+  "spec_notes": "You already have PLA. About 500 g is needed for the whole robot.",
+  "est_total_cad": null,
+  "summary": "You have it."
+ }
+]

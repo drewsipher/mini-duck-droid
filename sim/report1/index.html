@@ -1,0 +1,232 @@
+<title>Duck Training Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column of lab-notebook entries; figures sit on their own light plates so the white-background graphs read in both themes. */
+:root {
+  --bg: #f3f4f2; --panel: #ffffff; --fg: #1d2326; --muted: #5b666b; --rule: #d7dcd9;
+  --accent: #d9822b; --accent-ink: #9a5410; --good: #2a8a52; --bad: #b23b3b; --plate: #ffffff;
+  --display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161a1c; --panel: #1f2427; --fg: #e6e9e7; --muted: #9aa5a8; --rule: #323a3e;
+  --accent: #e9963f; --accent-ink: #f2b26e; --good: #5cc28a; --bad: #e07070; --plate: #f4f5f3; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161a1c; --panel: #1f2427; --fg: #e6e9e7; --muted: #9aa5a8; --rule: #323a3e;
+  --accent: #e9963f; --accent-ink: #f2b26e; --good: #5cc28a; --bad: #e07070; --plate: #f4f5f3; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; gap: 40px; }
+header { display: grid; gap: 6px; border-bottom: 2px solid var(--fg); padding-bottom: 16px; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+h1 { font: 700 clamp(34px, 6vw, 52px)/1 var(--display); margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font: 700 26px/1.15 var(--display); margin: 0; text-wrap: balance; }
+h3 { font: 600 17px/1.3 var(--body); margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); font-size: 18px; }
+section { display: grid; gap: 14px; }
+.stamp { font: 13px var(--mono); color: var(--muted); }
+figure { margin: 0; display: grid; gap: 8px; }
+.plate { background: var(--plate); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.plate img, .plate video { display: block; width: 100%; height: auto; max-width: 100%; }
+figcaption { font-size: 14px; color: var(--muted); max-width: 75ch; }
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.status div { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.pill { justify-self: start; font: 600 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; color: #fff; }
+.pill.good { background: var(--good); } .pill.bad { background: var(--bad); } .pill.next { background: var(--accent); }
+.status ul { margin: 0; padding-left: 18px; font-size: 15.5px; }
+.tablebox { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 640px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.verdict-good { color: var(--good); font-weight: 600; } .verdict-bad { color: var(--bad); font-weight: 600; }
+ol.plan { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 72ch; }
+ol.plan li::marker { font: 700 16px var(--display); color: var(--accent-ink); }
+.note { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; max-width: 72ch; }
+code { font: 0.9em var(--mono); }
+a { color: var(--accent-ink); }
+a:focus-visible, video:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Open Duck Mini v2 · retraining · report 1</span>
+    <h1>Duck Training Log</h1>
+    <p class="lede">Everything from the first day of training a new walking brain on the home PC (RTX 4060): what we tried, what the simulated duck does, and the plan from here.</p>
+    <span class="stamp">13 Oct 2026 · 5 training runs · about 600 million simulated steps</span>
+  </header>
+
+  <section>
+    <h2>Where we are</h2>
+    <div class="status">
+      <div><span class="pill good">Working</span><h3>Head and steadiness</h3>
+        <ul><li>Head goes exactly where it's commanded</li><li>Head moves no longer make him step</li><li>About a third less front-back wobble</li><li>Walks forward at real servo strength</li></ul></div>
+      <div><span class="pill bad">Not yet</span><h3>Backing up and side-stepping</h3>
+        <ul><li>New brains stand still when told to go back or sideways</li><li>Turning left got weaker</li><li>Shove recovery a little worse (4 of 8 vs 5)</li></ul></div>
+      <div><span class="pill next">Next</span><h3>Before more training</h3>
+        <ul><li>Measure his real servo strength (scale test)</li><li>Build the head motion you described into training</li><li>Retrain in two stages, with a scorecard at each</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Side by side in the simulator</h2>
+    <figure>
+      <div class="plate"><video src="compare_current_vs_stage2.mp4" controls muted playsinline preload="metadata"></video></div>
+      <figcaption>Left: his current brain (<code>BEST_WALK_ONNX_2</code>). Right: the new stage 2 brain with the automatic head pose. Both run the same routine with servos limited to 2.0 N·m: stand, forward, backward, turn left and right, side-step left and right, then head moves while standing. The camera follows each duck but doesn't turn with it.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>His head swings with every step</h2>
+    <p>The current brain uses the head as a counterweight. Even standing still it holds the head turned 13° right and tilted, and while walking it swings the head about ±10° every step. In the new brains the head does only what it's told. The automatic pose you asked for (pitch with forward and back, yaw into turns, roll toward side-steps) shows as the smooth steps in the lower trace.</p>
+    <figure>
+      <div class="plate"><img src="head_trace.png" alt="Head joint angles over the test routine for both brains" loading="lazy"></div>
+      <figcaption>Head joint angles during the routine. Top: current brain, constant swinging. Bottom: stage 2 with the automatic head pose. The brain had never practised these particular moves, so its legs had to compensate for them. That's why the head motion will be built into the next training run.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Where his weight is</h2>
+    <p>The head and neck are about a quarter of him, so where the head goes matters a lot for balance. The simulation model is close to your estimate for the head, gives the legs more weight (five servos each, about 275 g), and is heavier overall (2.1 kg against 1.5–1.8 kg). Training randomizes his weight down to 72% of the model to cover that.</p>
+    <figure><div class="plate"><img src="mass.png" alt="Bar chart of body part masses: model vs estimate" loading="lazy"></div></figure>
+  </section>
+
+  <section>
+    <h2>Why servo strength matters</h2>
+    <p>The training model lets each servo push up to 3.3 N·m. A real STS3215 at his voltage stalls at roughly 1.9 N·m. When the simulator's servos are limited to real strength, the current brain slows down and wobbles more, heading toward what your duck actually shows. That is why the next step is measuring his servos instead of guessing.</p>
+    <figure>
+      <div class="plate"><img src="torque.png" alt="Speed and wobble of the current brain as servo strength drops" loading="lazy"></div>
+      <figcaption>Current brain in the simulator. The shaded band is where his real servos probably are. The scale test will narrow it down.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Strength tests: right ankle</h2>
+    <p>Three tries. <strong>Test 1</strong> (hands off): he lifted off the stand at 600 g. <strong>Test 2</strong> (hand on his body): the scale also counted your hand pushing down through his stiff leg; the servo's numbers stayed flat while the scale climbed. <strong>Test 3</strong> (clamped) worked: as the force rose to 2.3 kg at the toe (1.16 N·m), the servo fell steadily further behind its target and its load climbed with it, as a real measurement should.</p>
+    <figure>
+      <div class="plate"><img src="strength.png" alt="Left: ankle torque against press angle for three tests; the clamped test climbs steadily to 1.16 N·m. Right: torque against servo error, clamped test points along a line steeper than the simulator's" loading="lazy"></div>
+      <figcaption>Right: for each degree it falls short of its target, his real ankle pushes <strong>0.44 N·m</strong>; the simulator's servo pushes 0.30. <strong>His servos are about 1.5× stiffer than the model.</strong> Left: at 15° the ankle was still climbing, at only 21% load, so its maximum is above 1.16 N·m and we didn't reach it.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>What stiffer servos do to his current brain</h2>
+    <p>I re-ran the current brain in the simulator with every servo made stiffer, from the model's value up to 1.7×.</p>
+    <figure>
+      <div class="plate"><img src="kp.png" alt="Three line graphs against servo stiffness: walking speed and turning speed rise, jitter rises from 4 to 6.5 degrees per second" loading="lazy"></div>
+      <figcaption>At your servos' stiffness (green line), backing up nearly doubles in speed and turning speeds up. That explains why the real duck backs up better than the plain simulator predicted. The fast shake also goes up by about 45%, part of the jitter you see. Side-stepping still doesn't start from a standstill at any stiffness, so that's the brain, not the servos.</figcaption>
+    </figure>
+    <p class="note">For training: the new brains will practise with servo stiffness spread from 1.1× to 1.8× the model (it was 0.9–1.1×), and with the maximum push spread across the datasheet range, so they're built for servos like his.</p>
+  </section>
+
+  <section>
+    <h2>Low-battery failsafe: how he should go down</h2>
+    <p>The failsafe warns below 7.0 V, and below 6.8 V it crouches him, turns the motors off and shuts the Pi down. Whatever we do, he ends up on the floor once the motors go limp, so I tested four ways of going down in the simulator, with servos as stiff as his.</p>
+    <figure>
+      <div class="plate"><video src="shutdown.mp4" controls muted playsinline preload="metadata"></video></div>
+      <figcaption>Top left: motors off while standing, he drops onto his head. Bottom left: the chosen sequence, a slow 3-second crouch with the body leaned back a little, then motors off; he slumps forward gently.</figcaption>
+    </figure>
+    <div class="tablebox"><table>
+      <tr><th>Sequence</th><th>Head hits the floor at</th></tr>
+      <tr><td>Motors off while standing</td><td class="num">1.33 m/s</td></tr>
+      <tr><td>Plain crouch, then off</td><td class="num">1.09 m/s</td></tr>
+      <tr><td><strong>Lean-back crouch, then off (chosen)</strong></td><td class="num verdict-good">0.25 m/s</td></tr>
+      <tr><td>Lean-back crouch, fading the motors out</td><td class="num">0.30 m/s</td></tr>
+    </table></div>
+    <p class="note">0.25 m/s is like dropping his head from about 3 mm; 1.33 m/s is like dropping it from 9 cm. The lean-back crouch stayed gentle (0.15–0.5 m/s) across every servo stiffness and strength I tried. Fading the motors out slowly didn't help: once they're weak enough to give, he goes down the same way.</p>
+    <p class="note"><strong>Update:</strong> these numbers used the simulator's joint ranges. With his real joint stops (next section) the lean-back crouch lands at 0.47 m/s, and the tuck replaces it.</p>
+  </section>
+
+  <section>
+    <h2>His real joint stops</h2>
+    <p>You moved each limp joint to its stop by hand (joint_limits_probe.py). Three things stand out. His <strong>knees only fold about 20° past standing</strong>; the simulator let them fold 90°. His <strong>ankles</strong> bend much less than the model. And his <strong>head turns 77° left and 100° right</strong> before the cable pulls, so the ±20° head-turn limit was far too tight.</p>
+    <figure>
+      <div class="plate"><img src="limits.png" alt="Bar chart per joint: grey simulator range, orange measured range, black tick at the standing pose. Knees and ankles are much shorter in reality; neck, head pitch and left hip pitch go further." loading="lazy"></div>
+      <figcaption>Grey: what the simulator allows. Orange: his real stops. Black tick: his standing pose. The left hip's 140° forward swing is probably the leg folding up past where the right one was stopped; worth a second look next time.</figcaption>
+    </figure>
+    <p class="note">Changed on the duck: the head-turn limit is now ±70° (from ±20°), short of where the cable pulls and past anything the brain or the web slider asks for. The new training will use these stops.</p>
+  </section>
+
+  <section>
+    <h2>Going down into a ball</h2>
+    <p>You asked for: head forward, sit back on his legs, face forward, tucked into a ball. I searched about 1,500 poses in the simulator with his real stops. <strong>Once the motors are off, no pose stays sitting.</strong> His knees can't fold far enough to sit on, so a limp duck always ends up on his chest or on his back. A couple of poses balanced for a moment, but a few degrees of error tipped them over hard, sometimes backward. So the goal became: go down <strong>forward, every time, from as low as possible.</strong></p>
+    <figure>
+      <div class="plate"><video src="tuck.mp4" controls muted playsinline preload="metadata"></video></div>
+      <figcaption>Side view, facing right. Each pose: stand, 3-second move into the pose, hold 1 second, motors off. Bottom right is the new default: crouched to his knee stops, head forward, face forward. Bottom left tucks the head down instead.</figcaption>
+    </figure>
+    <div class="tablebox"><table>
+      <tr><th>Way down</th><th>Head lands at</th><th>Like dropping his head from</th><th>Ends</th></tr>
+      <tr><td>Motors off while standing</td><td class="num">1.36 m/s</td><td class="num">9 cm</td><td>on his face</td></tr>
+      <tr><td>Old lean-back crouch</td><td class="num">0.47 m/s</td><td class="num">1 cm</td><td>on his face</td></tr>
+      <tr><td><strong>Option 2: tuck, chin up (default)</strong></td><td class="num verdict-good">0.62 m/s</td><td class="num">2 cm</td><td>on his chest, face down-forward</td></tr>
+      <tr><td>Option 1: tuck, head down</td><td class="num verdict-good">0.38 m/s</td><td class="num">7 mm</td><td>on his chest, head tucked under</td></tr>
+    </table></div>
+    <p class="note">Both tucks went down forward in every one of 70–105 simulated variations: stops a few degrees off, weaker or stronger servos, pose errors. Worst cases were 0.74 m/s (chin up) and 0.47 m/s (head down). Both ran on the real duck from pause: knees reached 96°; his soft head servos sag about 9° under gravity. To switch, set <code>"shutdown_pose": "head_down"</code> in the battery_guard part of duck_config.json.</p>
+  </section>
+
+  <section>
+    <h2>Walk 9: leaning back after the screws were tightened</h2>
+    <p>Same brain and the same commands as walk 4, but three backward falls in 89 seconds. Even standing still he leaned back 2.5–4°, where walk 4 stood at 0°, with his joints at the same angles to within half a degree. So his body now sits further back for the same joint angles: something changed mechanically when the screws were tightened, most likely the ankle horns settling a few degrees off.</p>
+    <figure>
+      <div class="plate"><img src="walk9.png" alt="Two timelines of back lean. Walk 4 stays within ±10° throughout. Walk 9 sits a few degrees back, creeps further back during turns and backing up, and hits the top of the chart three times." loading="lazy"></div>
+      <figcaption>Black line: how far he leans back, smoothed over half a second. Shading: what you were commanding. In walk 9 he leans further back during each turn, and when the turn stops he keeps going over.</figcaption>
+    </figure>
+    <p class="note">Fix to try in walk 10: both ankle offsets shifted 3° forward (left 4.5°→7.5°, right 0°→3°), which should put him back where walk 4 stood. The right side-step still didn't start stepping; that one is the brain.</p>
+  </section>
+
+  <section>
+    <h2>The five training runs</h2>
+    <figure>
+      <div class="plate"><img src="training.png" alt="Training score, survival and imitation curves for the five runs" loading="lazy"></div>
+      <figcaption>Each line is one run. Stages 2 to 3b continued from the brain before them, so they start further right. "Survives" is how much of a 20-second attempt the virtual ducks stay up on average, with random shoves.</figcaption>
+    </figure>
+    <div class="tablebox"><table>
+      <thead><tr><th>Run</th><th>What changed</th><th>Steps</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>1. Weak servos from scratch</td><td>Real servo strength (1.4–1.95 N·m) from the start</td><td class="num">80 M</td><td class="verdict-bad">Learned to stand still; stopped</td></tr>
+        <tr><td>2. Stage 1</td><td>Full strength, his weight range, head reward on</td><td class="num">150 M</td><td class="verdict-good">Walks forward 0.12–0.15 m/s, turns</td></tr>
+        <tr><td>3. Stage 2</td><td>Real strength 1.6–2.1, head follows commands, more single-direction practice</td><td class="num">+100 M</td><td class="verdict-good">Head fixed, steadier, walks forward. No back or side</td></tr>
+        <tr><td>4. Stage 3</td><td>Tightened the sideways speed tolerance</td><td class="num">+100 M</td><td class="verdict-bad">Collapsed to standing still (my mistake)</td></tr>
+        <tr><td>5. Stage 3b</td><td>Wider side-step range (±0.2), strength 1.8–2.6</td><td class="num">+100 M</td><td>Same as stage 2</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Scorecard</h2>
+    <figure>
+      <div class="plate"><img src="speeds.png" alt="Speeds reached in each direction for three brains" loading="lazy"></div>
+      <figcaption>Speed reached from a standstill when given a full command, servos at 2.0 N·m. The new brains win forward but stand still for backward and side-steps.</figcaption>
+    </figure>
+    <figure>
+      <div class="plate"><img src="scorecard.png" alt="Head pose at rest, front-back wobble and shove survival for three brains" loading="lazy"></div>
+      <figcaption>Left: head angle when untouched (the new brains' bars are zero). Middle: front-back wobble while walking forward. Right: how many of 8 shoves (15 N for 0.1 s, from 8 directions) each brain survives standing.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>What we learned</h2>
+    <ol class="plan">
+      <li>Starting training on weak servos makes standing still the safest thing it can find, so it never discovers walking.</li>
+      <li>The reward for following speed commands was too weak against the reward for staying up, and gave no credit for side-steps under 0.1 m/s. So the brains learned that standing still is good enough for backward and sideways commands.</li>
+      <li>When the brain controls the head, it uses the head as a counterweight. Taking the head away fixes the pose, but then the brain has to learn the specific head motions we want during walking.</li>
+      <li>The side-to-side rocking comes from the reference walk the brain imitates. Making him much smoother will mean changing that reference walk.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Plan from here</h2>
+    <ol class="plan">
+      <li><strong>Measure servo strength.</strong> The ankle presses the foot onto a kitchen scale in 1° steps. Scale reading × lever length = torque.</li>
+      <li><strong>Build the head motion into training.</strong> The head follows the same automatic pose rule as the runtime, plus random extra moves for puppeteering. The brain learns to walk with that weight moving.</li>
+      <li><strong>Stage A, full strength.</strong> All directions together, with a reward that gives credit for backing up and side-stepping. About 70 minutes.</li>
+      <li><strong>Stage B, his measured strength.</strong> Continue stage A at his real servo strength. About 45 minutes.</li>
+      <li><strong>Scorecard and video after each stage,</strong> before anything goes on the duck.</li>
+      <li><strong>Real test:</strong> the routine, a recording and a video. Then compare.</li>
+    </ol>
+    <p class="note">Later, for smoothness: regenerate the reference walk with less side-to-side sway, and use keyframes you puppet for expressive moves such as a bow or a nod.</p>
+  </section>
+</div>

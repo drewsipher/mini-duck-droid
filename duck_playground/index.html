@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duck Playground</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #f4f2ee; --panel: #ffffff; --text: #1d2126; --muted: #6a6f76; --line: #e1ded8;
+  --on: #2f63c0; --on-soft: #e3ebf9; --target: #e8892a; --stop: #c4362b; --good: #2f8f5b;
+  --dial: #fbfaf7; --tick: #b9b4aa; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171a; --panel: #1f2226; --text: #e7e6e3; --muted: #9aa0a6; --line: #30343a;
+    --on: #6f9ae6; --on-soft: #1f2a3d; --target: #f0a04b; --stop: #e0574b; --good: #4cb782;
+    --dial: #181a1d; --tick: #50555c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171a; --panel: #1f2226; --text: #e7e6e3; --muted: #9aa0a6; --line: #30343a;
+  --on: #6f9ae6; --on-soft: #1f2a3d; --target: #f0a04b; --stop: #e0574b; --good: #4cb782;
+  --dial: #181a1d; --tick: #50555c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+button { font: inherit; color: inherit; cursor: pointer; }
+header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line);
+  padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+h1 { font-size: 20px; margin: 0; }
+.conn { font-size: 13px; color: var(--muted); }
+.conn.bad { color: var(--stop); font-weight: 600; }
+.power { display: flex; align-items: center; gap: 10px; font-variant-numeric: tabular-nums; font-size: 14px; }
+.meter { width: 140px; height: 10px; border-radius: 5px; background: var(--line); overflow: hidden; }
+.meter span { display: block; height: 100%; width: 0; background: var(--good); transition: width .15s; }
+#stop { margin-left: auto; background: var(--stop); color: #fff; border: 0; border-radius: 10px;
+  padding: 12px 22px; font-weight: 700; font-size: 16px; letter-spacing: .02em; }
+main { padding: 16px; max-width: 1280px; margin: 0 auto; }
+.modes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.modes button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; }
+.modes button.on { background: var(--on-soft); border-color: var(--on); color: var(--on); font-weight: 600; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+.panel h2 { font-size: 16px; margin: 0 0 4px; }
+.panel p { margin: 4px 0; color: var(--muted); max-width: 70ch; }
+.panel .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 10px; }
+.btn { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; }
+.btn.primary { background: var(--on); border-color: var(--on); color: #fff; font-weight: 600; }
+.btn.rec { border-color: var(--stop); color: var(--stop); font-weight: 600; }
+label.inline { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
+input[type=range] { width: 160px; }
+.group-title { font-weight: 600; margin: 4px 0 8px; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px 12px; position: relative; }
+.card.leader { border-color: var(--target); box-shadow: 0 0 0 2px var(--target) inset; }
+.card.dead { opacity: .55; }
+.card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.card .nm { font-weight: 600; text-transform: capitalize; }
+.card .id { font-size: 12px; color: var(--muted); }
+.dial { user-select: none; -webkit-user-select: none; display: block; width: 100%; max-width: 170px; margin: 6px auto 2px; touch-action: none; cursor: grab; }
+.dial .face { fill: var(--dial); stroke: var(--tick); stroke-width: 2; }
+.dial .tick { stroke: var(--tick); }
+.dial .lbl { fill: var(--muted); font-size: 9px; text-anchor: middle; dominant-baseline: middle; }
+.dial .tgt { stroke: var(--target); stroke-width: 3; stroke-dasharray: 6 4; stroke-linecap: round; }
+.dial .needle { stroke: #7b7f86; stroke-width: 8; stroke-linecap: round; }
+.dial .tip { fill: #7b7f86; }
+.card.on .dial .needle { stroke: var(--on); }
+.card.on .dial .tip { fill: var(--on); }
+.dial .hub { fill: var(--text); }
+.read { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; font-size: 14px; }
+.read .deg { font-size: 20px; font-weight: 600; }
+.effort { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin: 6px 0 8px; }
+.effort span { display: block; height: 100%; width: 0; background: var(--target); transition: width .15s; }
+.card .ctl { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 13px; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.chip.on { background: var(--on-soft); border-color: var(--on); color: var(--on); font-weight: 600; }
+.chip.lead { border-color: var(--target); color: var(--target); }
+.warn { color: var(--stop); font-size: 12px; font-weight: 600; min-height: 1em; }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--text); color: var(--bg);
+  padding: 8px 14px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.toast.show { opacity: .95; }
+@media (max-width: 560px) {
+  header { padding: 10px 16px; }
+  #stop { width: 100%; margin-left: 0; order: 9; padding: 10px 16px; font-size: 15px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .meter { width: 90px; }
+  main { padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🦆 Duck Playground</h1>
+  <span class="conn" id="conn">connecting…</span>
+  <div class="power" title="Total current all servos are drawing right now">
+    <span>⚡ <b id="amps">0.00</b> A</span>
+    <div class="meter"><span id="meter"></span></div>
+    <span class="conn"><span id="watts">0</span> W · <span id="volts">–</span> V</span>
+  </div>
+  <button id="stop">STOP · all motors off</button>
+</header>
+
+<main>
+  <div class="modes" id="modes">
+    <button data-mode="free" class="on">✋ Hands on</button>
+    <button data-mode="follow">🧲 Follow the leader</button>
+    <button data-mode="wave">🌊 Wave</button>
+    <button data-mode="record">🎬 Record &amp; replay</button>
+  </div>
+
+  <section class="panel" data-for="free">
+    <h2>Hands on</h2>
+    <p>Every servo has a <b>sensor</b> that knows its angle, and a <b>motor</b> that can hold or move it. With the motor off (grey needle) you can turn the horn by hand and watch the dial follow. Drag a dial, and that servo's motor switches on (blue needle) and moves to the orange line.</p>
+    <p>Try it: switch a motor on and push against the horn. The orange <b>effort</b> bar and the ⚡ current go up, because the motor works harder to hold its place.</p>
+    <div class="row"><button class="btn" id="centre">Everyone to the middle</button></div>
+  </section>
+
+  <section class="panel" data-for="follow" hidden>
+    <h2>Follow the leader</h2>
+    <p>Pick a leader with its <b>Lead</b> button. The leader's motor turns off, so you can twist it by hand. The Pi reads its angle about 50 times a second and tells all the other servos to copy it. That's how a puppet controller or a robot arm "teach" mode works.</p>
+    <div class="row">
+      <label class="inline"><input type="checkbox" id="opposite"> Go the opposite way</label>
+      <span class="conn" id="leader-txt">No leader yet: press Lead on any servo.</span>
+    </div>
+  </section>
+
+  <section class="panel" data-for="wave" hidden>
+    <h2>Wave</h2>
+    <p>Each servo follows the same swing, but a little later than the one before it, so a wave rolls along the line. Robots walk with the same trick: legs repeat a pattern, each one shifted in time.</p>
+    <div class="row">
+      <label class="inline">Size <input type="range" id="amp" min="10" max="90" value="45"> <b id="amp-v">45°</b></label>
+      <label class="inline">Speed <input type="range" id="period" min="12" max="60" value="25"> <b id="period-v">2.5 s</b></label>
+      <button class="btn primary" id="wave-go">Start the wave</button>
+    </div>
+  </section>
+
+  <section class="panel" data-for="record" hidden>
+    <h2>Record &amp; replay</h2>
+    <p>Press Record and every motor goes limp. Move the horns by hand and the Pi saves all 14 angles many times a second. Press Play and the motors repeat your moves exactly. Animators use the same idea to teach robots new moves.</p>
+    <div class="row">
+      <button class="btn rec" id="rec">● Record</button>
+      <button class="btn" id="rec-stop">■ Stop</button>
+      <button class="btn primary" id="play">▶ Play</button>
+      <label class="inline"><input type="checkbox" id="loop"> Loop</label>
+      <span class="conn" id="rec-txt">Nothing recorded yet.</span>
+    </div>
+  </section>
+
+  <div id="groups"></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const GROUPS = [["Right leg", [10, 11, 12, 13, 14]], ["Left leg", [20, 21, 22, 23, 24]], ["Neck & head", [30, 31, 32, 33]]];
+const R = 70, C = 85;
+let state = null, uiMode = 'free', dragging = null, lastSend = 0, failures = 0;
+const cards = {};
+
+const pt = (deg, r) => { const a = deg * Math.PI / 180; return [C + r * Math.sin(a), C - r * Math.cos(a)]; };
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200); }
+async function cmd(body) {
+  try {
+    const r = await fetch('api/cmd', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json(); if (!j.ok && j.msg) toast(j.msg); return j;
+  } catch { toast('Could not reach the duck'); }
+}
+
+function dialSVG() {
+  let ticks = '';
+  for (let d = -180; d < 180; d += 15) {
+    const inner = R - (d % 90 === 0 ? 10 : d % 45 === 0 ? 6 : 3);
+    const [x1, y1] = pt(d, inner), [x2, y2] = pt(d, R);
+    ticks += `<line class="tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  }
+  const lbl = [[0, '0°'], [90, '90°'], [-90, '-90°'], [180, '180°']].map(([d, t]) => { const [x, y] = pt(d, R - 20); return `<text class="lbl" x="${x}" y="${y}">${t}</text>`; }).join('');
+  return `<svg class="dial" viewBox="0 0 170 170" role="img" aria-label="servo dial">
+    <circle class="face" cx="${C}" cy="${C}" r="${R}"/>${ticks}${lbl}
+    <line class="tgt" x1="${C}" y1="${C}" x2="${C}" y2="${C}" visibility="hidden"/>
+    <line class="needle" x1="${C}" y1="${C}" x2="${C}" y2="${C - R + 14}"/>
+    <circle class="tip" cx="${C}" cy="${C - R + 14}" r="7"/>
+    <circle class="hub" cx="${C}" cy="${C}" r="9"/></svg>`;
+}
+
+function build(servos) {
+  const byId = Object.fromEntries(servos.map(s => [s.id, s]));
+  $('#groups').innerHTML = GROUPS.map(([title, ids]) => `<div class="group-title">${title}</div><div class="grid">${ids.map(id => `
+    <div class="card" data-id="${id}">
+      <div class="top"><span class="nm">${byId[id].name.replace(/^(right|left) /, '')}</span><span class="id">ID ${id}</span></div>
+      ${dialSVG()}
+      <div class="read"><span class="deg">–</span><span class="sub conn"></span></div>
+      <div class="effort" title="Effort: how hard the motor is pushing"><span></span></div>
+      <div class="warn"></div>
+      <div class="ctl"><button class="chip motor">Motor off</button><button class="chip lead">Lead</button></div>
+    </div>`).join('')}</div>`).join('');
+  for (const el of document.querySelectorAll('.card')) {
+    const id = +el.dataset.id, svg = el.querySelector('svg');
+    cards[id] = { el, svg, needle: svg.querySelector('.needle'), tip: svg.querySelector('.tip'), tgt: svg.querySelector('.tgt'),
+      deg: el.querySelector('.deg'), sub: el.querySelector('.sub'), effort: el.querySelector('.effort span'),
+      warn: el.querySelector('.warn'), motor: el.querySelector('.motor'), lead: el.querySelector('.lead') };
+    const angleAt = e => { const r = svg.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 170 - C, y = (e.clientY - r.top) / r.height * 170 - C; return Math.hypot(x, y) < 8 ? null : Math.atan2(x, -y) * 180 / Math.PI; };
+    const drag = e => {
+      const a = angleAt(e); if (a == null) return;
+      const lim = Math.max(-150, Math.min(150, a));
+      dragging = { id, deg: lim }; drawTarget(id, lim, true);
+      const now = performance.now(); if (now - lastSend > 70) { lastSend = now; cmd({ action: 'set', id, deg: lim }); }
+    };
+    svg.addEventListener('pointerdown', e => { svg.setPointerCapture(e.pointerId); if (uiMode !== 'free') selectMode('free', false); drag(e); });
+    svg.addEventListener('pointermove', e => { if (dragging?.id === id) drag(e); });
+    const end = () => { if (dragging?.id === id) { cmd({ action: 'set', id, deg: dragging.deg }); dragging = null; } };
+    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+    cards[id].motor.addEventListener('click', () => { const s = state?.servos.find(x => x.id === id); cmd({ action: 'torque', id, on: !s?.torque }); });
+    cards[id].lead.addEventListener('click', () => { selectMode('follow', false); cmd({ action: 'follow', leader: id, opposite: $('#opposite').checked }); });
+  }
+}
+
+function drawNeedle(id, deg) {
+  const c = cards[id], [x, y] = pt(deg, R - 14);
+  c.needle.setAttribute('x2', x); c.needle.setAttribute('y2', y); c.tip.setAttribute('cx', x); c.tip.setAttribute('cy', y);
+}
+function drawTarget(id, deg, show) {
+  const c = cards[id];
+  if (!show || deg == null) { c.tgt.setAttribute('visibility', 'hidden'); return; }
+  const [x, y] = pt(deg, R - 4); c.tgt.setAttribute('x2', x); c.tgt.setAttribute('y2', y); c.tgt.setAttribute('visibility', 'visible');
+}
+
+function render(s) {
+  if (!Object.keys(cards).length) build(s.servos);
+  const amps = s.amps || 0;
+  $('#amps').textContent = amps.toFixed(2); $('#watts').textContent = (s.watts || 0).toFixed(1); $('#volts').textContent = s.volts ?? '–';
+  const m = $('#meter'); m.style.width = Math.min(100, amps / 5 * 100) + '%';
+  m.style.background = amps > 4 ? 'var(--stop)' : amps > 2.5 ? 'var(--target)' : 'var(--good)';
+  for (const sv of s.servos) {
+    const c = cards[sv.id]; if (!c) continue;
+    c.el.classList.toggle('on', sv.torque); c.el.classList.toggle('dead', !sv.ok);
+    c.el.classList.toggle('leader', s.mode === 'follow' && s.leader === sv.id);
+    if (sv.deg != null) { drawNeedle(sv.id, sv.deg); c.deg.textContent = `${sv.deg > 0 ? '+' : ''}${Math.round(sv.deg)}°`; }
+    if (dragging?.id !== sv.id) drawTarget(sv.id, sv.target, sv.torque && sv.target != null);
+    c.sub.textContent = sv.ok ? `${sv.ma} mA · ${sv.temp}°C` : 'no reply';
+    c.effort.style.width = Math.min(100, sv.load) + '%';
+    c.warn.textContent = sv.errors.length ? '⚠ ' + sv.errors.join(', ') : '';
+    c.motor.textContent = sv.torque ? 'Motor on' : 'Motor off'; c.motor.classList.toggle('on', sv.torque);
+    c.lead.textContent = s.mode === 'follow' && s.leader === sv.id ? 'Leading' : 'Lead';
+  }
+  if (s.mode === 'follow' && s.leader) $('#leader-txt').textContent = `Leader: ID ${s.leader}. Twist it by hand!`;
+  const rt = $('#rec-txt');
+  if (s.mode === 'record') rt.textContent = `Recording… ${s.rec_live.toFixed(1)} s (move the horns!)`;
+  else if (s.mode === 'play') rt.textContent = 'Playing back…';
+  else rt.textContent = s.recorded ? `${s.recorded.toFixed(1)} s recorded. Press Play.` : 'Nothing recorded yet.';
+  if (s.mode !== uiMode && !(uiMode === 'record' && s.mode === 'play') && !(uiMode === 'record' && s.mode === 'free')
+      && !(uiMode === 'follow' && s.mode === 'free') && !(uiMode === 'wave' && s.mode === 'free')) selectMode(s.mode === 'play' ? 'record' : s.mode, false);
+}
+
+function selectMode(mode, user = true) {
+  uiMode = mode;
+  document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+  document.querySelectorAll('.panel').forEach(p => p.hidden = p.dataset.for !== mode);
+  if (user && mode === 'free') cmd({ action: 'stop' });
+}
+
+async function poll() {
+  try {
+    const r = await fetch('api/state', { cache: 'no-store' });
+    state = await r.json(); failures = 0;
+    $('#conn').textContent = 'connected'; $('#conn').classList.remove('bad');
+    render(state);
+  } catch {
+    if (++failures > 3) { $('#conn').textContent = 'lost contact with the duck'; $('#conn').classList.add('bad'); }
+  }
+  setTimeout(poll, 120);
+}
+
+$('#stop').addEventListener('click', () => { cmd({ action: 'stop' }); toast('All motors off'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' || (e.key === ' ' && e.target === document.body)) { e.preventDefault(); cmd({ action: 'stop' }); toast('All motors off'); } });
+document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => {
+  const m = b.dataset.mode; selectMode(m, m === 'free');
+  if (m === 'follow' || m === 'wave' || m === 'record') cmd({ action: 'stop' });
+}));
+$('#centre').addEventListener('click', () => cmd({ action: 'centre' }));
+$('#opposite').addEventListener('change', e => { if (state?.mode === 'follow' && state.leader) cmd({ action: 'follow', leader: state.leader, opposite: e.target.checked }); });
+const amp = $('#amp'), per = $('#period');
+amp.addEventListener('input', () => $('#amp-v').textContent = amp.value + '°');
+per.addEventListener('input', () => $('#period-v').textContent = (per.value / 10).toFixed(1) + ' s');
+$('#wave-go').addEventListener('click', () => cmd({ action: 'wave', amp: +amp.value, period: per.value / 10 }));
+$('#rec').addEventListener('click', () => cmd({ action: 'record' }));
+$('#rec-stop').addEventListener('click', () => cmd({ action: 'stop' }));
+$('#play').addEventListener('click', () => cmd({ action: 'play', loop: $('#loop').checked }));
+poll();
+</script>
+</body>
+</html>
