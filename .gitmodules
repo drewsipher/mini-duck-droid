@@ -1,0 +1,3 @@
+[submodule "sim/upstream_runtime"]
+	path = sim/upstream_runtime
+	url = https://github.com/apirrone/Open_Duck_Mini_Runtime.git
