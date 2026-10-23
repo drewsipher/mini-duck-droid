@@ -58,8 +58,8 @@ class Policy:
 class TrackingSim:
     """CPU mirror of tracking.ClipTracking for one episode (no sensor noise)."""
 
-    def __init__(self, base_model, ref, policy, loop):
-        self.m0, self.ref, self.policy, self.loop = base_model, ref, policy, loop
+    def __init__(self, base_model, ref, policy, loop, pushes=False):
+        self.m0, self.ref, self.policy, self.loop, self.pushes = base_model, ref, policy, loop, pushes
         m = base_model
         self.act_names = [m.actuator(i).name for i in range(m.nu)]
         self.qadr = np.array([m.joint(n).qposadr[0] for n in self.act_names])
@@ -143,6 +143,8 @@ class TrackingSim:
         act_hist = [np.zeros(m.nu) for _ in range(3)]
         imu_hist = []
         errs, fell, t = [], False, 0
+        # --pushes: the recipe's velocity kicks (training has them, the standard battery does not)
+        push_every = int(round(rng.uniform(*R.PUSH_INTERVAL_S) / R.CTRL_DT)) if self.pushes else 0
         e0 = self.errors(d, k)
         if render:
             render(d, k, e0, False)
@@ -155,6 +157,9 @@ class TrackingSim:
             new = self.alpha * targets + (1 - self.alpha) * raw
             targets = np.clip(new, targets - self.max_step, targets + self.max_step)
             d.ctrl[:] = targets
+            if push_every and (t + 1) % push_every == 0:
+                th, mag = rng.uniform(0, 2 * np.pi), rng.uniform(*R.PUSH_MAGNITUDE_MS)
+                d.qvel[0] += mag * np.cos(th); d.qvel[1] += mag * np.sin(th)
             for _ in range(self.decim):
                 mujoco.mj_step(m, d)
             k += 1; t += 1
@@ -222,7 +227,7 @@ class Renderer:
         mujoco.mj_forward(self.m, self.ghost)       # the tracking camera follows subtree_com, which mj_kinematics alone does not fill
         t = k * R.CTRL_DT
         left = self._panel(self.ghost, self.labels[0], f"t = {t:.2f} s  clip frame {i}")
-        status = f"t = {t:.2f} s  joint err {np.degrees(e['joint_rms']):.1f} deg  base {100 * e['base_pos']:.1f} cm  tilt {np.degrees(e['base_ori']):.0f} deg"
+        status = f"t = {t:.2f} s  joint err {np.degrees(e['joint_rms']):.1f} deg  base {100 * e['base_pos']:.1f} cm  orient err {np.degrees(e['base_ori']):.0f} deg"
         right = self._panel(d, self.labels[1] + tag, status + ("  FELL" if fell else ""), warn=fell)
         self.frames.append(np.concatenate([left, right], axis=1))
 
@@ -240,34 +245,95 @@ class Renderer:
 
 
 # ----------------------------------------------------------------------------- package draft
+# Pass criteria written into every tracking package (skill.json "thresholds"), so the package
+# carries its own gate and tools/battery.py, the dashboard and graph_runtime all read the same
+# numbers. 0.94 = 47/50, the episodic G1 bar proposed in tests/GATES.md; joint error 0.15 rad is
+# the tools/skillkit default. A termination (height / orientation, identical to training) is a fail.
+PACKAGE_THRESHOLDS = {"battery_pass_ratio": 0.94, "battery_min_test_ratio": 0.94, "joint_err_rad": 0.15,
+                      "min_height_m": R.MIN_BASE_HEIGHT_M, "max_ori_err_rad": R.MAX_ORI_ERR_RAD}
+RECOVERY_SKILLS = ["sit"]         # the abort target(s) every skill must be able to fall back to
+THERMAL_C_DEFAULT = 60.0          # mechatronics/envelope.json cool-down threshold (proposed)
+
+
+def thermal_limit():
+    """The servo temperature above which a skill must not start, from the Mechatronics envelope."""
+    path = os.path.join(HERE, "..", "mechatronics", "envelope.json")
+    try:
+        rule = json.load(open(path))["thermal"]["proposed_rule"]          # {warn_c, cool_down_c, hard_stop_c, ...}
+        return float(rule["cool_down_c"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return THERMAL_C_DEFAULT
+
+
+def pipeline_battery(raw, skill_name, version=1, thresholds=None):
+    """This evaluator's report in the shape tools/battery.py writes and graph_runtime reads
+    (tests / overall_ratio / overall / passed), with the raw report kept inside."""
+    thr = dict(PACKAGE_THRESHOLDS, **(thresholds or {}))
+    ratio = raw["success"] / raw["total"] if raw["total"] else 0.0
+    err_ok = raw["joint_err_rad"] is not None and raw["joint_err_rad"] <= thr["joint_err_rad"]
+    test = {"success": raw["success"], "total": raw["total"], "ratio": round(ratio, 3),
+            "no_fall_ratio": round(ratio, 3),
+            "mean": {"mean_joint_err_rad": round(raw["joint_err_rad"], 4), "base_err_m": round(raw["base_err_m"], 4),
+                     "base_ori_err_rad": round(raw.get("base_ori_err_rad", float("nan")), 4)}}
+    passed = bool(raw["total"] and ratio >= thr["battery_pass_ratio"] and ratio >= thr["battery_min_test_ratio"] and err_ok)
+    return {"skill": skill_name, "version": version, "type": "episodic", "seeds": raw["seeds"], "episodes": raw["episodes"],
+            "tests": {"clip_tracking": test}, "overall_ratio": round(ratio, 3), "overall": f"{raw['success']}/{raw['total']}",
+            "passed": passed, "thresholds": {**thr, **raw.get("thresholds", {})},
+            "mean_joint_err_rad": round(raw["joint_err_rad"], 4), "evaluator": "sim/eval_tracking.py",
+            "created": datetime.now(timezone.utc).isoformat(timespec="seconds"), "raw": raw}
+
+
 def write_package(out_dir, name, onnx, clip, battery, spec, run_meta, loop):
+    """package_draft/ in the skills/schema.json layout, loadable by graph_runtime as it stands."""
     pk = os.path.join(out_dir, "package_draft")
     os.makedirs(os.path.join(pk, "report"), exist_ok=True)
     shutil.copy(onnx, os.path.join(pk, "policy.onnx"))
     shutil.copy(clip, os.path.join(pk, "clip.json"))
-    json.dump(battery, open(os.path.join(pk, "report", "battery.json"), "w"), indent=1)
+    bat = pipeline_battery(battery, name)
+    json.dump(bat, open(os.path.join(pk, "report", "battery.json"), "w"), indent=1)
     video = os.path.join(out_dir, "eval", "eval.mp4")
     if os.path.exists(video):
-        shutil.copy(video, os.path.join(pk, "report", "eval.mp4"))
+        shutil.copy(video, os.path.join(pk, "report", "battery_clip_tracking.mp4"))
     duration = battery["clip"]["duration_s"]
+    layout = spec.get("layout", [])
+    obs_spec = {"names": [b["name"] for b in layout], "size": int(spec.get("obs_size", sum(b["size"] for b in layout))),
+                "blocks": {b["name"]: int(b["size"]) for b in layout}, "layout": layout}
+    if spec.get("notes"):
+        obs_spec["notes"] = spec["notes"]
+    sess = ort.InferenceSession(onnx, providers=["CPUExecutionProvider"])
+    envelope = dict(R.ENVELOPE)
+    if envelope.get("thermal_c") is None:
+        envelope["thermal_c"] = thermal_limit()
+    run_path = run_meta.get("_path") or os.path.join(os.path.dirname(os.path.abspath(onnx)), "run.json")
     skill = {
         "name": name, "type": "episodic", "loop": bool(loop), "version": 1,
         "commands": {},
-        "entry": {"from": ["walk", "idle"], "phase": [0, 1], "window_s": 0.3},
-        "exit": {"to": ["walk", "idle"]},
-        "neighbours": ["walk", "idle"],
+        # idle is the walk skill at zero command (plan decision 5), not a package of its own; every
+        # skill may exit into recovery (framework 2.3: recovery is reachable from every node)
+        "entry": {"from": ["walk"], "phase": [0, 1], "window_s": 0.3},
+        "exit": {"to": ["walk"] + RECOVERY_SKILLS},
+        "neighbours": ["walk"] + RECOVERY_SKILLS,
         "timeout_s": round((R.LOOP_EPISODE_S if loop else duration) + 1.0, 3),
-        "envelope": dict(R.ENVELOPE),
+        "envelope": envelope,
         "robot_model_hash": sha256_file(ROBOT_XML), "robot_xml": os.path.relpath(ROBOT_XML, TRAIN_PG),
         "actuator_model_version": R.ACTUATOR_MODEL_VERSION,
-        "recipe_version": R.RECIPE_VERSION,
+        "recipe_version": f"tracking-v{R.RECIPE_VERSION}",
         "seed": run_meta.get("seed"),
-        "obs_spec": spec,
+        "obs_spec": obs_spec,
+        # graph_runtime: target = clip(t + dt) + action_scale * action, then the deploy filters
+        "policy": {"kind": "onnx", "action_mode": "residual_on_reference", "action_scale": R.ACTION_SCALE,
+                   "lpf_hz": R.ACT_LPF_HZ, "max_vel_rad_s": R.MAX_MOTOR_VEL, "head_mode": "policy",
+                   "input_name": sess.get_inputs()[0].name},
+        # tools/skillkit: the same settings in its vocabulary
+        "runtime": {"action_scale": R.ACTION_SCALE, "lpf_hz": R.ACT_LPF_HZ, "head_mode": "policy"},
+        "thresholds": dict(PACKAGE_THRESHOLDS),
         "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": {"clip": os.path.abspath(clip), "run": run_meta.get("_path"), "num_timesteps": run_meta.get("num_timesteps"),
+        "source": {"clip": os.path.abspath(clip), "run": run_path, "num_timesteps": run_meta.get("num_timesteps"),
                    "wall_time_s": run_meta.get("wall_time_s"), "onnx": os.path.abspath(onnx)},
-        "battery": {"ratio": battery["ratio"], "success_rate": battery["success_rate"],
-                    "joint_err_rad": battery["joint_err_rad"], "base_err_m": battery["base_err_m"]},
+        "hashes": {"policy_onnx": sha256_file(onnx), "clip_json": sha256_file(clip)},
+        "status": "battery_passed" if bat["passed"] else "draft",
+        "status_history": [{"at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "from": None,
+                            "to": "battery_passed" if bat["passed"] else "draft", "by": "sim/eval_tracking.py"}],
     }
     json.dump(skill, open(os.path.join(pk, "skill.json"), "w"), indent=1)
     return pk
@@ -284,6 +350,7 @@ def main():
     ap.add_argument("--out-dir", default=None, help="default: the ONNX's directory")
     ap.add_argument("--package", action="store_true", help="also write <out-dir>/package_draft/")
     ap.add_argument("--no-video", action="store_true")
+    ap.add_argument("--pushes", action="store_true", help="also apply the recipe's random velocity kicks (training has them)")
     a = ap.parse_args()
     onnx = os.path.abspath(a.onnx)
     out_dir = os.path.abspath(a.out_dir or os.path.dirname(onnx))
@@ -305,7 +372,7 @@ def main():
     if os.path.exists(run_path):
         run_meta = json.load(open(run_path)); run_meta["_path"] = run_path
 
-    sim = TrackingSim(m0, ref, policy, a.loop)
+    sim = TrackingSim(m0, ref, policy, a.loop, pushes=a.pushes)
     results, per_seed = [], []
     first_fail = None
     for seed in range(a.seeds):
@@ -334,7 +401,8 @@ def main():
         "randomisation": {"floor_friction": [0.5, 1.0], "link_mass_scale": [0.9, 1.1], "trunk_mass_kg": [-0.1, 0.1], "trunk_com_m": [-0.05, 0.05],
                           "joint_zero_rad": [-0.03, 0.03], "frictionloss_scale": [0.9, 1.1], "armature_scale": [1.0, 1.05],
                           "kp_scale": list(R.KP_RANGE), "torque_nm": list(R.TORQUE_RANGE), "action_delay_steps": list(R.ACTION_DELAY_STEPS),
-                          "imu_delay_steps": list(R.IMU_DELAY_STEPS), "sensor_noise": "off", "pushes": "off"},
+                          "imu_delay_steps": list(R.IMU_DELAY_STEPS), "sensor_noise": "off",
+                          "pushes": f"{R.PUSH_MAGNITUDE_MS} m/s every {R.PUSH_INTERVAL_S} s" if a.pushes else "off"},
         "recipe_version": R.RECIPE_VERSION, "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     print(f"\n{name}: {battery['ratio']} success ({100 * battery['success_rate']:.0f} %), joint err {battery['joint_err_rad']:.4f} rad "

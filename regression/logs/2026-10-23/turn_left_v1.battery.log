@@ -1,0 +1,12 @@
+[clip ref] clip.json: 27 steps, 0.54 s, loop (unwrapped to 460 steps), trunk: integrated_measured(vx=-0.004, vy=-0.003, yaw=56.0 deg/s), peak joint vel 2.18 rad/s
+seed 0: 10/10  joint err 0.0549 rad
+seed 1: 10/10  joint err 0.0559 rad
+seed 2: 9/10  joint err 0.0571 rad
+seed 3: 10/10  joint err 0.0601 rad
+seed 4: 9/10  joint err 0.0563 rad
+
+turn_left: 48/50 success (96 %), joint err 0.0569 rad (3.26 deg), base err 3.54 cm, ori err 11.1 deg, mean episode 5.99 s
+video /tmp/tmpihsyg_lq/eval/eval.mp4
+battery /tmp/tmpihsyg_lq/eval/battery.json
+
+overall 48/50 = 0.96  joint err 0.0569 rad  PASSED -> /home/hermes/src/mini-duck-droid/skills/turn_left/v1/report/battery.json

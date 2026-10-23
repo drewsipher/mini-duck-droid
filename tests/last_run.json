@@ -1,9 +1,9 @@
 {
- "time": "2026-10-23 01:53:05 EDT",
- "wall_seconds": 13.07054853439331,
+ "time": "2026-10-23 10:44:44 EDT",
+ "wall_seconds": 11.408791065216064,
  "exit": 0,
  "totals": {
-  "passed": 86,
+  "passed": 92,
   "failed": 0,
   "skipped": 2
  },
@@ -12,55 +12,55 @@
    "passed": 5,
    "failed": 0,
    "skipped": 2,
-   "seconds": 0.9391202568076551
+   "seconds": 0.9504472722765058
   },
   "tests/test_clip_check.py": {
    "passed": 12,
    "failed": 0,
    "skipped": 0,
-   "seconds": 2.994241862324998
+   "seconds": 2.545895721996203
   },
   "tests/test_clips_data.py": {
    "passed": 7,
    "failed": 0,
    "skipped": 0,
-   "seconds": 0.003353446489199996
+   "seconds": 0.0032698872964829206
   },
   "tests/test_envelope_and_registry.py": {
    "passed": 7,
    "failed": 0,
    "skipped": 0,
-   "seconds": 0.0014310232363641262
+   "seconds": 0.0015474827960133553
   },
   "tests/test_model_dump.py": {
    "passed": 8,
    "failed": 0,
    "skipped": 0,
-   "seconds": 0.2630696150008589
+   "seconds": 0.24263271410018206
   },
   "tests/test_pipeline.py": {
    "passed": 5,
    "failed": 0,
    "skipped": 0,
-   "seconds": 1.38944923132658
+   "seconds": 1.3005507257767022
   },
   "tests/test_reporter.py": {
    "passed": 3,
    "failed": 0,
    "skipped": 0,
-   "seconds": 0.2167947122361511
+   "seconds": 0.22585349017754197
   },
   "tests/test_sim_smoke.py": {
    "passed": 6,
    "failed": 0,
    "skipped": 0,
-   "seconds": 0.9422489507123828
+   "seconds": 0.8759894801769406
   },
   "tests/test_tools.py": {
-   "passed": 33,
+   "passed": 39,
    "failed": 0,
    "skipped": 0,
-   "seconds": 6.225951360538602
+   "seconds": 5.166130155557767
   }
  },
  "failures": [],

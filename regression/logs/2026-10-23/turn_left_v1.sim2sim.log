@@ -1,0 +1,1 @@
+skipped: the upstream runtime only builds the 101-wide walk observation; this package's obs_spec needs the motion-graph runtime (graph_runtime/) before sim-to-sim can run

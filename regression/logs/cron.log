@@ -1,0 +1,4 @@
+== walk/v1 (locomotion)
+   battery 0.7 (280/400), sim2sim MISMATCH (0.02004 rad; clock-aligned 0.00561), status draft -> battery FAILED
+1 packages: 0 passed both gates, 0 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-10-23T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-23.md

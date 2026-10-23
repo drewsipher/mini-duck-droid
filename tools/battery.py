@@ -22,6 +22,7 @@ seed 0). Exit 0 when the battery passed (overall >= thresholds.battery_pass_rati
 test >= battery_min_test_ratio), 2 when it ran but failed, 1 on a tool error.
 """
 import argparse
+import json
 import os
 import sys
 import time
@@ -187,6 +188,65 @@ def plot(report, path):
     plt.close(fig)
 
 
+def tracking_battery(a, skill, skill_dir, out):
+    """Clip-tracking packages (the recipe's residual-on-reference policies) are scored by the
+    recipe's own strict evaluator, sim/eval_tracking.py: the observation it builds is the one the
+    policy was trained on and its fail rule is the training termination (framework rule: identical
+    thresholds). This wrapper runs it and writes the result in this tool's report shape."""
+    import shutil
+    import subprocess
+    import tempfile
+    if a.lpf is not None or a.max_vel is not None or a.torque is not None:
+        print("battery: --lpf/--max-vel/--torque are not supported for tracking packages (the recipe fixes them)")
+        return 1
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    sim_dir = os.path.join(root, "sim")
+    sys.path.insert(0, sim_dir)
+    import eval_tracking as et                                    # noqa: E402  (numpy + mujoco only)
+    report_dir = os.path.dirname(out)
+    with tempfile.TemporaryDirectory() as tmp:
+        cmd = [sys.executable, os.path.join(sim_dir, "eval_tracking.py"), os.path.join(skill_dir, "policy.onnx"),
+               os.path.join(skill_dir, "clip.json"), "--name", skill["name"], "--out-dir", tmp,
+               "--seeds", str(a.seeds), "--episodes", str(a.episodes)]
+        if skill.get("loop"):
+            cmd.append("--loop")
+        if a.no_video:
+            cmd.append("--no-video")
+        spec = {"layout": (skill.get("obs_spec") or {}).get("layout"), "obs_size": (skill.get("obs_spec") or {}).get("size")}
+        # eval_tracking reads obs_spec.json next to the ONNX; give it the package's
+        work_onnx = os.path.join(tmp, "policy.onnx")
+        shutil.copy(cmd[2], work_onnx)
+        json.dump(spec, open(os.path.join(tmp, "obs_spec.json"), "w"))
+        cmd[2] = work_onnx
+        env = dict(os.environ, MUJOCO_GL=os.environ.get("MUJOCO_GL", "egl"))
+        p = subprocess.run(cmd, cwd=sim_dir, env=env, text=True, capture_output=True)
+        print(p.stdout[-2000:])
+        raw_path = os.path.join(tmp, "eval", "battery.json")
+        if p.returncode != 0 or not os.path.exists(raw_path):
+            print(p.stderr[-2000:])
+            print("battery: eval_tracking.py failed")
+            return 1
+        raw = json.load(open(raw_path))
+        report = et.pipeline_battery(raw, skill["name"], skill.get("version", 1), skill.get("thresholds"))
+        report["tool"] = "tools/battery.py -> sim/eval_tracking.py"
+        report["robot_model_hash"] = sk.model_hash()
+        os.makedirs(report_dir, exist_ok=True)
+        sk.dump_json(report, out)
+        video = os.path.join(tmp, "eval", "eval.mp4")
+        if os.path.exists(video):
+            shutil.copy(video, os.path.join(report_dir, "battery_clip_tracking.mp4"))
+    plot(report, os.path.join(report_dir, os.path.basename(out).replace(".json", ".png")))
+    passed = report["passed"]
+    print(f"overall {report['overall']} = {report['overall_ratio']}  joint err {report['mean_joint_err_rad']} rad  "
+          f"{'PASSED' if passed else 'FAILED'} -> {out}")
+    if passed and not a.no_status and out.endswith(os.path.join("report", "battery.json")) and skill.get("status", "draft") == "draft":
+        skill["status"] = "battery_passed"
+        skill.setdefault("status_history", []).append({"at": sk.now_iso(), "from": "draft", "to": "battery_passed", "by": "tools/battery.py"})
+        sk.dump_json(skill, os.path.join(skill_dir, "skill.json"))
+        print("status: draft -> battery_passed")
+    return 0 if passed else 2
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("skill_dir")
@@ -208,6 +268,8 @@ def main(argv=None):
     out = os.path.abspath(a.out) if a.out else os.path.join(skill_dir, "report", "battery.json")
     report_dir = os.path.dirname(out)
     os.makedirs(report_dir, exist_ok=True)
+    if (skill.get("policy") or {}).get("action_mode") == "residual_on_reference":
+        return tracking_battery(a, skill, skill_dir, out)
     rt, thr = sk.runtime_settings(skill), sk.thresholds(skill)
     overrides = {}
     if a.lpf is not None:

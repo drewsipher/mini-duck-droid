@@ -1,0 +1,12 @@
+[clip ref] clip.json: 126 steps, 2.50 s, episodic, trunk: home_held, peak joint vel 0.90 rad/s
+seed 0: 10/10  joint err 0.0270 rad
+seed 1: 10/10  joint err 0.0265 rad
+seed 2: 10/10  joint err 0.0264 rad
+seed 3: 10/10  joint err 0.0261 rad
+seed 4: 10/10  joint err 0.0273 rad
+
+bow: 50/50 success (100 %), joint err 0.0267 rad (1.53 deg), base err 1.12 cm, ori err 2.8 deg, mean episode 2.50 s
+video /tmp/tmpmh6psy5b/eval/eval.mp4
+battery /tmp/tmpmh6psy5b/eval/battery.json
+
+overall 50/50 = 1.0  joint err 0.0267 rad  PASSED -> /home/hermes/src/mini-duck-droid/skills/bow/v1/report/battery.json

@@ -1,0 +1,19 @@
+{
+  "name": "library",
+  "description": "The first graph built from trained library skills: walk (idle = walk at zero command), the learned bow from skills/bow/v1 (tracking policy, recipe v1), and sit as the abort target. The bow was trained to start from the standing pose, so its edge only opens near standstill (framework rule 4: enter a skill only from states it was trained on). Walk is the motion-graph team's walk/v1 package (the deployed brain with its own standing+walking battery); skills/walk/v1 holds the same brain under the strict battery, which it fails on backward and side-right.",
+  "root": ".",
+  "nodes": {
+    "walk": "graph_runtime/demo_skills/walk/v1",
+    "bow": "skills/bow/v1",
+    "sit": "graph_runtime/demo_skills/sit/v1"
+  },
+  "start": "walk",
+  "idle": {"node": "walk", "command": [0, 0, 0]},
+  "recovery": {"node": "sit", "window_s": 0.3},
+  "edges": [
+    {"from": "walk", "to": "bow", "phase": [0.0, 1.0], "speed": [0.0, 0.02], "window_s": 0.3, "wait_timeout_s": 3.0},
+    {"from": "bow", "to": "walk", "window_s": 0.3},
+    {"from": "walk", "to": "sit", "window_s": 0.3},
+    {"from": "bow", "to": "sit", "window_s": 0.2}
+  ]
+}

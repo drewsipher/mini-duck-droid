@@ -1,0 +1,54 @@
+{
+  "name": "library_moving_entry",
+  "description": "Experiment only: the same graph with the walk->bow edge opened up to walking speed, to measure what framework rule 4 predicts (the bow was trained from standstill).",
+  "root": ".",
+  "nodes": {
+    "walk": "graph_runtime/demo_skills/walk/v1",
+    "bow": "skills/bow/v1",
+    "sit": "graph_runtime/demo_skills/sit/v1"
+  },
+  "start": "walk",
+  "idle": {
+    "node": "walk",
+    "command": [
+      0,
+      0,
+      0
+    ]
+  },
+  "recovery": {
+    "node": "sit",
+    "window_s": 0.3
+  },
+  "edges": [
+    {
+      "from": "walk",
+      "to": "bow",
+      "phase": [
+        0.0,
+        1.0
+      ],
+      "speed": [
+        0.0,
+        0.15
+      ],
+      "window_s": 0.3,
+      "wait_timeout_s": 3.0
+    },
+    {
+      "from": "bow",
+      "to": "walk",
+      "window_s": 0.3
+    },
+    {
+      "from": "walk",
+      "to": "sit",
+      "window_s": 0.3
+    },
+    {
+      "from": "bow",
+      "to": "sit",
+      "window_s": 0.2
+    }
+  ]
+}

@@ -76,7 +76,7 @@
     "cutoff_frequency": null,
     "action_scale": 0.25,
     "config": "sim/upstream_runtime/example_config.json",
-    "wall_s": 1.12
+    "wall_s": 0.69
   },
   "sim_test": {
     "lpf_hz": 0.0,
@@ -89,6 +89,6 @@
     "phase clock: the runtime builds the observation before advancing imitation_i (first step sees [0,0]), sim_test advances first; both run 27 steps per period. With sim_test's clock delayed one step to match, the lockstep RMS is 0.0056 rad (diagnostic, not used for match)",
     "largest observation-block RMS differences (runtime - sim_test, same state): gait_phase 0.16418, last_action 0.08744, last_last_action 0.08734"
   ],
-  "created": "2026-10-23T00:42:17-04:00",
+  "created": "2026-10-23T10:45:43-04:00",
   "tool": "tools/sim2sim.py"
 }

@@ -1,0 +1,116 @@
+<title>Duck Overnight Build</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f6f4ef;--fg:#1f2320;--muted:#5d655f;--card:#ffffff;--line:#dcd8cf;--accent:#b7791f;--ok:#2e7d4f;--bad:#b3342b;--warn:#a05a00;--code:#efece5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#151715;--fg:#e8e6df;--muted:#a3a89f;--card:#1e221f;--line:#333833;--accent:#e0a53a;--ok:#6cc28f;--bad:#ef7b72;--warn:#e9a74c;--code:#262b27;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151715;--fg:#e8e6df;--muted:#a3a89f;--card:#1e221f;--line:#333833;--accent:#e0a53a;--ok:#6cc28f;--bad:#ef7b72;--warn:#e9a74c;--code:#262b27;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5;margin:0}
+main{max-width:980px;margin:0 auto;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-size:1.9rem;margin:0 0 4px;text-wrap:balance}
+h2{font-size:1.25rem;margin:40px 0 10px;padding-top:12px;border-top:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:18px 0 6px}
+p{max-width:70ch;margin:8px 0}
+.sub{color:var(--muted);margin:0 0 18px}
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;margin:10px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+.wrap{overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.card img,.card video,figure img,figure video{width:100%;max-width:100%;height:auto;border-radius:6px;display:block;background:#000}
+figure{margin:12px 0}
+figcaption{color:var(--muted);font-size:.85rem;margin-top:6px}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--warn);font-weight:600}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--code);padding:1px 5px;border-radius:4px}
+pre{font-family:"IBM Plex Mono",monospace;font-size:.82rem;background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto}
+ul{padding-left:20px;max-width:75ch}li{margin:4px 0}
+.pill{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:6px}
+.stat{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.stat div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:120px}
+.stat b{display:block;font-size:1.3rem}
+.stat span{color:var(--muted);font-size:.8rem}
+</style>
+<main>
+<div class="kicker">Open Duck Mini · skill library · night of 22 to 23 October 2026</div>
+<h1>Duck Overnight Build</h1>
+<p class="sub">Seven agent teams built the skill-library pipeline while you slept. Everything below was run, not just written. The LAN dashboard at <code>http://192.168.50.109:8430</code> shows the live state of all of it.</p>
+
+<div class="stat">
+  <div><b>86 / 0 / 2</b><span>tests passed / failed / skipped</span></div>
+  <div><b>56</b><span>motion graph tests</span></div>
+  <div><b>280 of 400</b><span>walk brain strict battery</span></div>
+  <div><b>0 falls</b><span>motion graph demo, 13 s</span></div>
+  <div><b>118 files</b><span>committed as d42ed35</span></div>
+</div>
+
+<h2>1. Blender is now the animation tool</h2>
+<p>The duck rig lives in <code>anim/duck.blend</code>: one bone per servo with the hinge locked to the bone's Z axis, so the joint angle you key is the angle the servo gets. Foot IK with a slider, left/right mirroring with the duck's real sign table, and a sidebar panel with import, export, check, mirror and loop. Round-tripping a recorded turn clip through Blender reproduces it to the last digit. How to animate is in <code>anim/README.md</code>; open it with <code>anim/blender.sh</code>.</p>
+<figure><img src="img/blender_rig.png" alt="Blender with the duck rig in the bow pose, sidebar Duck tab visible"><figcaption>Frame 60 of the placeholder bow. Blue = leg joints, green = head chain, red = things you grab (trunk box, foot circles).</figcaption></figure>
+<p>Three real defects were found and fixed on the way: MuJoCo recentres every mesh at compile time (raw STL vertices never matched the compiled positions), the IK driver did not refresh when the slider changed from Python, and the MJCF <code>home</code> keyframe sits 17 mm too low (feet through the floor). The rig now uses the settled standing height.</p>
+<figure><video controls preload="metadata" data-asset="test_bow_check" src="/_blob/443055613e4b4f789c49c490e51c869c"></video><figcaption>Stage 2 check of the placeholder bow playing kinematically in MuJoCo: floor penetration, self-collision, joint limits, servo speed and the home pose at both ends. Pass.</figcaption></figure>
+
+<h2>2. The Duck Puppet became the Duck Dashboard</h2>
+<p>Progress, animations with 3D playback and check badges, training runs with reward curves and ONNX links, the GPU card, skill packages with their battery and sim-to-sim results, a tool runner with live logs, telemetry charts, the experiment log, and the puppet page at <code>/puppet/</code>. Phone first, dark mode, and listed in the Command Center as "Duck Dashboard".</p>
+<div class="grid">
+  <div class="card"><img src="img/dash_progress.png" alt="Dashboard progress tab"><figcaption>Progress: milestones and workstreams, editable.</figcaption></div>
+  <div class="card"><img src="img/dash_animations.png" alt="Dashboard animations tab"><figcaption>Animations: every clip, its check, Check and Open in Blender.</figcaption></div>
+  <div class="card"><img src="img/dash_training.png" alt="Dashboard training tab"><figcaption>Training: GPU, running jobs, every run with its score.</figcaption></div>
+  <div class="card"><img src="img/dash_phone.png" alt="Dashboard at phone width"><figcaption>Phone width.</figcaption></div>
+</div>
+
+<h2>3. Motion graph runtime: skills hand off without stopping</h2>
+<p><code>graph_runtime/</code> is the state machine from the framework: explicit edges, entry windows on gait phase and contact, blending at the reference level (the commanded joint targets cross-fade over the window, two policies are never averaged), previous actions handed to the incoming policy, timeouts, and abort into a sit skill. It runs on MuJoCo now and has a locked hardware backend that documents the exact runtime calls for later.</p>
+<figure><video controls preload="metadata" data-asset="motion_graph_demo" src="/_blob/d61238ad68503fa4a7e0437b83333aa3"></video><figcaption>Scripted demo: idle, walk at 0.12 m/s, a bow overlay on the head while the legs keep walking, abort into sit. Max tilt 12.9°, no fall.</figcaption></figure>
+<figure><img src="img/demo_strip.png" alt="Four frames of the demo: walk, walk plus bow, blending into sit, sat"><figcaption>Walk, walk + bow overlay, blending into sit, relaxed.</figcaption></figure>
+<p class="warn">Finding: the placeholder bow played open loop with the legs parked at the static home pose tips the duck forward 1.1 s in (5 of 5). The head carries a lot of the mass. That is exactly what a tracking policy must learn to compensate, and a reason for the clip gate to grow a head-excursion check.</p>
+
+<h2>4. Skill packages, battery, sim-to-sim, regression</h2>
+<p>Every skill is a folder <code>skills/&lt;name&gt;/v&lt;N&gt;/</code> with <code>skill.json</code>, the clip, the ONNX and reports; a loader refuses anything incomplete. The current walk brain is packaged as <code>walk/v1</code> and put through the strict battery: 5 seeds × 10 episodes per test, randomised friction, mass and torque, identical fall thresholds.</p>
+<div class="wrap"><table>
+<tr><th>Test</th><th>Result</th><th>Note</th></tr>
+<tr><td>standing</td><td class="ok">50 / 50</td><td></td></tr>
+<tr><td>forward</td><td class="ok">50 / 50</td><td>0.077 m/s</td></tr>
+<tr><td>backward</td><td class="bad">0 / 50</td><td>−0.016 m/s, below 20 % of command</td></tr>
+<tr><td>turn left / right</td><td class="ok">50 / 50 each</td><td>±38 °/s</td></tr>
+<tr><td>side-step left</td><td class="ok">50 / 50</td><td>0.058 m/s</td></tr>
+<tr><td>side-step right</td><td class="bad">0 / 50</td><td>does not step right</td></tr>
+<tr><td>push recovery 15 N</td><td class="warn">30 / 50</td><td></td></tr>
+<tr><td><b>overall</b></td><td class="bad">280 / 400 (0.70)</td><td>pass bar proposed at 0.90; status stays draft</td></tr>
+</table></div>
+<figure><img src="img/walk_v1_battery.png" alt="Battery results chart for walk v1"><figcaption>No falls in any velocity test. The failures are honest gaps of this brain, now measured.</figcaption></figure>
+<p>Sim-to-sim runs the package through the real runtime code with a mocked servo bus: 0.0200 rad RMS target difference, a hair over the 0.02 bar, and the cause is isolated. The Pi runtime advances its gait clock <em>after</em> building the observation; the trainer advances it before. With the clock aligned the difference is 0.0056 rad. A nightly regression over every package is in cron at 03:30 (73 s).</p>
+<p class="warn">Finding: the current walk brain does not step at all with the 8 Hz action filter (0.001 m/s). The filter belongs to the newer curriculum brains. If the duck ever stood and refused to walk, this is a candidate.</p>
+
+<h2>5. Mechatronics: the envelope, with sources</h2>
+<p><code>mechatronics/envelope.json</code> gives every deploy limit a status (verified, measured, derived, proposed, unverified) and a source file. Torque 1.86 N·m, 4 rad/s, fall tilt 45°, thermal warn 50 / cool-down 60 / hard 65 °C proposed, voltage guards, per-joint deploy ranges.</p>
+<figure><img src="img/servo_step.png" alt="Servo step response in simulation"><figcaption>Model servo, 0.5 rad step at 1.86 N·m: rise 0.16 s, 6.6 % overshoot. The bench procedure to measure the real one is written, and needs your hands.</figcaption></figure>
+<ul>
+  <li><span class="warn">The "8 Hz" action filter is a 1.2 Hz filter.</span> The formula puts <code>1/fc</code> where an RC constant belongs. Sim and runtime share it, so nothing is inconsistent, but packages should carry the real cutoff.</li>
+  <li><span class="warn">Mass is the largest known model error:</span> the MJCF totals 2.107 kg against your 1.5 to 1.8 kg estimate. <code>mechatronics/weigh_me.md</code> is a 10-minute kitchen-scale checklist.</li>
+  <li><span class="warn">8.3 V flag:</span> almost certainly the servos' 8.0 V max-voltage register tripping after a full charge; advisory by default. The read-only health script confirms it once the Pi is on (it was off tonight).</li>
+  <li>At the 1.86 N·m cap the model's steady-speed ceiling is 3.2 rad/s, below the 3.8 to 4.5 rad/s the real knees reach: the cap is right at stall and pessimistic at speed.</li>
+</ul>
+
+<h2>6. Tests and gates</h2>
+<p><code>./run_tests.sh</code>: 86 passed, 0 failed, 2 skipped in 13 s, covering the model dump, the clip checker, the Blender round trip (headless), a sim smoke test of the walk brain, the package tools, the M1 chain end to end, the envelope and the tool registry. <code>tests/GATES.md</code> proposes the concrete thresholds for G1 to G5 and waits for your approval.</p>
+
+<h2>7. mjlab spike</h2>
+<p>The duck's MJCF loads into mjlab unchanged, BAM servo model and all; a duck tracking environment builds and trains PPO at about 33k env-steps/s at 1024 environments on the 4060, with a converter prototype from our clip JSON. Recommendation: stay on brax/MJX for phase 1, port episodic tracking to mjlab in phase 2, about 3 to 4 days to a first clip there. Details in <code>experiments/mjlab_spike.md</code>.</p>
+
+<h2 id="controls">8. First skill trained from a clip</h2>
+<div id="controls-body">
+<p>The Controls team's tracking task (BeyondMimic-style reward template, adaptive sampling, fixed randomisation, previous two actions in the observation) was still training the placeholder bow when this page was written. This section is updated when it finishes.</p>
+</div>
+
+<h2>9. What needs you</h2>
+<ul>
+  <li>Author the first real clips in Blender: bow, wiggle, look around. The placeholders only move the head.</li>
+  <li>Weigh the duck (<code>mechatronics/weigh_me.md</code>) and switch the Pi on for the first telemetry read.</li>
+  <li>Approve or edit the gate thresholds in <code>tests/GATES.md</code>.</li>
+  <li>Decide the walk v1 contract: accept backward and side-right as known gaps, or narrow its command ranges.</li>
+  <li>Decide the 8.3 V handling: leave it, charge to about 8.2 V, or raise the register once.</li>
+  <li>Open questions from every team are in <code>experiments/questions.md</code>, with a section for you.</li>
+</ul>
+</main>
