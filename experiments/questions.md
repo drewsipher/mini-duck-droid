@@ -40,6 +40,8 @@ when it is a failure. Things only Drew can decide go under "For Drew".
 - **(Testing, 00:35) Mass range.** MJCF mass is 2.107 kg; `MASS_SCALE=0.72,1.0` spans 1.52 to 2.11 kg. If Mechatronics' weigh-in lands at 1.5 kg the real duck sits at the edge of the randomisation range; worth centring the range on the measured mass in the recipe.
 - **(Testing, 01:05) train_skill.sh / eval_tracking.py.** `tests/test_tools.py` checks `train_skill.sh` with `bash -n`, the executable bit and a `set -e/-o pipefail` line, and only byte-compiles `eval_tracking.py` (never imports it: GPU). Both pass.
 
+- (Coordinator, 2026-10-23 10:50) The Controls agent hit a usage limit at ~02:40 after training bow (full, 150M steps) and turn_left (preview + full) and writing their drafts, before its report. Finished by the coordinator: eval_tracking.write_package now emits schema-valid packages (obs_spec names/size/blocks, policy block with action_mode residual_on_reference, pipeline-format battery with `passed`, thresholds 47/50 + 0.15 rad, thermal 60 C from the envelope, recovery exit to `sit`, `idle` dropped as a neighbour since idle = walk at zero command); tools/battery.py delegates tracking packages to eval_tracking. Open: per-term reward weights were never reviewed by a person; training still ends with 8-10 % falls under pushes + mid-clip starts.
+
 ## Software pipeline
 
 1. **(Controls) Deployment settings of the walk brain.** `BEST_WALK_ONNX_2.onnx` does not step in

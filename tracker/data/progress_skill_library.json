@@ -1,21 +1,21 @@
 {
-  "updated": "2026-10-23T01:57-04:00",
+  "updated": "2026-10-23T10:47-04:00",
   "plan": "skill-library-plan.md",
   "flow_map": "http://hermes-agent.local/apps/mermaid-flow-studio/?load=diagrams/skill-library-plan.mmd",
   "milestones": [
     {
       "id": "M0",
       "title": "Foundation",
-      "status": "in_progress",
+      "status": "done",
       "weeks": "1",
-      "notes": "Plan, flow map, package spec, experiment log, teams briefed. Blender rig built 10-23."
+      "notes": "Plan, flow map, package spec, experiment log, teams, Blender, dashboard (10-23)"
     },
     {
       "id": "M1",
       "title": "One skill end to end",
-      "status": "todo",
+      "status": "in_progress",
       "weeks": "2-3",
-      "notes": "bow clip: author, check, train, battery, sim-to-sim, hardware, skills/bow/v1"
+      "notes": "placeholder bow: authored, checked, trained 50/50, packaged, runs in the motion graph; missing: sim-to-sim on robot code, hardware, a real Blender-authored clip"
     },
     {
       "id": "M2",
@@ -99,8 +99,8 @@
     {
       "team": "Controls",
       "item": "Tracking task + recipe + train_skill.sh",
-      "status": "in_progress",
-      "notes": "agent running overnight 10-23"
+      "status": "done",
+      "notes": "tracking.py + recipe_v1 + train_skill.sh; bow 50/50, turn_left 48/50 in skills/"
     },
     {
       "team": "Controls",
@@ -119,6 +119,18 @@
       "item": "pytest suite, gates, questions log",
       "status": "done",
       "notes": "86 passed 2 skipped (run_tests.sh); tests/GATES.md proposed thresholds for Drew"
+    },
+    {
+      "team": "Software",
+      "item": "First library graph (graphs/library.json)",
+      "status": "done",
+      "notes": "walk -> learned bow -> walk -> sit, no fall (collision scene); edge check 10/10 stop, 10/10 moving"
+    },
+    {
+      "team": "Software",
+      "item": "Motion graph runtime on the Pi (hardware backend)",
+      "status": "todo",
+      "notes": "unlocks sim-to-sim for tracking skills; needs the Pi on"
     }
   ]
 }

@@ -38,11 +38,12 @@ ul{padding-left:20px;max-width:75ch}li{margin:4px 0}
 <p class="sub">Seven agent teams built the skill-library pipeline while you slept. Everything below was run, not just written. The LAN dashboard at <code>http://192.168.50.109:8430</code> shows the live state of all of it.</p>
 
 <div class="stat">
-  <div><b>86 / 0 / 2</b><span>tests passed / failed / skipped</span></div>
+  <div><b>50 / 50</b><span>trained bow, strict battery</span></div>
+  <div><b>92 / 0 / 2</b><span>tests passed / failed / skipped</span></div>
   <div><b>56</b><span>motion graph tests</span></div>
   <div><b>280 of 400</b><span>walk brain strict battery</span></div>
   <div><b>0 falls</b><span>motion graph demo, 13 s</span></div>
-  <div><b>118 files</b><span>committed as d42ed35</span></div>
+  <div><b>3 skills</b><span>in the library (2 passing)</span></div>
 </div>
 
 <h2>1. Blender is now the animation tool</h2>
@@ -99,14 +100,39 @@ ul{padding-left:20px;max-width:75ch}li{margin:4px 0}
 <h2>7. mjlab spike</h2>
 <p>The duck's MJCF loads into mjlab unchanged, BAM servo model and all; a duck tracking environment builds and trains PPO at about 33k env-steps/s at 1024 environments on the 4060, with a converter prototype from our clip JSON. Recommendation: stay on brax/MJX for phase 1, port episodic tracking to mjlab in phase 2, about 3 to 4 days to a first clip there. Details in <code>experiments/mjlab_spike.md</code>.</p>
 
-<h2 id="controls">8. First skill trained from a clip</h2>
+<h2 id="controls">8. The first skills trained from clips</h2>
 <div id="controls-body">
-<p>The Controls team's tracking task (BeyondMimic-style reward template, adaptive sampling, fixed randomisation, previous two actions in the observation) was still training the placeholder bow when this page was written. This section is updated when it finishes.</p>
+<p>The Controls team built the tracking task in train_pg: the BeyondMimic-style reward template (body position, orientation and velocities, joint tracking, action rate, joint limits, self-contact), adaptive start sampling, a fixed randomisation set, the previous two actions in the observation, and the deploy filters inside training. Every number lives in <code>recipe_v1.py</code> with the reason it differs from the humanoid paper. The policy outputs a correction on top of the clip, so a zero action plays the clip as authored.</p>
+<div class="wrap"><table>
+<tr><th>Skill</th><th>Training</th><th>Strict battery</th><th>Tracking error</th></tr>
+<tr><td>bow (placeholder head bow, 2.5 s)</td><td>150M steps, 67 min</td><td class="ok">50 / 50</td><td>joint 0.027 rad (1.5°), trunk 1.1 cm, tilt 2.8°</td></tr>
+<tr><td>bow, with the training pushes on</td><td></td><td class="ok">49 / 50</td><td>joint 0.027 rad</td></tr>
+<tr><td>turn_left (recorded s2a turn, looped 6 s)</td><td>preview + full run</td><td class="ok">48 / 50</td><td>joint 0.057 rad (3.3°), trunk 3.6 cm, heading lags to 18° by 5.5 s</td></tr>
+</table></div>
+<p>The battery runs in plain CPU MuJoCo, not the GPU simulator the policy trained in, with randomised friction, masses, torque, servo gains and action delay, and fails an episode on the same height and orientation limits training uses.</p>
+<figure><video controls preload="metadata" src="/_blob/d7b14280b8ed83e22f769190ab78a542"></video><figcaption>Reference clip (left) against the trained policy (right). The open-loop version of this same bow fell 5 of 5 times; the policy keeps the trunk within 1 cm and 5° while the heavy head goes down.</figcaption></figure>
+<figure><img src="img/bow_eval_strip.png" alt="Reference and policy side by side at four moments of the bow"><figcaption>Four moments of the bow, reference left, policy right, with the per-frame errors.</figcaption></figure>
+<figure><video controls preload="metadata" src="/_blob/26c9288fdf067bd669b5fb497b8366da"></video><figcaption>The looped left turn, recorded from the s2a brain, tracked by its own small policy.</figcaption></figure>
+<figure><img src="img/bow_curves.png" alt="Per-term training curves for the bow"><figcaption>Every reward term and penalty separately, as the recipe requires. Joint error falls from 3.0° to 1.7°. In training, with pushes and starts anywhere in the clip, 8 to 10% of episodes still fall at the end; the strict battery starts at the clip's beginning.</figcaption></figure>
+
+<h3>The motion graph runs the learned bow</h3>
+<p>The Controls agent hit a usage limit at 02:40 before finishing, so I finished its last steps in the morning. The evaluator now writes packages that pass the library schema and load in the motion graph, and the pipeline battery hands clip-tracking skills to that same evaluator, so there is one evaluator with the training thresholds. Both skills are in <code>skills/</code> with status battery_passed. <code>graphs/library.json</code> is the first graph built from trained library skills.</p>
+<figure><video controls preload="metadata" src="/_blob/cfd4ec12b6c2b3fd6638e337f80070c5"></video><figcaption>Walk, stop, the learned bow, walk again, abort into sit. Body-collision scene, no fall, max tilt 9.5°.</figcaption></figure>
+<figure><img src="img/library_strip.png" alt="Five frames: walk, blending into bow, bow, walk, sit"><figcaption>Walk, blending into the bow at 65%, bowing at 2.6° tilt, walking again, sitting after the abort.</figcaption></figure>
+<div class="wrap"><table>
+<tr><th>Edge check (10 runs each, start pose ±0.03 rad)</th><th>No fall</th><th>Peak tilt in the bow</th></tr>
+<tr><td>walk → stop → bow (the trained entry)</td><td class="ok">10 / 10</td><td>3.8°</td></tr>
+<tr><td>walk at 0.12 m/s → bow (never trained)</td><td class="ok">10 / 10</td><td>7.2 to 7.9°</td></tr>
+</table></div>
+<p>Entering the bow mid-stride doubles the tilt, the cost framework rule 4 predicts, but it holds at this speed. The library graph still only opens that edge near standstill; <code>graphs/library_moving_entry.json</code> is the experiment. These ten-run checks randomise the start pose only, not the physics.</p>
+<figure><video controls preload="metadata" src="/_blob/482bcd4c5f0fdc267f72f5d4c0209495"></video><figcaption>The untrained case: the bow triggered while walking.</figcaption></figure>
+<p class="warn">Finding: in the default training scene the sit skill's crouch falls through the floor, because legs and trunk have no floor collision there. In the body-collision scene the same session has no fall. Recovery skills must be tested in the collision scene.</p>
+<p>Not yet done for these skills: sim-to-sim through the robot's own code, because the Pi's runtime has no clip-tracking path. That gate waits on the motion graph runtime reaching the Pi (M3).</p>
 </div>
 
 <h2>9. What needs you</h2>
 <ul>
-  <li>Author the first real clips in Blender: bow, wiggle, look around. The placeholders only move the head.</li>
+  <li>Author the first real clips in Blender: bow, wiggle, look around. The placeholders only move the head. Each one then goes through <code>sim/train_skill.sh</code>: about 20 minutes for a preview and an hour for a full run.</li>
   <li>Weigh the duck (<code>mechatronics/weigh_me.md</code>) and switch the Pi on for the first telemetry read.</li>
   <li>Approve or edit the gate thresholds in <code>tests/GATES.md</code>.</li>
   <li>Decide the walk v1 contract: accept backward and side-right as known gaps, or narrow its command ranges.</li>
