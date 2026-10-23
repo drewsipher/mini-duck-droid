@@ -36,3 +36,9 @@ systemctl --user restart duck-tracker
 # The service runs with --lan: open http://192.168.50.109:8430 from any device on the home network
 ssh bdxv2@bdxv2.local 'tail ~/duck_agent.log'    # the agent on the Pi
 ```
+
+## Licence
+
+Non-commercial. Code is under PolyForm Noncommercial 1.0.0 (`LICENSE`), animations and media
+under CC BY-NC 4.0 (`LICENSE-ASSETS`). Files from Open Duck Mini and three.js keep their own
+licences. `NOTICE.md` says which files are which.
