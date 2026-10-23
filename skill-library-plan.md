@@ -25,8 +25,8 @@ Mapped onto the framework's four layers and six stages. "Exists" means working t
 | L3 overlay layer | partial | Head (4 DoF) is already a command input to the walk policy, not a learned behaviour. Antennas, eyes, sound are classical |
 | L2 animation engine, state machine | none | Runtime runs exactly one ONNX. No transitions, no blending, no clip layer |
 | L1 operator layer | partial | Web UI and Xbox controller drive velocity commands only |
-| Stage 1 author | exists | **Duck Puppet** (`tracker/`): pose, hold, record the real duck; keyframe timeline, mirror, loop, trim, append (`anim.js`); `record_policy_clip.py` records a brain's gait as a clip. Blender is reachable through MCP for later |
-| Stage 2 retarget and check | none | No clip checker (ground penetration, self-collision, joint limits, servo speed) |
+| Stage 1 author | exists (10-23) | **Blender 5.2** with the duck rig (`anim/duck.blend`, Duck Tools panel: IK legs, mirror with the duck's sign table, clip import/export, check button; see `anim/README.md`). The Duck Puppet (`tracker/`) stays the hardware console: pose, hold, record the real duck, play clips on it. `record_policy_clip.py` records a brain's gait as a clip |
+| Stage 2 retarget and check | exists (10-23) | `anim/clip_check.py`: floor penetration, self-collision, joint limits, servo speed, home pose at both ends, video; also a Blender button |
 | Stage 3/4 training | partial | `sim/train_pg` (mujoco_playground, brax PPO on MJX, ~1 h per 100M steps). `ClipReferenceMotion` and `HybridReferenceMotion` track joint angles and contacts from clips. No root-pose tracking, no adaptive sampling, no frozen reward template |
 | Stage 5 sim-to-sim | partial | `sim_test.Sim` mirrors the runtime (same filters, torque, obs). Not run through the real deploy code |
 | Stage 6 hardware | partial | Hand-held and free tests, no gantry, no ratio reporting |
@@ -65,7 +65,7 @@ Owns the robot model, actuator truth and the safety envelope.
 
 ### 3.2 Animation and character
 Owns clips and show functions.
-- **Author** clips in the Duck Puppet (keyframes or record from the real duck or from a brain). First clips: `bow`, `wiggle`, `look_around`, then `hop`.
+- **Author** clips in Blender on the duck rig (`anim/README.md`); record from the real duck through the Duck Puppet or from a brain with `record_policy_clip.py` when a performance is easier than keyframes. First clips: `bow`, `wiggle`, `look_around`, then `hop`.
 - **Tag** every clip with entry window, exit window, gait phase, and the pose it must start and end in.
 - **Stage 2 checks** (tool built by Software, used here): no ground penetration, no self-collision, joints inside limits, servo speed inside the envelope, start and end pose match the neighbour.
 - Show functions: head gestures, antenna moves, eye and sound cues scheduled by the animation engine.

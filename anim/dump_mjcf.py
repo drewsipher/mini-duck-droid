@@ -80,9 +80,21 @@ def main():
     act_joint = [mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_JOINT, m.actuator_trnid[a][0]) for a in range(m.nu)]
     home = {}
     try:                                         # the standing pose the runtime and the trainer start from
-        kq = m.keyframe("home").qpos
+        kq = m.keyframe("home").qpos.copy()
         jadr = {mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_JOINT, j): int(m.jnt_qposadr[j]) for j in range(m.njnt)}
-        home = {"joints": {j: float(kq[jadr[j]]) for j in act_joint}, "base_pos": kq[:3].tolist(), "base_quat": kq[3:7].tolist()}
+        # The keyframe's base height (0.15 m) leaves the feet ~17 mm through the floor; the duck settles
+        # higher under gravity. Report the height at which the lowest foot point just touches the floor,
+        # so a clip authored at the home pose stands ON the floor (the keyframe value is kept alongside).
+        d2 = mujoco.MjData(m)
+        d2.qpos[:] = kq
+        mujoco.mj_kinematics(m, d2)
+        mujoco.mj_collision(m, d2)
+        floor = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, "floor")
+        pen = max((-d2.contact[i].dist for i in range(d2.ncon) if floor in (d2.contact[i].geom1, d2.contact[i].geom2)), default=0.0)
+        settled = kq[:3].copy()
+        settled[2] += max(pen, 0.0)
+        home = {"joints": {j: float(kq[jadr[j]]) for j in act_joint}, "base_pos": [float(x) for x in settled],
+                "base_pos_keyframe": kq[:3].tolist(), "base_quat": kq[3:7].tolist(), "keyframe_floor_penetration_m": float(pen)}
     except KeyError:
         pass
     json.dump({"xml": os.path.relpath(XML, HERE), "bodies": bodies, "actuators": actuators, "meshes": meshes,

@@ -30,6 +30,63 @@ FPS = 50
 BONE_LEN = 0.04
 
 
+# Left <-> right mirror in the MuJoCo/runtime frame (same table as tracker/anim.js): the two hip
+# pitches, rolls and yaws have opposite signs (standing: left_hip_pitch -0.63, right +0.635); knees
+# and ankles share a sign; the head yaw and roll flip. Blender's own X-mirror cannot know this.
+MIRROR = {
+    "left_hip_yaw": ("right_hip_yaw", -1), "right_hip_yaw": ("left_hip_yaw", -1),
+    "left_hip_roll": ("right_hip_roll", -1), "right_hip_roll": ("left_hip_roll", -1),
+    "left_hip_pitch": ("right_hip_pitch", -1), "right_hip_pitch": ("left_hip_pitch", -1),
+    "left_knee": ("right_knee", 1), "right_knee": ("left_knee", 1),
+    "left_ankle": ("right_ankle", 1), "right_ankle": ("left_ankle", 1),
+    "neck_pitch": ("neck_pitch", 1), "head_pitch": ("head_pitch", 1),
+    "head_yaw": ("head_yaw", -1), "head_roll": ("head_roll", -1),
+}
+
+
+def mirror_joints(joints):
+    """{joint: rad} -> the same motion done by the other side."""
+    out = {}
+    for j, v in joints.items():
+        mj, s = MIRROR[j]
+        out[mj] = s * v
+    return out
+
+
+def mirror_pose(arm):
+    """Mirror the current FK pose of the rig (legs and head). Run with IK off or snap afterwards."""
+    q, _, _ = joint_angles(arm)
+    set_pose(arm, mirror_joints(q))
+    snap_ik_targets(arm)
+
+
+def mirror_action(arm, action=None, name=None):
+    """A new action that is the mirror of `action` (default: the rig's current action), sampled per frame."""
+    action = action or arm.animation_data.action
+    scene = bpy.context.scene
+    f0, f1 = (int(action.frame_range[0]), int(action.frame_range[1]))
+    frames = []
+    cur = scene.frame_current
+    for f in range(f0, f1 + 1):
+        scene.frame_set(f)
+        q, base, _ = joint_angles(arm)
+        frames.append((f, mirror_joints(q), base))
+    scene.frame_set(cur)
+    new = bpy.data.actions.new(name or action.name + ".mirror")
+    arm.animation_data.action = new
+    try:
+        if not new.slots:
+            new.slots.new(id_type="OBJECT", name=arm.name)
+        arm.animation_data.action_slot = new.slots[0]
+    except AttributeError:
+        pass
+    for f, q, base in frames:
+        p, (w, x, y, z) = base
+        set_pose(arm, q, base={"base_pos": [p[0], -p[1], p[2]], "base_quat": [w, -x, y, -z]}, frame=f, key=True)
+    set_ik(arm, 0.0)
+    return new
+
+
 def bone_name(joint):
     for side, suf in (("left_", ".L"), ("right_", ".R")):
         if joint.startswith(side):
@@ -171,6 +228,7 @@ def build(model_path=MODEL, with_meshes=True):
         col = arm_data.collections.new(name)
         for bn in members:
             col.assign(arm_data.bones[bn])
+    _controls_look(arm)
     if with_meshes:
         _attach_meshes(arm, m, bodies, body_joint)
     _floor()
@@ -202,6 +260,49 @@ def snap_ik_targets(arm, key=False, frame=None):
         if key:
             t.keyframe_insert("location", frame=frame)
     bpy.context.view_layer.update()
+
+
+def _shape(name, kind, size):
+    """A small wire mesh used as a custom bone shape (hidden helper object)."""
+    ob = bpy.data.objects.get(name)
+    if ob:
+        return ob
+    import math as _m
+    if kind == "circle":
+        n = 24
+        verts = [(size * _m.cos(2 * _m.pi * i / n), 0.0, size * _m.sin(2 * _m.pi * i / n)) for i in range(n)]
+        edges = [(i, (i + 1) % n) for i in range(n)]
+    else:                                        # box
+        s = size
+        verts = [(x, y, z) for x in (-s, s) for y in (-s, s) for z in (-s, s)]
+        edges = [(0, 1), (2, 3), (4, 5), (6, 7), (0, 2), (1, 3), (4, 6), (5, 7), (0, 4), (1, 5), (2, 6), (3, 7)]
+    mesh = bpy.data.meshes.new(name)
+    mesh.from_pydata(verts, edges, [])
+    ob = bpy.data.objects.new(name, mesh)
+    ob["duck_part"] = True
+    bpy.context.scene.collection.objects.link(ob)
+    ob.hide_viewport = True
+    ob.hide_render = True
+    return ob
+
+
+def _controls_look(arm):
+    """Colours and custom shapes so an animator can tell controls from joints at a glance."""
+    pb = arm.pose.bones
+    for p in pb:
+        if p.name.startswith("foot_ik"):
+            p.custom_shape = _shape("DuckShape.foot", "circle", 1.0)
+            p.custom_shape_scale_xyz = (0.5, 0.5, 0.5)
+            p.color.palette = "THEME01"              # red: things you grab
+        elif p.name == "base":
+            p.custom_shape = _shape("DuckShape.base", "box", 1.0)
+            p.custom_shape_scale_xyz = (0.8, 0.8, 0.8)
+            p.color.palette = "THEME01"
+        elif any(k in p.name for k in ("neck", "head")):
+            p.color.palette = "THEME04"              # green: head chain (FK)
+        else:
+            p.color.palette = "THEME03"              # blue: leg joints (IK or FK)
+    arm.data.show_axes = False
 
 
 def _attach_meshes(arm, m, bodies, body_joint):
@@ -275,6 +376,20 @@ def set_pose(arm, joints, base=None, frame=None, key=False):
         if key:
             b.keyframe_insert("location", frame=frame)
             b.keyframe_insert("rotation_quaternion", frame=frame)
+
+
+def fcurves(action):
+    """All F-curves of an action. Blender 5 removed Action.fcurves (layered, slotted actions)."""
+    if action is None:
+        return []
+    if hasattr(action, "fcurves"):
+        return list(action.fcurves)
+    out = []
+    for layer in action.layers:
+        for strip in layer.strips:
+            for cb in strip.channelbags:
+                out.extend(cb.fcurves)
+    return out
 
 
 def _frames_of(clip):
@@ -374,7 +489,12 @@ def export_clip(path, start=None, end=None, arm=None, meta=None):
         frames.append([round((f - start) / FPS, 3), {k: round(v, 4) for k, v in q.items()}])
         bases.append([[round(x, 4) for x in base[0]], [round(x, 4) for x in base[1]]])
     scene.frame_set(cur)
-    out = {"frames": frames, "base": bases, "interp": "linear",
+    # The trunk track is only meaningful when the animator moved the base bone; otherwise leave it out
+    # so the checker and the trainer place the duck on the floor themselves.
+    act = arm.animation_data.action if arm.animation_data else None
+    base_animated = any(fc.data_path.startswith('pose.bones["base"]') for fc in fcurves(act))
+    out = {"frames": frames, "interp": "linear",
+           **({"base": bases} if base_animated else {}),
            "authored_in": {"tool": "blender", "file": bpy.data.filepath, "action": getattr(arm.animation_data.action, "name", None) if arm.animation_data else None,
                            "fps": FPS, "off_axis_leak": worst, **(meta or {})}}
     with open(path, "w") as fh:

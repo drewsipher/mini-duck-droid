@@ -46,6 +46,9 @@ def main():
     ap.add_argument("--loop", action="store_true", help="cyclic clip: end must match start, not home")
     a = ap.parse_args()
     frames, base_track = load_frames(a.clip)
+    for p in (a.video, a.json):
+        if p:
+            os.makedirs(os.path.dirname(os.path.abspath(p)), exist_ok=True)
     m = mujoco.MjModel.from_xml_path(XML)
     d = mujoco.MjData(m)
     home = m.keyframe("home").qpos.copy()
