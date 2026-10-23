@@ -22,6 +22,8 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 PG = os.path.join(HERE, "..", "sim", "train_pg", "playground", "open_duck_mini_v2")
 XML = os.path.join(PG, "xmls", "scene_flat_terrain_backlash.xml")
+if not os.path.exists(XML):  # a clone without the training repo: use the copy shipped in anim/model
+    XML = os.path.join(HERE, "model", "scene_flat_terrain_backlash.xml")
 FPS = 50
 
 
@@ -77,12 +79,19 @@ def main():
     worst_pen, self_hits, min_clear = 0.0, {}, 1e9
     renderer = cam = writer = None
     if a.video:
-        import imageio.v2 as imageio
-        renderer = mujoco.Renderer(m, 400, 480)
-        cam = mujoco.MjvCamera(); cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
-        cam.trackbodyid = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, "base")
-        cam.distance, cam.azimuth, cam.elevation = 0.9, 140, -12
-        writer = imageio.get_writer(a.video, fps=25, codec="libx264", quality=7, macro_block_size=16, ffmpeg_params=["-pix_fmt", "yuv420p"])
+        try:  # the video is a convenience: without imageio-ffmpeg or OpenGL the check still runs
+            import imageio.v2 as imageio
+            writer = imageio.get_writer(a.video, fps=25, codec="libx264", quality=7, macro_block_size=16, ffmpeg_params=["-pix_fmt", "yuv420p"])
+            renderer = mujoco.Renderer(m, 400, 480)
+            cam = mujoco.MjvCamera(); cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
+            cam.trackbodyid = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, "base")
+            cam.distance, cam.azimuth, cam.elevation = 0.9, 140, -12
+        except Exception as e:
+            print(f"no video ({type(e).__name__}: {str(e).splitlines()[0]}); for video: pip install imageio imageio-ffmpeg", file=sys.stderr)
+            if writer:
+                writer.close()
+            renderer = writer = None
+            rep["video_error"] = str(e).splitlines()[0]
     for k, f in enumerate(frames):
         d.qpos[:] = home
         d.qpos[qadr] = Q[k]
@@ -128,7 +137,7 @@ def main():
     print(json.dumps(rep, indent=1))
     if a.json:
         json.dump(rep, open(a.json, "w"), indent=1)
-    if a.video:
+    if a.video and "video_error" not in rep:
         print("video", a.video)
     sys.exit(0 if not fails else 1)
 

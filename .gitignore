@@ -14,3 +14,4 @@ tracker/data/progress.json.bak
 .DS_Store
 anim/*.blend1
 tracker/data/jobs/
+anim/blender.log

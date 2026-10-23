@@ -7,7 +7,7 @@ first rule below that matches it.
 
 | What | Where | Licence |
 |---|---|---|
-| Open Duck Mini robot model and meshes (Antoine Pirrone and contributors) | `mechatronics/model/*.xml`, the mesh data inside `anim/duck_model.json` and `anim/duck.blend` | Apache 2.0, `LICENSES/Apache-2.0.txt` |
+| Open Duck Mini robot model and meshes (Antoine Pirrone and contributors) | `anim/model/`, `mechatronics/model/*.xml`, the mesh data inside `anim/duck_model.json` and `anim/duck.blend` | Apache 2.0, `LICENSES/Apache-2.0.txt` |
 | Open Duck Mini walk policy | `sim/BEST_WALK_ONNX*.onnx`, `skills/walk/v1/policy.onnx`, `graph_runtime/demo_skills/walk/v1/policy.onnx` | Apache 2.0 |
 | Modified copy of an Open Duck Mini runtime script | `duck_feel/v2_rl_walk_mujoco.live.py` (the upstream parts) | Apache 2.0 |
 | Open Duck Mini runtime | `sim/upstream_runtime` (git submodule, not stored here) | its own repository's terms |

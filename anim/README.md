@@ -8,6 +8,16 @@ hardware console and dashboard; it plays the clips Blender exports.
 anim/blender.sh                                  # opens anim/duck.blend on the machine's display
 anim/blender.sh tracker/data/clips/test_bow.json # ...and imports a clip as an action
 ```
+### On another computer
+1. `git clone https://github.com/drewsipher/mini-duck-droid.git`, then open `anim/duck.blend` in Blender 5.2.
+2. Install the panel once: **Edit > Preferences > Add-ons**, the **v** menu at the top right, **Install from
+   Disk...**, pick `anim/duck_tools_addon.py`, and tick **Duck Tools**. It finds everything else next to
+   the open `duck.blend`, so always open the file from the clone.
+3. For the **Check clip** button, Python 3 with MuJoCo:
+   `python3 -m pip install mujoco numpy imageio imageio-ffmpeg` (Windows: `py -m pip install ...`).
+   The panel uses `sim/.venv` if the clone has one, else `python3`/`python` on the PATH; set
+   `DUCK_PYTHON` to point it at another. Without `imageio-ffmpeg` the check still runs, just without video.
+
 The file has the **Duck** rig, the floor at z = 0, 50 fps (one frame = one control step), metres.
 The sidebar (press N) has a **Duck** tab with every button below.
 
@@ -52,7 +62,8 @@ Everything above is also a button on the dashboard (http://192.168.50.109:8430).
 ## Files
 - `dump_mjcf.py` — MJCF → `duck_model.json` (bodies, joints, compiled meshes, home pose). Run with `sim/.venv`.
 - `blender_duck.py` — runs inside Blender: `build()`, `import_clip()`, `export_clip()`, `mirror_action()`, `snap_ik_targets()`.
-- `duck_tools_addon.py` — the sidebar panel (linked into `~/.config/blender/5.2/scripts/addons/duck_tools.py` by `install_addon.sh`).
+- `duck_tools_addon.py` — the sidebar panel (installed from disk, or linked into `~/.config/blender/5.2/scripts/addons/duck_tools.py` by `install_addon.sh`).
+- `model/` — copy of the Open Duck Mini MJCF and meshes the checker uses when the training repo is not cloned (Apache 2.0).
 - `blender_remote.py` — drive the running Blender from a shell: `import`, `export`, `snap`, `home`, `exec`.
 - `clip_check.py` — the stage 2 gate (exit 0 pass / 1 fail, `--json`, `--video`, `--loop`).
 - `make_test_clips.py` — placeholder head clips (`test_bow`, `test_look`) to exercise the pipeline.
