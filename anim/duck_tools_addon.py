@@ -249,7 +249,8 @@ class DUCK_OT_mirror_action(bpy.types.Operator):
 class DUCK_OT_loop(bpy.types.Operator):
     bl_idname = "duck.make_loop"
     bl_label = "Make loop"
-    bl_description = "Add a Cycles modifier to every F-curve of the current action so it repeats"
+    bl_description = ("Add a Cycles modifier to every F-curve of the current action so it repeats; the trunk and "
+                      "foot target locations repeat with offset, so a walk keeps travelling instead of snapping back")
 
     def execute(self, context):
         arm = _arm()
@@ -258,9 +259,12 @@ class DUCK_OT_loop(bpy.types.Operator):
             return {"CANCELLED"}
         n = 0
         for fc in _bd().fcurves(act):
-            if not any(m.type == "CYCLES" for m in fc.modifiers):
-                fc.modifiers.new("CYCLES")
+            mod = next((m for m in fc.modifiers if m.type == "CYCLES"), None)
+            if mod is None:
+                mod = fc.modifiers.new("CYCLES")
                 n += 1
+            travels = fc.data_path.endswith(".location") and ('"base"' in fc.data_path or '"foot_ik.' in fc.data_path)
+            mod.mode_before = mod.mode_after = "REPEAT_OFFSET" if travels else "REPEAT"
         self.report({"INFO"}, f"cycles on {n} curves")
         return {"FINISHED"}
 
