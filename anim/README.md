@@ -67,3 +67,4 @@ Everything above is also a button on the dashboard (http://192.168.50.109:8430).
 - `blender_remote.py` — drive the running Blender from a shell: `import`, `export`, `snap`, `home`, `exec`.
 - `clip_check.py` — the stage 2 gate (exit 0 pass / 1 fail, `--json`, `--video`, `--loop`).
 - `make_test_clips.py` — placeholder head clips (`test_bow`, `test_look`) to exercise the pipeline.
+- `make_walk.py` — generates a symmetric walking loop (trunk travels, planted feet stay flat, joints from IK on the MuJoCo model); `--stride`, `--period`, `--lift`, `--sway`… Import the result with `blender_duck.import_clip`.

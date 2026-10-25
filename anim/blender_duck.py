@@ -495,7 +495,7 @@ def export_clip(path, start=None, end=None, arm=None, meta=None):
     base_animated = any(fc.data_path.startswith('pose.bones["base"]') for fc in fcurves(act))
     out = {"frames": frames, "interp": "linear",
            **({"base": bases} if base_animated else {}),
-           "authored_in": {"tool": "blender", "file": bpy.data.filepath, "action": getattr(arm.animation_data.action, "name", None) if arm.animation_data else None,
+           "authored_in": {"tool": "blender", "file": os.path.basename(bpy.data.filepath), "action": getattr(arm.animation_data.action, "name", None) if arm.animation_data else None,
                            "fps": FPS, "off_axis_leak": worst, **(meta or {})}}
     with open(path, "w") as fh:
         json.dump(out, fh)
