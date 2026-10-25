@@ -4709,7 +4709,7 @@
   },
   "mean_joint_err_rad": null,
   "robot_model_hash": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38",
-  "runtime_s": 31.6,
-  "created": "2026-10-23T10:45:41-04:00",
+  "runtime_s": 32.0,
+  "created": "2026-10-24T03:30:45-04:00",
   "tool": "tools/battery.py"
 }

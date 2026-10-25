@@ -15,7 +15,7 @@
       "title": "One skill end to end",
       "status": "in_progress",
       "weeks": "2-3",
-      "notes": "placeholder bow: authored, checked, trained 50/50, packaged, runs in the motion graph; missing: sim-to-sim on robot code, hardware, a real Blender-authored clip"
+      "notes": "Drew's Blender bow (2026-10-24): authored, checked, approved, trained 50/50 (joint err 1.2 deg), in skills/bow/v1, runs walk -> bow -> walk -> sit in the motion graph; missing: sim-to-sim on robot code, hardware"
     },
     {
       "id": "M2",
@@ -75,8 +75,8 @@
     {
       "team": "Animation",
       "item": "Author the first real clips in Blender (bow, wiggle, look_around)",
-      "status": "todo",
-      "notes": "Drew: anim/blender.sh; placeholders test_bow/test_look exist"
+      "status": "in_progress",
+      "notes": "bow done and trained (2026-10-24); walk next"
     },
     {
       "team": "Software",
@@ -100,7 +100,7 @@
       "team": "Controls",
       "item": "Tracking task + recipe + train_skill.sh",
       "status": "done",
-      "notes": "tracking.py + recipe_v1 + train_skill.sh; bow 50/50, turn_left 48/50 in skills/"
+      "notes": "tracking.py + recipe_v1 + train_skill.sh; Drew's bow 50/50 in skills/bow/v1 (placeholder skills retired to skills_archive/)"
     },
     {
       "team": "Controls",
