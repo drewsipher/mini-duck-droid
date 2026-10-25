@@ -202,7 +202,10 @@ def test_library_reports_are_ratios(pkg):
     if os.path.exists(s):
         rep = json.load(open(s))
         assert rep.get("match") in (True, False, None)
-        assert isinstance(rep.get("rms_target_diff_rad"), (int, float)) and isinstance(rep.get("threshold_rad"), (int, float))
+        if rep.get("match") is None:     # skipped (no runtime for this obs_spec yet): it must say why
+            assert rep.get("notes"), "a skipped sim2sim.json must carry notes"
+        else:
+            assert isinstance(rep.get("rms_target_diff_rad"), (int, float)) and isinstance(rep.get("threshold_rad"), (int, float))
         checked += 1
     h = os.path.join(rep_dir, "hardware.json")
     if os.path.exists(h):

@@ -1,6 +1,6 @@
 {
   "name": "library",
-  "description": "The first graph built from trained library skills: walk (idle = walk at zero command), the bow from skills/bow/v1 (Drew's Blender bow, the first approved clip; tracking policy, recipe v1, 50/50), and sit as the abort target. The bow was trained to start from the standing pose, so its edge only opens near standstill (framework rule 4: enter a skill only from states it was trained on). Walk is the motion-graph team's walk/v1 package (the deployed brain with its own standing+walking battery); skills/walk/v1 holds the same brain under the strict battery, which it fails on backward and side-right.",
+  "description": "The first graph built from trained library skills: walk (idle = walk at zero command), the bow from skills/bow/v1 (Drew's Blender bow, the first approved clip; tracking policy, recipe v1, 50/50), and sit as the abort target. The bow was trained to start from the standing pose, so its edge only opens near standstill (framework rule 4: enter a skill only from states it was trained on). Walk is the motion-graph team's walk/v1 package (the deployed upstream brain, commandable, with its own standing+walking battery). skills/walk/v1 is now Drew's waddle walk (tracking, forward 0.1 m/s only, 50/50); it is not in this graph yet.",
   "root": ".",
   "nodes": {
     "walk": "graph_runtime/demo_skills/walk/v1",

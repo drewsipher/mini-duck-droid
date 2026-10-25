@@ -38,3 +38,9 @@ Teams write under their own entries; questions for other teams go to `experiment
 - command: `nohup sim/train_skill.sh tracker/data/clips/Bow.json bow_drew` (smoke 3.1 min, full recipe default, seed 0), then `tools/skill_package.py import train_pg/runs_skills/bow_drew/package_draft --name bow`
 - evidence: strict battery 50/50, joint err 0.0215 rad mean / 0.134 max, base err 0.62 cm, orientation err 1.2 deg; open-loop (no policy) the same clip leans 18 deg against 12 deg authored, the policy holds 12. Motion graph `graphs/library.json` idle 2 s, walk 0.12 3 s, idle, bow, walk, abort: no fall, max tilt 11.7 deg (collision scene).
 - decision: `skills/bow/v1` is this bow. The placeholder packages (test_bow, turn_left) moved to `skills_archive/placeholders/`.
+
+## 2026-10-25 walk v1 = Drew's waddle walk (tracking loop)
+- clip: Drew's Blender walk (treadmill, asymmetric steps) rebuilt by `anim/make_walk.py` at his request: trunk travels 0.10 m/s, 1.0 s cycle, mirrored steps, planted feet flat, trunk rolls ~12 deg over the standing foot (BD-X style waddle, centre of mass 1.5 cm sway). Approved by Drew before training.
+- command: `sim/train_skill.sh tracker/data/clips/Walk.json walk_drew --loop` (smoke 3.1 min, full 71.1 min), then `tools/skill_package.py import train_pg/runs_skills/walk_drew/package_draft --name walk`
+- evidence: strict loop battery 50/50, joint err 0.050 rad (2.9 deg), base err 4.1 cm, ori err 6.4 deg, all 6 s. Distance in 6 s (3 seeds): 0.52 / 0.57 / 0.49 m against 0.60 m, sideways drift +4 / -3 / +5 cm: it walks forward at 0.08-0.095 m/s; nothing in the observation tells it where it is, so the error accumulates.
+- decision: `skills/walk/v1` is this walk (forward only, not commandable). The upstream brain package moved to `skills_archive/upstream_walk_v1`. Next: research gating / fusion of per-clip experts (Drew: a higher-order brain that mixes experts from IMU and later cameras) instead of authored transitions.

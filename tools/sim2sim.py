@@ -4,7 +4,7 @@
 LowPassActionFilter / PolyReferenceMotion), with the hardware mocked by MuJoCo, compared with
 the scorer sim_test.Sim on the same commands and seed.
 
-    cd sim && MUJOCO_GL=egl .venv/bin/python ../tools/sim2sim.py ../skills/walk/v1 [--cmd 0.15,0,0] [--seconds 5] [--seed 0]
+    cd sim && MUJOCO_GL=egl .venv/bin/python ../tools/sim2sim.py ../skills_archive/upstream_walk_v1 [--cmd 0.15,0,0] [--seconds 5] [--seed 0]
 
 Only the hardware is replaced:
   rustypot.feetech  -> FakeFeetech: present positions / velocities from MuJoCo qpos / qvel of the

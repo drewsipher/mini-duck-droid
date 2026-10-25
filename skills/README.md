@@ -73,7 +73,7 @@ Extra top-level keys (`recorded_from_policy`, `authored_in`, `tags`) are kept as
 .venv/bin/python ../tools/skill_package.py validate ../skills/bow/v1
 .venv/bin/python ../tools/skill_package.py list
 MUJOCO_GL=egl .venv/bin/python ../tools/battery.py ../skills/bow/v1 --seeds 5 --episodes 10
-MUJOCO_GL=egl .venv/bin/python ../tools/sim2sim.py ../skills/walk/v1
+MUJOCO_GL=egl .venv/bin/python ../tools/sim2sim.py ../skills_archive/upstream_walk_v1
 ../regression/run.sh                      # every package: validate + battery + sim2sim -> regression/<date>.md
 python3 ../experiments/log.py add --title ... --hypothesis ... --command ... --evidence ... --decision ...
 ```

@@ -22,7 +22,7 @@
       "title": "Locomotion packaged",
       "status": "in_progress",
       "weeks": "3",
-      "notes": "skills/walk/v1 packaged (draft): battery 280/400, sim2sim 0.020 rad; backward and side-right fail"
+      "notes": "2026-10-25: skills/walk/v1 is Drew's waddle walk (tracking loop, forward 0.1 m/s, 50/50); the upstream brain package is archived as skills_archive/upstream_walk_v1 (280/400)"
     },
     {
       "id": "M3",
@@ -76,7 +76,7 @@
       "team": "Animation",
       "item": "Author the first real clips in Blender (bow, wiggle, look_around)",
       "status": "in_progress",
-      "notes": "bow done and trained (2026-10-24); walk next"
+      "notes": "bow (2026-10-24) and walk (2026-10-25) done and trained; next: gating/fusion research"
     },
     {
       "team": "Software",
