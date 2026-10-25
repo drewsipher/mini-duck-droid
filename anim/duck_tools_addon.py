@@ -201,11 +201,60 @@ class DUCK_OT_check(bpy.types.Operator):
                                                       "self": list(rep["self_collisions_m"].keys()),
                                                       "over_speed": rep["over_speed"], "limits": rep["limit_breach_rad"],
                                                       "video": os.path.join(out_dir, "check.mp4")})
+        problems = _mark_problems(context.scene, rep, _bd().bone_name)
         msg = ("PASS" if rep["pass"] else "FAIL: " + ", ".join(rep["fails"])) + f"  (penetration {1000 * rep['floor_penetration_m']:.1f} mm)"
+        if problems:
+            msg += "  |  " + "; ".join(problems) + "  (see the markers on the timeline)"
         if "video_error" in rep:
             msg += f"  [no video: {cmd[0]} -m pip install imageio imageio-ffmpeg]"
         self.report({"INFO"} if rep["pass"] else {"WARNING"}, msg)
         return {"FINISHED"}
+
+
+MARK = "x "   # prefix of the timeline markers Check clip owns; it clears and redraws them every run
+
+
+def _runs(frames):
+    """Consecutive frame indices grouped into (first, last) runs."""
+    out = []
+    for f in sorted(frames):
+        if out and f == out[-1][1] + 1:
+            out[-1][1] = f
+        else:
+            out.append([f, f])
+    return out
+
+
+def _mark_problems(scene, rep, bone_name):
+    """Timeline markers at the frames the checker flagged (one per run of frames), plus a short text list.
+    Clip frame index 0 is the scene's first frame, which is where Export and Check start."""
+    for m in [m for m in scene.timeline_markers if m.name.startswith(MARK)]:
+        scene.timeline_markers.remove(m)
+    f0 = scene.frame_start
+    items = []                                  # (index, marker text, list text)
+    def span(a, z):
+        return f"{f0 + a}" + (f"-{f0 + z}" if z > a else "")
+    for j, idx in rep.get("over_speed_frames", {}).items():
+        b, runs = bone_name(j), _runs(idx)
+        for a, z in runs:
+            items.append((a, f"{MARK}fast {b}", None))
+        items.append((runs[0][0], None, f"{b} too fast (peak {rep['over_speed'][j]} rad/s) at frames {', '.join(span(a, z) for a, z in runs)}"))
+    for j, idx in rep.get("limit_breach_frames", {}).items():
+        b = bone_name(j)
+        for a, z in _runs(idx):
+            items.append((a, f"{MARK}limit {b}", f"{b} past its limit at frames {span(a, z)}"))
+    pen = {int(k): v for k, v in rep.get("floor_penetration_frames", {}).items()}
+    for a, z in _runs(pen):
+        deep = max(pen[k] for k in range(a, z + 1))
+        items.append((a, f"{MARK}floor {1000 * deep:.0f}mm", f"through the floor {1000 * deep:.1f} mm at frames {span(a, z)}"))
+    hits = {int(k): v for k, v in rep.get("self_collision_frames", {}).items()}
+    for a, z in _runs(hits):
+        pairs = sorted({p for k in range(a, z + 1) for p in hits[k]})
+        items.append((a, f"{MARK}hit {pairs[0]}", f"{', '.join(pairs)} collide at frames {span(a, z)}"))
+    for a, name, _ in items:
+        if name:
+            scene.timeline_markers.new(name, frame=f0 + a)
+    return [t for a, _, t in sorted(items, key=lambda i: i[0]) if t]
 
 
 class DUCK_OT_open_video(bpy.types.Operator):

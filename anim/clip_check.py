@@ -71,12 +71,18 @@ def main():
     rep["limit_breach_rad"] = {n: float(over[:, i].max()) for i, n in enumerate(names) if over[:, i].max() > 1e-4}
     rep["peak_vel_rad_s"] = {n: round(float(vel[:, i].max()), 2) for i, n in enumerate(names)}
     rep["over_speed"] = {n: round(float(vel[:, i].max()), 2) for i, n in enumerate(names) if vel[:, i].max() > a.max_vel}
+    # where it happens: clip frame indices (0 = first exported frame), the later frame of each too-fast step
+    rep["over_speed_frames"] = {n: [int(k) + 1 for k in np.where(vel[:, i] > a.max_vel)[0]] for i, n in enumerate(names)
+                                if vel[:, i].max() > a.max_vel}
+    rep["limit_breach_frames"] = {n: [int(k) for k in np.where(over[:, i] > 1e-4)[0]] for i, n in enumerate(names)
+                                  if over[:, i].max() > 1e-4}
     # pose at both ends
     rep["start_vs_home_rad"] = float(np.abs(Q[0] - homeq).max())
     rep["end_vs_home_rad"] = float(np.abs(Q[-1] - homeq).max())
     rep["end_vs_start_rad"] = float(np.abs(Q[-1] - Q[0]).max())
     # kinematic playback: penetration and self-collision
     worst_pen, self_hits, min_clear = 0.0, {}, 1e9
+    pen_frames, self_frames = {}, {}                # frame index -> depth (m) / body pairs
     renderer = cam = writer = None
     if a.video:
         try:  # the video is a convenience: without imageio-ffmpeg or OpenGL the check still runs
@@ -111,17 +117,22 @@ def main():
             g1, g2 = c.geom1, c.geom2
             if floor in (g1, g2):
                 worst_pen = max(worst_pen, -c.dist)
+                if -c.dist > a.penetration:
+                    pen_frames[k] = max(pen_frames.get(k, 0.0), float(-c.dist))
             else:
                 b1 = mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_BODY, m.geom_bodyid[g1]); b2 = mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_BODY, m.geom_bodyid[g2])
                 if c.dist < 0 and m.body_parentid[m.geom_bodyid[g1]] != m.geom_bodyid[g2] and m.body_parentid[m.geom_bodyid[g2]] != m.geom_bodyid[g1]:
                     key = f"{b1} x {b2}"
                     self_hits[key] = max(self_hits.get(key, 0.0), float(-c.dist))
+                    self_frames.setdefault(k, set()).add(key)
         if writer and k % 2 == 0:
             renderer.update_scene(d, cam); writer.append_data(renderer.render())
     if writer:
         writer.close(); renderer.close()
     rep["floor_penetration_m"] = round(float(worst_pen), 4)
     rep["self_collisions_m"] = {k: round(v, 4) for k, v in self_hits.items()}
+    rep["floor_penetration_frames"] = {int(k): round(v, 4) for k, v in sorted(pen_frames.items())}
+    rep["self_collision_frames"] = {int(k): sorted(v) for k, v in sorted(self_frames.items())}
     fails = []
     if rep["limit_breach_rad"]: fails.append("joint limits")
     if rep["over_speed"]: fails.append(f"servo speed > {a.max_vel} rad/s")
