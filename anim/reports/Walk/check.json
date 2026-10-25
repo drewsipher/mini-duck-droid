@@ -1,0 +1,50 @@
+{
+ "clip": "C:\\Users\\barma\\src\\mini-duck-droid\\anim\\reports\\Walk\\clip.json",
+ "frames": 72,
+ "seconds": 1.42,
+ "joints": [
+  "left_hip_yaw",
+  "left_hip_roll",
+  "left_hip_pitch",
+  "left_knee",
+  "left_ankle",
+  "neck_pitch",
+  "head_pitch",
+  "head_yaw",
+  "head_roll",
+  "right_hip_yaw",
+  "right_hip_roll",
+  "right_hip_pitch",
+  "right_knee",
+  "right_ankle"
+ ],
+ "limit_breach_rad": {},
+ "peak_vel_rad_s": {
+  "left_hip_yaw": 0.91,
+  "left_hip_roll": 0.76,
+  "left_hip_pitch": 1.86,
+  "left_knee": 2.31,
+  "left_ankle": 4.8,
+  "neck_pitch": 0.0,
+  "head_pitch": 0.0,
+  "head_yaw": 0.0,
+  "head_roll": 0.5,
+  "right_hip_yaw": 1.98,
+  "right_hip_roll": 1.15,
+  "right_hip_pitch": 2.57,
+  "right_knee": 3.56,
+  "right_ankle": 3.93
+ },
+ "over_speed": {
+  "left_ankle": 4.8
+ },
+ "start_vs_home_rad": 0.5873,
+ "end_vs_home_rad": 0.5861000000000001,
+ "end_vs_start_rad": 0.0020999999999999908,
+ "floor_penetration_m": 0.0029,
+ "self_collisions_m": {},
+ "fails": [
+  "servo speed > 4.0 rad/s"
+ ],
+ "pass": false
+}
