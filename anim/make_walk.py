@@ -1,20 +1,22 @@
-"""Make a symmetric walking loop clip: the trunk travels forward, planted feet stay put and flat.
+"""Make a symmetric walking loop clip: the trunk travels forward and waddles, planted feet stay put.
 
-    sim/.venv/bin/python anim/make_walk.py out.json [--stride 0.10] [--period 50] [--lift 0.016] ...
+    sim/.venv/bin/python anim/make_walk.py out.json [--stride 0.10] [--period 50] [--sway 0.015] ...
 
 The gait is planned in the world (trunk path, two foot paths half a cycle apart, the right foot
-the mirror of the left) and the 14 joints come from IK on the MuJoCo model: each sole goes to its
-planned point, flat and pointing forward. Import the clip into Blender with blender_duck.import_clip.
+the mirror of the left) and the 14 joints come from whole-body IK on the MuJoCo model. Import the
+clip into Blender with blender_duck.import_clip.
 
 One cycle = `period` steps at 50 Hz; the clip has period+1 frames, the last one equals the first
 with the trunk and feet moved forward by `stride` (the loop convention of clip_check --loop and the
 trainer). Per foot: swing for `swing` of the cycle (lift and move forward one stride), stance for
-the rest (fixed on the floor). The trunk moves at constant speed, sways toward the standing foot
-and bobs up a little in single support; the head rolls with the sway.
+the rest (fixed on the floor). The trunk moves forward at constant speed and bobs a little.
 
-The duck has no ankle roll, so a planted foot only stays flat when the trunk barely sways: the
-sway is kept small (the balance comes from stepping, as in the upstream walks) and the feet sit
-a little wider than home (0.091 m), where the hip roll that keeps them flat is close to zero.
+Sideways it waddles like the BD-X droids: the centre of mass swings `sway` toward the standing
+foot. The duck has no ankle roll, so the IK gets there by rolling the trunk over the standing hip
+(the far hip rises, which helps the swing foot clear) and by letting the standing foot roll a
+little onto its inner edge; `--flat` sets how much keeping that foot flat counts against the sway.
+The trunk's sideways position and roll are solved, not planned. The head undoes `head_level` of
+the trunk roll. Last, each frame is raised so the lowest point of the feet just touches the floor.
 """
 import argparse
 import json
@@ -35,16 +37,16 @@ FLAT = np.array([[0.0, 0.0, 1.0], [0.0, -1.0, 0.0], [1.0, 0.0, 0.0]])   # pad ax
 
 
 def plan(a):
-    """Per frame: trunk xyz, sole target xyz per foot, head roll."""
+    """Per frame: trunk x and z, centre-of-mass y, sole target xyz and stance flag per foot."""
     n = a.period
     phase = np.arange(n + 1) / n
-    trunk = np.stack([a.stride * phase,
-                      a.sway * np.cos(2 * np.pi * (phase - (a.swing + 1) / 2)),          # toward the left foot mid left stance
-                      a.height + a.bob * np.cos(4 * np.pi * (phase - a.swing / 2))], 1)    # up in single support
-    feet = {}
+    trunk_x = a.stride * phase
+    trunk_z = a.height + a.bob * np.cos(4 * np.pi * (phase - a.swing / 2))          # up in single support
+    com_y = a.sway * np.cos(2 * np.pi * (phase - (a.swing + 1) / 2))                  # over the left foot mid left stance
+    feet, stance = {}, {}
     for side, off, y in (("L", 0.0, a.width), ("R", 0.5, -a.width)):
         mid = a.swing + (1 - a.swing) / 2                    # stance middle, in foot phase
-        pts = []
+        pts, st = [], []
         for ph in phase:
             c = math.floor(ph - off + 1e-9)
             s = ph - off - c
@@ -56,9 +58,9 @@ def plan(a):
             else:
                 x, z = land, 0.0
             pts.append((x, y, z + a.clear))
-        feet[side] = np.array(pts)
-    head_roll = a.head_roll * np.cos(2 * np.pi * (phase - (a.swing + 1) / 2))
-    return phase, trunk, feet, head_roll
+            st.append(s >= a.swing or s == 0.0)
+        feet[side], stance[side] = np.array(pts), st
+    return phase, trunk_x, trunk_z, com_y, feet, stance
 
 
 def solve(a):
@@ -66,43 +68,70 @@ def solve(a):
     d = mujoco.MjData(m)
     d.qpos[:] = m.keyframe("home").qpos
     jid = {mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_JOINT, j): j for j in range(m.njnt)}
-    phase, trunk, feet, head_roll = plan(a)
-    out, worst = [], {"pos_m": 0.0, "tilt_rad": 0.0}
+    phase, trunk_x, trunk_z, com_y, feet, stance = plan(a)
+    legs = [jid[j] for side in "LR" for j in LEGS[side]]
+    dofs = np.array([1, 3] + [m.jnt_dofadr[j] for j in legs])          # trunk y, trunk roll, the 10 leg joints
+    qa = np.array([m.jnt_qposadr[j] for j in legs])
+    lo, hi = m.jnt_range[legs].T
+    pads = {s: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, PAD[s]) for s in "LR"}
+    sole_local = np.array([a.sole, 0.0, 0.0])
+    mujoco.mj_kinematics(m, d)
+    head_sign = -np.sign(d.joint("head_roll").xaxis[0])               # head roll that undoes a positive trunk roll
+    frames, worst = [], {"pos_m": 0.0, "stance_roll_rad": 0.0, "trunk_roll_rad": 0.0, "com_y_m": 0.0}
     for k in range(len(phase)):
-        d.qpos[0:3] = trunk[k]
-        d.qpos[3:7] = (1, 0, 0, 0)
+        d.qpos[0], d.qpos[2] = trunk_x[k], trunk_z[k]
         for j in HEAD:
             d.qpos[m.jnt_qposadr[jid[j]]] = 0.0
-        d.qpos[m.jnt_qposadr[jid["head_roll"]]] = head_roll[k]
-        for side, names in LEGS.items():
-            g = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, PAD[side])
-            qa = np.array([m.jnt_qposadr[jid[j]] for j in names])
-            da = np.array([m.jnt_dofadr[jid[j]] for j in names])
-            lo, hi = m.jnt_range[[jid[j] for j in names]].T
-            sole_local = np.array([a.sole, 0.0, 0.0])
-            for _ in range(200):
-                mujoco.mj_kinematics(m, d)
-                mujoco.mj_comPos(m, d)
+        for _ in range(300):
+            mujoco.mj_kinematics(m, d)
+            mujoco.mj_comPos(m, d)
+            rows, errs = [], []
+            for s in "LR":
+                g = pads[s]
                 R = d.geom_xmat[g].reshape(3, 3)
                 p = d.geom_xpos[g] + R @ sole_local
-                ep = feet[side][k] - p
                 qe = np.zeros(4)
                 mujoco.mju_mat2Quat(qe, (FLAT @ R.T).flatten())
                 er = 2 * qe[1:] * np.sign(qe[0] or 1)
                 jp = np.zeros((3, m.nv)); jr = np.zeros((3, m.nv))
                 mujoco.mj_jac(m, d, jp, jr, p, m.geom_bodyid[g])
-                J = np.vstack([jp[:, da], a.rot_w * jr[:, da]])
-                e = np.concatenate([ep, a.rot_w * er])
-                if np.abs(ep).max() < 1e-5 and np.abs(er).max() < 1e-4:
-                    break
-                dq = np.linalg.solve(J.T @ J + 1e-6 * np.eye(5), J.T @ e)
-                d.qpos[qa] = np.clip(d.qpos[qa] + dq, lo, hi)
-            worst["pos_m"] = max(worst["pos_m"], float(np.abs(ep).max()))
-            worst["tilt_rad"] = max(worst["tilt_rad"], float(math.acos(min(1.0, R[2, 0]))))
+                w = a.flat if stance[s][k] else a.swing_flat
+                rows += [10 * jp[:, dofs], w * jr[:, dofs]]
+                errs += [10 * (feet[s][k] - p), w * er]
+            jc = np.zeros((3, m.nv))
+            mujoco.mj_jacSubtreeCom(m, d, jc, 1)
+            rows.append(jc[1:2, dofs])
+            errs.append([com_y[k] - d.subtree_com[1][1]])
+            reg = np.zeros((1, len(dofs))); reg[0, 1] = a.roll_reg                 # prefer a level trunk
+            roll = 2 * math.atan2(d.qpos[4], d.qpos[3])
+            rows.append(reg); errs.append([-a.roll_reg * roll])
+            J, e = np.vstack(rows), np.concatenate(errs)
+            dq = np.linalg.solve(J.T @ J + 1e-7 * np.eye(len(dofs)), J.T @ e)
+            v = np.zeros(m.nv); v[dofs] = dq
+            mujoco.mj_integratePos(m, d.qpos, v, 1.0)
+            d.qpos[qa] = np.clip(d.qpos[qa], lo, hi)
+            if np.abs(dq).max() < 1e-7:
+                break
+        d.qpos[m.jnt_qposadr[jid["head_roll"]]] = head_sign * a.head_level * roll
+        # drop the duck so the lowest point of either pad sits `clear` above the floor
+        mujoco.mj_kinematics(m, d)
+        low = min((d.geom_xpos[g] + m.mesh_vert[m.mesh_vertadr[m.geom_dataid[g]]:][:m.mesh_vertnum[m.geom_dataid[g]]]
+                   @ d.geom_xmat[g].reshape(3, 3).T)[:, 2].min() for g in pads.values())
+        d.qpos[2] += a.clear - low
+        mujoco.mj_kinematics(m, d)
+        mujoco.mj_comPos(m, d)
+        for s in "LR":
+            R = d.geom_xmat[pads[s]].reshape(3, 3)
+            p = d.geom_xpos[pads[s]] + R @ sole_local
+            worst["pos_m"] = max(worst["pos_m"], float(np.abs((feet[s][k] - p)[:2]).max()))
+            if stance[s][k]:
+                worst["stance_roll_rad"] = max(worst["stance_roll_rad"], abs(float(math.asin(R[1, 0]))))
+        worst["trunk_roll_rad"] = max(worst["trunk_roll_rad"], abs(roll))
+        worst["com_y_m"] = max(worst["com_y_m"], abs(float(d.subtree_com[1][1])))
         q = {j: round(float(d.qpos[m.jnt_qposadr[jid[j]]]), 4) for j in LEGS["L"] + HEAD + LEGS["R"]}
-        out.append([round(k / FPS, 3), q])
-    base = [[[round(float(x), 4) for x in t], [1.0, 0.0, 0.0, 0.0]] for t in trunk]
-    return out, base, worst
+        frames.append([round(k / FPS, 3), q, [[round(float(x), 4) for x in d.qpos[0:3]], [round(float(x), 4) for x in d.qpos[3:7]]]])
+    worst = {k: round(v, 4) for k, v in worst.items()}
+    return [f[:2] for f in frames], [f[2] for f in frames], worst
 
 
 def main():
@@ -112,15 +141,17 @@ def main():
     ap.add_argument("--stride", type=float, default=0.10, help="m the trunk (and each foot) moves per cycle")
     ap.add_argument("--swing", type=float, default=0.4, help="fraction of the cycle each foot is in the air")
     ap.add_argument("--lift", type=float, default=0.016, help="m the sole rises mid swing")
-    ap.add_argument("--sway", type=float, default=0.004, help="m the trunk leans toward the standing foot")
+    ap.add_argument("--sway", type=float, default=0.015, help="m the centre of mass swings toward the standing foot")
+    ap.add_argument("--flat", type=float, default=0.03, help="m per rad: how much keeping the standing foot flat counts")
+    ap.add_argument("--swing-flat", type=float, default=0.02, help="the same for the foot in the air")
+    ap.add_argument("--roll-reg", type=float, default=0.005, help="m per rad: preference for a level trunk")
     ap.add_argument("--bob", type=float, default=0.002, help="m the trunk rises in single support")
-    ap.add_argument("--height", type=float, default=0.170, help="m trunk origin above the floor")
+    ap.add_argument("--height", type=float, default=0.170, help="m trunk origin above the floor (before the drop)")
     ap.add_argument("--width", type=float, default=0.091, help="m from the centre line to each sole")
     ap.add_argument("--foot-x", type=float, default=-0.0164, help="m sole ahead of the trunk origin mid stance")
-    ap.add_argument("--head-roll", type=float, default=0.06, help="rad the head rolls with the sway")
+    ap.add_argument("--head-level", type=float, default=0.5, help="fraction of the trunk roll the head undoes")
     ap.add_argument("--sole", type=float, default=-0.0046, help="pad-frame x of the sole face")
-    ap.add_argument("--clear", type=float, default=0.0003, help="m the planted sole sits above the floor")
-    ap.add_argument("--rot-w", type=float, default=0.05, help="m per rad: how much keeping the foot flat counts")
+    ap.add_argument("--clear", type=float, default=0.0003, help="m the lowest foot point sits above the floor")
     a = ap.parse_args()
     frames, base, worst = solve(a)
     clip = {"frames": frames, "interp": "linear", "base": base,
@@ -129,7 +160,7 @@ def main():
     with open(a.out, "w") as fh:
         json.dump(clip, fh)
     v = a.stride / (a.period / FPS)
-    print(f"{a.out}: {len(frames)} frames, cycle {a.period / FPS:.2f} s, {v:.3f} m/s, IK worst {worst}")
+    print(f"{a.out}: {len(frames)} frames, cycle {a.period / FPS:.2f} s, {v:.3f} m/s, worst {worst}")
 
 
 if __name__ == "__main__":
