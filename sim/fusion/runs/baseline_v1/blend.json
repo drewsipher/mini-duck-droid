@@ -1,0 +1,134 @@
+{
+ "experiment": "blend",
+ "rows": [
+  {
+   "kind": "output",
+   "w_walk": 0.0,
+   "success": 20,
+   "total": 20,
+   "vx": 5.653642049257922e-05
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.1,
+   "success": 20,
+   "total": 20,
+   "vx": 7.59374556261978e-05
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.25,
+   "success": 20,
+   "total": 20,
+   "vx": 0.00023551313079145066
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.4,
+   "success": 20,
+   "total": 20,
+   "vx": 0.001072817515392499
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.5,
+   "success": 20,
+   "total": 20,
+   "vx": 0.0034764013517654445
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.6,
+   "success": 20,
+   "total": 20,
+   "vx": 0.009470373527726072
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.75,
+   "success": 20,
+   "total": 20,
+   "vx": 0.03659474235869885
+  },
+  {
+   "kind": "output",
+   "w_walk": 0.9,
+   "success": 20,
+   "total": 20,
+   "vx": 0.07340080460061052
+  },
+  {
+   "kind": "output",
+   "w_walk": 1.0,
+   "success": 20,
+   "total": 20,
+   "vx": 0.09042723301447872
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.0,
+   "success": 20,
+   "total": 20,
+   "vx": 5.653642049257922e-05
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.1,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.25,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.4,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.5,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.6,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.75,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 0.9,
+   "success": 0,
+   "total": 20,
+   "vx": null
+  },
+  {
+   "kind": "weights",
+   "w_walk": 1.0,
+   "success": 20,
+   "total": 20,
+   "vx": 0.09042723301447872
+  }
+ ],
+ "stand": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/walk_drew/full/policy.onnx",
+ "note": "fixed mix for 6 s from the stand pose; weights = one network with interpolated weights tracking the blended reference"
+}

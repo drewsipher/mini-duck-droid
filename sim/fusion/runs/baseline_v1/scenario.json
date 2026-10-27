@@ -1,0 +1,58 @@
+{
+ "experiment": "scenario",
+ "schedule": [
+  [
+   0,
+   "stand"
+  ],
+  [
+   1.5,
+   "walk"
+  ],
+  [
+   5.5,
+   "stand"
+  ]
+ ],
+ "walk_start": 0.0,
+ "pushes": false,
+ "rows": [
+  {
+   "variant": "hard switch, double support",
+   "ramp_s": 0.0,
+   "ds_only": true,
+   "success": 20,
+   "total": 20,
+   "walk_vx": 0.09039992946728878,
+   "jump_max_rad": 0.29391102483945036,
+   "settle_vx_max": 0.0055010446698896855,
+   "fail_seeds": []
+  },
+  {
+   "variant": "0.3 s cross-fade, double support",
+   "ramp_s": 0.3,
+   "ds_only": true,
+   "success": 19,
+   "total": 20,
+   "walk_vx": 0.08995640835158245,
+   "jump_max_rad": 0.18525756481910344,
+   "settle_vx_max": 0.005895131066494591,
+   "fail_seeds": [
+    10
+   ]
+  },
+  {
+   "variant": "hard switch, any phase",
+   "ramp_s": 0.0,
+   "ds_only": false,
+   "success": 20,
+   "total": 20,
+   "walk_vx": 0.09039992946728878,
+   "jump_max_rad": 0.29391102483945036,
+   "settle_vx_max": 0.0055010446698896855,
+   "fail_seeds": []
+  }
+ ],
+ "stand": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/walk_drew/full/policy.onnx"
+}

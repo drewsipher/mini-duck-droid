@@ -48,6 +48,7 @@ Mapped onto the framework's four layers and six stages. "Exists" means working t
 6. **Head, antennas, eyes, sound are show functions.** They stay out of training. The animation engine schedules them alongside skills.
 7. **One MJCF is the source of truth.** `open_duck_mini_v2_backlash*.xml` in `train_pg`. Any mass or actuator change bumps the robot model hash, and every package records the hash it was trained against.
 8. **Reports stay visual.** Every milestone ends with videos and curves in the artifact, as before.
+9. **Skills are fused by output, not by weights (2026-10-26).** Every skill is trained on its own; no shared base network. At run time the active experts all run every step (each with its own clock and previous actions) and their motor targets are mixed; a hard switch already works for stand and walk at any gait phase. Averaging network weights falls even when walk is branched from stand. A learned gate (IMU + command) is added when an expert brings something new, starting with push recovery. Evidence: `experiments/log.md`, 2026-10-25/26.
 
 ---
 
@@ -77,6 +78,7 @@ Owns the training recipe and skill training.
 - **Fixed randomisation set:** friction, mass, motor strength, latency, sensor noise. Same for every skill.
 - **Previous two actions in the observation** (transition rule 1) and **blended-start training** (rule 3) and **neighbour end-state starts** (rule 4).
 - **Freeze** the recipe after the first two skills converge. A recipe change is a versioned event.
+- **Expert fusion** (`sim/fusion/`): bench for switching and blending experts in MuJoCo, and the gate trainer (`train_gate.sh`, `fusion_gate.py`). Next expert for it: push recovery.
 - **mjlab spike:** install, run the tracking example, time a duck clip on the 4060, write the verdict.
 - Locomotion v2 continues under the frozen recipe once it exists; until then the curriculum thread runs as today.
 
@@ -84,7 +86,7 @@ Owns the training recipe and skill training.
 Owns the package format, the motion graph runtime, the tools and the regression suite.
 - **Skill package format** (`skill.json` + clip + ONNX + report + version record). Loader refuses a package with a missing part.
 - **Clip checker** `clip_check.py`: plays a clip on the MJCF kinematically, reports penetration, self-collision, limit and speed breaches.
-- **Motion graph runtime** (new package, runs on the Pi and in the simulator from the same code): loads packages, state machine with explicit edges, reference-level blending with ramps, previous-action continuity, timeout and abort, operator inputs (web UI, gamepad, later show control), show-function scheduler. Replaces the single-policy loop in `v2_rl_walk_mujoco.py` while reusing its hardware layer.
+- **Motion graph runtime** (new package, runs on the Pi and in the simulator from the same code): loads packages, state machine with explicit edges, reference-level blending with ramps, output blending of experts that run every step (decision 9), previous-action continuity, timeout and abort, operator inputs (web UI, gamepad, later show control), show-function scheduler. Replaces the single-policy loop in `v2_rl_walk_mujoco.py` while reusing its hardware layer.
 - **Sim battery** `battery.py`: multi-seed, per-skill and per-edge, same thresholds as training, outputs ratios. Grows `eval_policy.py`.
 - **Sim-to-sim** `sim2sim.py`: runs the motion graph runtime's own code against `sim_test.Sim`.
 - **Experiment log:** append-only `experiments/log.md`, one entry per run: hypothesis, command, evidence, decision.

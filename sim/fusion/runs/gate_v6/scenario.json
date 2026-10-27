@@ -1,0 +1,69 @@
+{
+ "experiment": "scenario",
+ "schedule": [
+  [
+   0,
+   "stand"
+  ],
+  [
+   1.5,
+   "walk"
+  ],
+  [
+   5.5,
+   "stand"
+  ]
+ ],
+ "walk_start": 0.0,
+ "pushes": false,
+ "rows": [
+  {
+   "variant": "hard switch, double support",
+   "ramp_s": 0.0,
+   "ds_only": true,
+   "success": 40,
+   "total": 40,
+   "walk_vx": 0.0905418650310863,
+   "jump_max_rad": 0.29487930582844657,
+   "settle_vx_max": 0.005682668390298485,
+   "fail_seeds": []
+  },
+  {
+   "variant": "0.3 s cross-fade, double support",
+   "ramp_s": 0.3,
+   "ds_only": true,
+   "success": 39,
+   "total": 40,
+   "walk_vx": 0.09047202194762637,
+   "jump_max_rad": 0.18618071918667195,
+   "settle_vx_max": 0.006275717762078897,
+   "fail_seeds": [
+    10
+   ]
+  },
+  {
+   "variant": "hard switch, any phase",
+   "ramp_s": 0.0,
+   "ds_only": false,
+   "success": 40,
+   "total": 40,
+   "walk_vx": 0.0905418650310863,
+   "jump_max_rad": 0.29487930582844657,
+   "settle_vx_max": 0.005682668390298485,
+   "fail_seeds": []
+  },
+  {
+   "variant": "learned gate",
+   "ramp_s": null,
+   "ds_only": null,
+   "success": 40,
+   "total": 40,
+   "walk_vx": 0.0903769325663706,
+   "jump_max_rad": 0.19067723848844356,
+   "settle_vx_max": 0.006091744797679322,
+   "fail_seeds": []
+  }
+ ],
+ "stand": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/walk_drew/full/policy.onnx"
+}

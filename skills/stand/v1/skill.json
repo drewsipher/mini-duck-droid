@@ -1,0 +1,174 @@
+{
+  "name": "stand",
+  "type": "episodic",
+  "loop": true,
+  "version": 1,
+  "commands": {},
+  "entry": {
+    "from": [
+      "walk"
+    ],
+    "phase": [
+      0,
+      1
+    ],
+    "window_s": 0.3
+  },
+  "exit": {
+    "to": [
+      "walk",
+      "sit"
+    ]
+  },
+  "neighbours": [
+    "walk",
+    "sit"
+  ],
+  "timeout_s": 7.0,
+  "envelope": {
+    "torque_nm": 1.86,
+    "max_vel_rad_s": 4.0,
+    "thermal_c": 60.0,
+    "fall_tilt_deg": 45
+  },
+  "robot_model_hash": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38",
+  "robot_xml": "playground/open_duck_mini_v2/xmls/open_duck_mini_v2_backlash.xml",
+  "actuator_model_version": "bam-upstream",
+  "recipe_version": "tracking-v1",
+  "seed": 0,
+  "obs_spec": {
+    "names": [
+      "gyro",
+      "accelerometer",
+      "joint_pos_rel",
+      "joint_vel_scaled",
+      "prev_action_1",
+      "prev_action_2",
+      "motor_targets_rel",
+      "phase",
+      "ref_joint_pos_next_rel",
+      "ref_joint_vel_next_scaled"
+    ],
+    "size": 107,
+    "blocks": {
+      "gyro": 3,
+      "accelerometer": 3,
+      "joint_pos_rel": 14,
+      "joint_vel_scaled": 14,
+      "prev_action_1": 14,
+      "prev_action_2": 14,
+      "motor_targets_rel": 14,
+      "phase": 3,
+      "ref_joint_pos_next_rel": 14,
+      "ref_joint_vel_next_scaled": 14
+    },
+    "layout": [
+      {
+        "name": "gyro",
+        "size": 3,
+        "offset": 0
+      },
+      {
+        "name": "accelerometer",
+        "size": 3,
+        "offset": 3
+      },
+      {
+        "name": "joint_pos_rel",
+        "size": 14,
+        "offset": 6
+      },
+      {
+        "name": "joint_vel_scaled",
+        "size": 14,
+        "offset": 20
+      },
+      {
+        "name": "prev_action_1",
+        "size": 14,
+        "offset": 34
+      },
+      {
+        "name": "prev_action_2",
+        "size": 14,
+        "offset": 48
+      },
+      {
+        "name": "motor_targets_rel",
+        "size": 14,
+        "offset": 62
+      },
+      {
+        "name": "phase",
+        "size": 3,
+        "offset": 76
+      },
+      {
+        "name": "ref_joint_pos_next_rel",
+        "size": 14,
+        "offset": 79
+      },
+      {
+        "name": "ref_joint_vel_next_scaled",
+        "size": 14,
+        "offset": 93
+      }
+    ],
+    "notes": {
+      "gyro": "IMU gyro rad/s, body frame (MJCF 'gyro' sensor)",
+      "accelerometer": "IMU accelerometer m/s^2 incl. gravity, body frame (MJCF 'accelerometer' sensor)",
+      "joint_pos_rel": "joint angle - home pose, actuator order",
+      "joint_vel_scaled": "joint velocity rad/s x 0.05",
+      "prev_action_1": "policy output of the previous step (zeros at entry)",
+      "prev_action_2": "policy output two steps ago (zeros at entry)",
+      "motor_targets_rel": "low-pass filtered motor targets sent last step - home pose (starts at the clip's first frame)",
+      "phase": "[t/T, cos(2 pi t/T), sin(2 pi t/T)], T = clip length (loop: cycle length, t/T wraps)",
+      "ref_joint_pos_next_rel": "clip joint angles at t + dt - home pose",
+      "ref_joint_vel_next_scaled": "clip joint velocities at t + dt x 0.05"
+    }
+  },
+  "policy": {
+    "kind": "onnx",
+    "action_mode": "residual_on_reference",
+    "action_scale": 0.25,
+    "lpf_hz": 8.0,
+    "max_vel_rad_s": 4.0,
+    "head_mode": "policy",
+    "input_name": "obs"
+  },
+  "runtime": {
+    "action_scale": 0.25,
+    "lpf_hz": 8.0,
+    "head_mode": "policy"
+  },
+  "thresholds": {
+    "battery_pass_ratio": 0.94,
+    "battery_min_test_ratio": 0.94,
+    "joint_err_rad": 0.15,
+    "min_height_m": 0.09,
+    "max_ori_err_rad": 0.8
+  },
+  "created": "2026-10-25T23:53:22+00:00",
+  "source": {
+    "clip": "/home/hermes/src/mini-duck-droid/tracker/data/clips/Stand.json",
+    "run": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/run.json",
+    "num_timesteps": 150000000,
+    "wall_time_s": 6245.2,
+    "onnx": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+    "draft": "sim/train_pg/runs_skills/stand_drew/package_draft"
+  },
+  "hashes": {
+    "policy_onnx": "79d4c939647051644dc74c76d7b1c96745f5c7b2b506b8f57eef3e79647fd02a",
+    "clip_json": "e055856da3edf71bf24db75456af822791cbca4051c7ab8ac2186d73ae933724"
+  },
+  "status": "battery_passed",
+  "status_history": [
+    {
+      "at": "2026-10-25T23:53:22+00:00",
+      "from": null,
+      "to": "battery_passed",
+      "by": "sim/eval_tracking.py"
+    }
+  ],
+  "imported": "2026-10-25T19:53:33-04:00"
+}

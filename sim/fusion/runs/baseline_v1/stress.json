@@ -1,0 +1,27 @@
+{
+ "experiment": "stress",
+ "rows": [
+  {
+   "variant": "hard switch",
+   "success": 35,
+   "total": 40,
+   "mean_seconds": 11.6095,
+   "vx_walk": 0.06202766593743474,
+   "speed_stop": 0.026214306210326922,
+   "tilt_max_deg": 21.550731805983666
+  },
+  {
+   "variant": "0.3 s cross-fade",
+   "success": 32,
+   "total": 40,
+   "mean_seconds": 11.131,
+   "vx_walk": 0.04880176054804639,
+   "speed_stop": 0.03479160598005576,
+   "tilt_max_deg": 23.758442290143982
+  }
+ ],
+ "stand": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/walk_drew/full/policy.onnx",
+ "gate": null,
+ "note": "12 s from standing; command flips every 0.5-2 s (schedule per seed); recipe pushes on"
+}

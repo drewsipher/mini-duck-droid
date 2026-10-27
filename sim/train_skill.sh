@@ -1,7 +1,10 @@
 #!/bin/bash
 # Train one skill from one clip on the fixed recipe (recipe_v1.py), then evaluate it strictly.
 #
-#   sim/train_skill.sh <clip.json> <name> [--preview] [--loop] [--steps N] [--seed S] [--skip-smoke] [--no-eval]
+#   sim/train_skill.sh <clip.json> <name> [--preview] [--loop] [--steps N] [--seed S] [--skip-smoke] [--no-eval] [--init CKPT]
+#
+#   --init  start from another skill's checkpoint (a directory under runs_skills/<skill>/full/) instead of
+#           a fresh network: the branched-from-a-shared-base option of the fusion research
 #
 #   smoke   64 envs, 5 PPO iterations: does it compile and run end to end (~5 min)   -> runs_skills/<name>/smoke/
 #   preview --preview: ~30 min (recipe PREVIEW_TIMESTEPS)                             -> runs_skills/<name>/preview/
@@ -16,10 +19,11 @@
 set -eo pipefail
 [[ $# -ge 2 ]] || { sed -n 2,14p "$0"; exit 1; }
 CLIP=$(realpath "$1"); NAME=$2; shift 2      # resolve the clip before leaving the caller's directory
+CALLER=$PWD
 cd "$(dirname "$0")/train_pg"
 PY=.venv/bin/python
 export PYTHONPATH=.
-MODE=full; LOOP=0; STEPS=""; SEED=${SEED:-0}; SMOKE=1; EVAL=1
+MODE=full; LOOP=0; STEPS=""; SEED=${SEED:-0}; SMOKE=1; EVAL=1; INIT=()
 while [[ $# -gt 0 ]]; do
   case $1 in
     --preview) MODE=preview ;;
@@ -28,6 +32,7 @@ while [[ $# -gt 0 ]]; do
     --seed) SEED=$2; shift ;;
     --skip-smoke) SMOKE=0 ;;
     --no-eval) EVAL=0 ;;
+    --init) INIT=(--restore_checkpoint_path "$(cd "$CALLER" && realpath "$2")"); shift ;;
     *) echo "unknown option $1" >&2; exit 1 ;;
   esac
   shift
@@ -41,7 +46,7 @@ export CLIP LOOP SEED
 if nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader 2>/dev/null | grep -v -i blender | grep -q .; then
   echo "=== warning: another compute process is on the GPU:"; nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 fi
-echo "=== $(date '+%F %T') skill $NAME  clip $CLIP  loop $LOOP  mode $MODE  seed $SEED"
+echo "=== $(date '+%F %T') skill $NAME  clip $CLIP  loop $LOOP  mode $MODE  seed $SEED  ${INIT[*]}"
 
 if [[ $SMOKE == 1 ]]; then
   echo "=== $(date '+%T') smoke: 64 envs, 5 iterations -> $OUT/smoke"
@@ -59,7 +64,7 @@ mkdir -p "$RUN"
 if [[ $MODE == preview ]]; then export PREVIEW=1; fi
 [[ -n "$STEPS" ]] && export NUM_TIMESTEPS=$STEPS
 echo "=== $(date '+%T') $MODE run -> $RUN (steps ${NUM_TIMESTEPS:-recipe default})"
-$PY playground/open_duck_mini_v2/tracking_runner.py --output_dir "$RUN" > "$RUN/train.log" 2>&1 \
+$PY playground/open_duck_mini_v2/tracking_runner.py --output_dir "$RUN" "${INIT[@]}" > "$RUN/train.log" 2>&1 \
   || { echo "$MODE run failed; tail of $RUN/train.log:"; tail -30 "$RUN/train.log"; exit 1; }
 echo "=== $(date '+%T') $MODE done: $(tail -1 "$RUN/train.log")"
 ln -sfn "$MODE" "$OUT/latest"

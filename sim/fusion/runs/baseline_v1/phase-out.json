@@ -1,0 +1,176 @@
+{
+ "experiment": "phase-out",
+ "stand": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/stand_drew/full/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/walk_drew/full/policy.onnx",
+ "episodes_per_phase": 20,
+ "rows": [
+  {
+   "phase": 0.0,
+   "success": 20,
+   "total": 20,
+   "vx": -0.000219287224864749
+  },
+  {
+   "phase": 0.04,
+   "success": 19,
+   "total": 20,
+   "vx": 0.00013364109549474196
+  },
+  {
+   "phase": 0.08,
+   "success": 20,
+   "total": 20,
+   "vx": 0.000244570505851015
+  },
+  {
+   "phase": 0.12,
+   "success": 19,
+   "total": 20,
+   "vx": 0.00020175263962619243
+  },
+  {
+   "phase": 0.16,
+   "success": 20,
+   "total": 20,
+   "vx": 0.00013938245924132787
+  },
+  {
+   "phase": 0.2,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00013964999882174882
+  },
+  {
+   "phase": 0.24,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00026187725644689506
+  },
+  {
+   "phase": 0.28,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00034431850974484955
+  },
+  {
+   "phase": 0.32,
+   "success": 20,
+   "total": 20,
+   "vx": 9.7225828391219e-05
+  },
+  {
+   "phase": 0.36,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00026054579797622193
+  },
+  {
+   "phase": 0.4,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00029823638244563507
+  },
+  {
+   "phase": 0.44,
+   "success": 20,
+   "total": 20,
+   "vx": -4.929035134496993e-05
+  },
+  {
+   "phase": 0.48,
+   "success": 20,
+   "total": 20,
+   "vx": 0.0005725825472755769
+  },
+  {
+   "phase": 0.52,
+   "success": 20,
+   "total": 20,
+   "vx": 0.00045421810345881486
+  },
+  {
+   "phase": 0.56,
+   "success": 20,
+   "total": 20,
+   "vx": -0.0007762855158909782
+  },
+  {
+   "phase": 0.6,
+   "success": 20,
+   "total": 20,
+   "vx": 0.00040149227126717966
+  },
+  {
+   "phase": 0.64,
+   "success": 19,
+   "total": 20,
+   "vx": 0.00024602648911780257
+  },
+  {
+   "phase": 0.68,
+   "success": 20,
+   "total": 20,
+   "vx": -0.0005046099738654651
+  },
+  {
+   "phase": 0.72,
+   "success": 20,
+   "total": 20,
+   "vx": -0.0005038749478694398
+  },
+  {
+   "phase": 0.76,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00028225251091574947
+  },
+  {
+   "phase": 0.8,
+   "success": 20,
+   "total": 20,
+   "vx": 0.00021289232537173214
+  },
+  {
+   "phase": 0.84,
+   "success": 20,
+   "total": 20,
+   "vx": -0.00028502079018732034
+  },
+  {
+   "phase": 0.88,
+   "success": 20,
+   "total": 20,
+   "vx": -5.3241413050340486e-05
+  },
+  {
+   "phase": 0.92,
+   "success": 20,
+   "total": 20,
+   "vx": -0.0002095021527900099
+  },
+  {
+   "phase": 0.96,
+   "success": 20,
+   "total": 20,
+   "vx": 8.980496880064864e-05
+  }
+ ],
+ "double_support_phases": [
+  0.0,
+  0.02,
+  0.38,
+  0.4,
+  0.42,
+  0.44,
+  0.46,
+  0.48,
+  0.5,
+  0.52,
+  0.88,
+  0.9,
+  0.92,
+  0.94,
+  0.96,
+  0.98
+ ]
+}

@@ -1,0 +1,12 @@
+{
+  "skill": "stand",
+  "version": 1,
+  "match": null,
+  "rms_target_diff_rad": null,
+  "max_diff_rad": null,
+  "notes": [
+    "skipped: the upstream runtime only builds the 101-wide walk observation; this package's obs_spec needs the motion-graph runtime (graph_runtime/) before sim-to-sim can run"
+  ],
+  "created": "2026-10-26T03:30:10-04:00",
+  "tool": "tools/sim2sim.py"
+}
