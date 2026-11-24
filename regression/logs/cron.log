@@ -2,3 +2,361 @@
    battery 0.7 (280/400), sim2sim MISMATCH (0.02004 rad; clock-aligned 0.00561), status draft -> battery FAILED
 1 packages: 0 passed both gates, 0 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-10-23T03:30:01-0400.
 wrote /home/hermes/src/mini-duck-droid/regression/2026-10-23.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (locomotion)
+   battery 0.7 (280/400), sim2sim MISMATCH (0.02004 rad; clock-aligned 0.00561), status draft -> battery FAILED
+2 packages: 1 passed both gates, 1 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-10-25T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-25.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+3 packages: 3 passed both gates, 3 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-26T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-26.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+3 packages: 3 passed both gates, 3 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-27T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-27.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-28T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-28.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-29T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-29.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-30T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-30.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-10-31T03:30:01-0400.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-10-31.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-01T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-01.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-02T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-02.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-03T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-03.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-04T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-04.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-11-05T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-05.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-06T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-06.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-07T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-07.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-11-08T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-08.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-09T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-09.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-10T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-10.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-11T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-11.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-12T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-12.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-13T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-13.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-14T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-14.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-15T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-15.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-16T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-16.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-17T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-17.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-18T03:30:02-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-18.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-19T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-19.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-20T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-20.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-21T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-21.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 1 min on 2026-11-22T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-22.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-23T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-23.md
+== bow/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== recovery/v2 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== stand/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+== walk/v1 (episodic)
+   battery 1.0 (50/50), sim2sim n/a, status battery_passed -> pass
+5 packages: 5 passed both gates, 5 passed the battery, 0 matched sim-to-sim, 0 invalid, 0 tool errors; 5 seeds x 10 episodes; 0 min on 2026-11-24T03:30:01-0500.
+wrote /home/hermes/src/mini-duck-droid/regression/2026-11-24.md

@@ -1,0 +1,14 @@
+turn on : low KPS set
+turn on : init pos set
+turn on : high kps
+[Poly ref data] Processing ...
+[Poly ref data] Done processing
+Starting
+TURNING OFF
+
+sim2sim walk v1 cmd [0.15, 0.0, 0.0] over 5.0 s (seed 0)
+  lockstep target RMS 0.0200 rad (max 0.0799, settle window 0.0101, clock-aligned 0.0056), threshold 0.02
+  per joint: Lhip_yaw=0.009 Lhip_roll=0.019 Lhip_pitch=0.024 Lknee=0.030 Lankle=0.022 neck_pitch=0.011 head_pitch=0.018 head_yaw=0.022 head_roll=0.015 Rhip_yaw=0.010 Rhip_roll=0.020 Rhip_pitch=0.020 Rknee=0.030 Rankle=0.017
+  obs blocks: gyro=0.0 accelerometer=0.0 commands=0.0 joint_pos_rel=0.00029 joint_vel_scaled=1e-05 last_action=0.08744 last_last_action=0.08734 last_last_last_action=0.08721 motor_targets=0.01998 feet_contacts=0.0 gait_phase=0.16418
+  free run: joint RMS 0.0187 rad, runtime fell False, sim_test fell False; tracking {'command': {'vx': 0.15, 'vy': 0.0, 'wz': 0.0}, 'runtime': {'fwd_m_s': 0.0965, 'left_m_s': -0.0103, 'yaw_deg_s': -1.56, 'fell': False}, 'sim_test': {'fwd_m_s': 0.105, 'left_m_s': 0.0007, 'yaw_deg_s': -0.22, 'fell': False}}
+  MISMATCH -> /home/hermes/src/mini-duck-droid/skills/walk/v1/report/sim2sim.json

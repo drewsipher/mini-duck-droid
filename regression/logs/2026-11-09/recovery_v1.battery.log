@@ -1,0 +1,12 @@
+[clip ref] clip.json: 50 steps, 1.00 s, loop (unwrapped to 501 steps), trunk: clip_base_track, peak joint vel 0.15 rad/s
+seed 0: 10/10  joint err 0.0246 rad
+seed 1: 10/10  joint err 0.0248 rad
+seed 2: 10/10  joint err 0.0245 rad
+seed 3: 10/10  joint err 0.0246 rad
+seed 4: 10/10  joint err 0.0251 rad
+
+recovery: 50/50 success (100 %), joint err 0.0247 rad (1.42 deg), base err 0.62 cm, ori err 2.7 deg, mean episode 6.00 s
+video /tmp/tmplnmtpyw3/eval/eval.mp4
+battery /tmp/tmplnmtpyw3/eval/battery.json
+
+overall 50/50 = 1.0  joint err 0.0247 rad  PASSED -> /home/hermes/src/mini-duck-droid/skills/recovery/v1/report/battery.json
