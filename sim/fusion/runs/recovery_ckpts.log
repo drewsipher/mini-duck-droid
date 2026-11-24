@@ -1,0 +1,47 @@
+=== 14:19:32 checkpoint 66846720
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '19/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '13/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '17/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/66846720/push-dir.json
+recovery 0.3 {'forward': '12/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '19/20', 'backward': '3/20', 'right-back': '19/20', 'right': '20/20', 'right-fwd': '19/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '15/20', 'left': '20/20', 'left-back': '10/20', 'backward': '0/20', 'right-back': '6/20', 'right': '20/20', 'right-fwd': '12/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/66846720/push-dir_force0.2s.json
+=== 14:19:56 checkpoint 83558400
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '19/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '14/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '17/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/83558400/push-dir.json
+recovery 0.3 {'forward': '12/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '18/20', 'backward': '3/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '15/20', 'left': '20/20', 'left-back': '9/20', 'backward': '0/20', 'right-back': '5/20', 'right': '20/20', 'right-fwd': '14/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/83558400/push-dir_force0.2s.json
+=== 14:20:20 checkpoint 100270080
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '19/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '17/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '18/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/100270080/push-dir.json
+recovery 0.3 {'forward': '16/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '18/20', 'backward': '1/20', 'right-back': '19/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '16/20', 'left': '20/20', 'left-back': '10/20', 'backward': '0/20', 'right-back': '4/20', 'right': '20/20', 'right-fwd': '14/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/100270080/push-dir_force0.2s.json
+=== 14:20:43 checkpoint 116981760
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '20/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '15/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '19/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/116981760/push-dir.json
+recovery 0.3 {'forward': '13/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '17/20', 'backward': '1/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '19/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '11/20', 'left': '20/20', 'left-back': '7/20', 'backward': '0/20', 'right-back': '4/20', 'right': '20/20', 'right-fwd': '11/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/116981760/push-dir_force0.2s.json
+=== 14:21:07 checkpoint 133693440
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '20/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '17/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '18/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/133693440/push-dir.json
+recovery 0.3 {'forward': '13/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '19/20', 'backward': '2/20', 'right-back': '18/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '9/20', 'left': '20/20', 'left-back': '6/20', 'backward': '0/20', 'right-back': '6/20', 'right': '20/20', 'right-fwd': '8/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/133693440/push-dir_force0.2s.json
+=== 14:21:31 checkpoint 150405120
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '20/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '13/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '18/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/150405120/push-dir.json
+recovery 0.3 {'forward': '12/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '19/20', 'backward': '0/20', 'right-back': '17/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.4 {'forward': '0/20', 'left-fwd': '12/20', 'left': '20/20', 'left-back': '8/20', 'backward': '0/20', 'right-back': '3/20', 'right': '20/20', 'right-fwd': '6/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/150405120/push-dir_force0.2s.json
+=== 14:21:54 stand expert, same tests
+stand 0.3 {'forward': '8/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '4/20', 'backward': '0/20', 'right-back': '4/20', 'right': '20/20', 'right-fwd': '16/20'}
+stand 0.4 {'forward': '0/20', 'left-fwd': '6/20', 'left': '20/20', 'left-back': '0/20', 'backward': '0/20', 'right-back': '0/20', 'right': '20/20', 'right-fwd': '3/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/recovery_ckpts/stand/push-dir_force0.2s.json
+=== 14:22:00 done

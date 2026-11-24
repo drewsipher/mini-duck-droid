@@ -1,10 +1,12 @@
 #!/bin/bash
 # Train one skill from one clip on the fixed recipe (recipe_v1.py), then evaluate it strictly.
 #
-#   sim/train_skill.sh <clip.json> <name> [--preview] [--loop] [--steps N] [--seed S] [--skip-smoke] [--no-eval] [--init CKPT]
+#   sim/train_skill.sh <clip.json> <name> [--preview] [--loop] [--steps N] [--seed S] [--skip-smoke] [--no-eval] [--init CKPT] [--task recovery]
 #
 #   --init  start from another skill's checkpoint (a directory under runs_skills/<skill>/full/) instead of
 #           a fresh network: the branched-from-a-shared-base option of the fusion research
+#   --task recovery   push recovery on the clip's pose (recovery.py) instead of tracking the clip; same
+#           observation and action interface, so the expert drops into sim/fusion like any other
 #
 #   smoke   64 envs, 5 PPO iterations: does it compile and run end to end (~5 min)   -> runs_skills/<name>/smoke/
 #   preview --preview: ~30 min (recipe PREVIEW_TIMESTEPS)                             -> runs_skills/<name>/preview/
@@ -23,11 +25,12 @@ CALLER=$PWD
 cd "$(dirname "$0")/train_pg"
 PY=.venv/bin/python
 export PYTHONPATH=.
-MODE=full; LOOP=0; STEPS=""; SEED=${SEED:-0}; SMOKE=1; EVAL=1; INIT=()
+MODE=full; LOOP=0; STEPS=""; SEED=${SEED:-0}; SMOKE=1; EVAL=1; INIT=(); TASK=tracking
 while [[ $# -gt 0 ]]; do
   case $1 in
     --preview) MODE=preview ;;
     --loop) LOOP=1 ;;
+    --task) TASK=$2; shift ;;
     --steps) STEPS=$2; shift ;;
     --seed) SEED=$2; shift ;;
     --skip-smoke) SMOKE=0 ;;
@@ -42,11 +45,11 @@ OUT=runs_skills/$NAME
 mkdir -p "$OUT"
 # the recipe's randomisation knobs for randomize.py (same values tracking_runner.py sets)
 eval "export $($PY -c 'import recipe_v1 as R; print(" ".join(f"{k}={v}" for k, v in R.as_env_vars().items()))')"
-export CLIP LOOP SEED
+export CLIP LOOP SEED TASK
 if nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader 2>/dev/null | grep -v -i blender | grep -q .; then
   echo "=== warning: another compute process is on the GPU:"; nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 fi
-echo "=== $(date '+%F %T') skill $NAME  clip $CLIP  loop $LOOP  mode $MODE  seed $SEED  ${INIT[*]}"
+echo "=== $(date '+%F %T') skill $NAME  clip $CLIP  task $TASK  loop $LOOP  mode $MODE  seed $SEED  ${INIT[*]}"
 
 if [[ $SMOKE == 1 ]]; then
   echo "=== $(date '+%T') smoke: 64 envs, 5 iterations -> $OUT/smoke"

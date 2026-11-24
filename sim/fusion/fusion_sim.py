@@ -35,6 +35,17 @@ class Expert:
     def __init__(self, name, onnx, clip, m0, loop=True, net=None):
         self.name, self.loop = name, loop
         self.net = net or MLP.from_onnx(onnx)
+        # the residual scale this expert was trained with: obs_spec.json next to its ONNX (a run folder), else
+        # skill.json's policy.action_scale (a package), else the recipe's
+        self.scale = R.ACTION_SCALE
+        if onnx:
+            import json
+            folder = os.path.dirname(os.path.abspath(onnx))
+            spec, skill = os.path.join(folder, "obs_spec.json"), os.path.join(folder, "skill.json")
+            if os.path.exists(spec):
+                self.scale = float(json.load(open(spec)).get("action", {}).get("action_scale", R.ACTION_SCALE))
+            elif os.path.exists(skill):
+                self.scale = float(json.load(open(skill)).get("policy", {}).get("action_scale", R.ACTION_SCALE))
         self.ref = ClipTrackingReference(clip, m0, loop=loop, horizon_s=HORIZON_S, quiet=True)
         self.cycle = self.ref.cycle_steps
         # per cycle frame: both feet on the floor in the reference (within 1 mm of the lowest foot height)
@@ -74,9 +85,16 @@ class FusionSim(ET.TrackingSim):
                                [ph, np.cos(2 * np.pi * ph), np.sin(2 * np.pi * ph)],
                                e.ref.q[kn] - self.home, e.ref.qd[kn] * R.DOF_VEL_SCALE])
 
-    def run(self, rng, controller, episode_s, start=("stand", 0), pushes=False, render=None, blend_net=None):
+    def run(self, rng, controller, episode_s, start=("stand", 0), pushes=False, render=None, blend_net=None, push_mag=None, push_dir=None,
+            push_every_s=None, push_force_s=0.0):
         """One episode. controller(sim, t, w_prev) -> weights (len experts). start = (expert, clock).
-        blend_net: (MLP, fn t -> w) runs that one network instead, tracking the blended reference."""
+        blend_net: (MLP, fn t -> w) runs that one network instead, tracking the blended reference.
+        pushes: the recipe's kicks (interval and magnitude ranges); push_mag=(lo, hi) overrides the magnitude,
+        push_dir an angle in the duck's frame (0 = from behind, pushing it forward; pi/2 = to its left),
+        push_every_s a fixed interval. push_force_s > 0: instead of an instant velocity kick, a constant
+        force on the trunk over that long giving the same total velocity change (a hand shove: it rotates
+        the duck over its feet; the kick moves the feet too). A push is reported in the trace row as
+        "push": [vx, vy] (world) on the step it starts."""
         m = self.randomised_model(rng)
         d = mujoco.MjData(m)
         act_delay = int(rng.integers(R.ACTION_DELAY_STEPS[0], R.ACTION_DELAY_STEPS[1] + 1))
@@ -100,8 +118,10 @@ class FusionSim(ET.TrackingSim):
         w = np.array([1.0 if n == start[0] else 0.0 for n in self.names])
         raw_prev, fell = targets.copy(), False
         steps = int(round(episode_s / R.CTRL_DT))
-        push_every = int(round(rng.uniform(*R.PUSH_INTERVAL_S) / R.CTRL_DT)) if pushes else 0
+        push_every = int(round((push_every_s or rng.uniform(*R.PUSH_INTERVAL_S)) / R.CTRL_DT)) if pushes else 0
         bn_a = [np.zeros(14), np.zeros(14)]; bn_hist = [np.zeros(14) for _ in range(3)]
+        force_steps = int(round(push_force_s / R.CTRL_DT)) if push_force_s > 0 else 0
+        force_left, mass = 0, float(np.sum(m.body_mass))
         for t in range(steps):
             gyro = d.sensordata[self.gyro_a:self.gyro_a + 3].copy()
             acc = d.sensordata[self.acc_a:self.acc_a + 3].copy()
@@ -117,7 +137,7 @@ class FusionSim(ET.TrackingSim):
                 for e in self.experts:
                     a = e.net(self.expert_obs(e, shared, targets))
                     e.hist.insert(0, a); del e.hist[3:]
-                    raws.append(e.ref.q[e.i(e.k + 1)] + R.ACTION_SCALE * e.hist[min(act_delay, 2)])
+                    raws.append(e.ref.q[e.i(e.k + 1)] + e.scale * e.hist[min(act_delay, 2)])
                     e.a2, e.a1 = e.a1, a
                 raw = w @ np.array(raws)
             else:
@@ -130,16 +150,29 @@ class FusionSim(ET.TrackingSim):
                                     bref - self.home, bref_d * R.DOF_VEL_SCALE])
                 a = net(o)
                 bn_hist.insert(0, a); del bn_hist[3:]
-                raw = bref + R.ACTION_SCALE * bn_hist[min(act_delay, 2)]
+                raw = bref + ew.scale * bn_hist[min(act_delay, 2)]
                 bn_a = [a, bn_a[0]]
             new = self.alpha * targets + (1 - self.alpha) * raw
             targets = np.clip(new, targets - self.max_step, targets + self.max_step)
             d.ctrl[:] = targets
+            push = None
             if push_every and (t + 1) % push_every == 0:
-                th, mag = rng.uniform(0, 2 * np.pi), rng.uniform(*R.PUSH_MAGNITUDE_MS)
-                d.qvel[0] += mag * np.cos(th); d.qvel[1] += mag * np.sin(th)
+                th, mag = rng.uniform(0, 2 * np.pi), rng.uniform(*(push_mag or R.PUSH_MAGNITUDE_MS))
+                if push_dir is not None:                                   # in the duck's current heading
+                    xm = d.xmat[self.base_body]
+                    th = push_dir + np.arctan2(xm[3], xm[0])
+                push = [float(mag * np.cos(th)), float(mag * np.sin(th))]
+                if force_steps:
+                    d.xfrc_applied[self.base_body, :2] = mass * np.array(push) / push_force_s
+                    force_left = force_steps
+                else:
+                    d.qvel[0] += push[0]; d.qvel[1] += push[1]
             for _ in range(self.decim):
                 mujoco.mj_step(m, d)
+            if force_left:
+                force_left -= 1
+                if force_left == 0:
+                    d.xfrc_applied[self.base_body, :] = 0.0
             for e in self.experts:
                 e.k += 1
             b = self.base_body
@@ -147,7 +180,7 @@ class FusionSim(ET.TrackingSim):
             h = float(d.qpos[self.ref.base_qpos_addr + 2])
             trace.append({"t": (t + 1) * R.CTRL_DT, "w": w.tolist(), "x": float(d.qpos[0]), "y": float(d.qpos[1]),
                           "vx": float(d.qvel[0]), "h": h, "tilt": tilt, "jump": float(np.abs(raw - raw_prev).max()),
-                          "phase": {e.name: e.phase() for e in self.experts}})
+                          "phase": {e.name: e.phase() for e in self.experts}, "push": push})
             raw_prev = raw
             fell = h < R.MIN_BASE_HEIGHT_M or tilt > R.MAX_ORI_ERR_RAD or not np.isfinite(d.qpos).all()
             if render:

@@ -1,0 +1,7 @@
+stand 0.4 {'forward': '18/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '13/20', 'backward': '0/20', 'right-back': '17/20', 'right': '20/20', 'right-fwd': '20/20'}
+stand 0.5 {'forward': '1/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '1/20', 'backward': '0/20', 'right-back': '1/20', 'right': '20/20', 'right-fwd': '18/20'}
+walk 0.4 {'forward': '2/20', 'left-fwd': '7/20', 'left': '14/20', 'left-back': '15/20', 'backward': '1/20', 'right-back': '8/20', 'right': '19/20', 'right-fwd': '7/20'}
+walk 0.5 {'forward': '0/20', 'left-fwd': '2/20', 'left': '13/20', 'left-back': '4/20', 'backward': '0/20', 'right-back': '4/20', 'right': '13/20', 'right-fwd': '3/20'}
+recovery 0.4 {'forward': '20/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '19/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+recovery 0.5 {'forward': '14/20', 'left-fwd': '20/20', 'left': '20/20', 'left-back': '20/20', 'backward': '17/20', 'right-back': '20/20', 'right': '20/20', 'right-fwd': '20/20'}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/push_ckpt83M_s50/push-dir.json

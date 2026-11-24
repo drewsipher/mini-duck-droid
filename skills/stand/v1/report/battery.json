@@ -32,10 +32,10 @@
   },
   "mean_joint_err_rad": 0.0245,
   "evaluator": "sim/eval_tracking.py",
-  "created": "2026-10-26T07:30:10+00:00",
+  "created": "2026-11-24T08:30:21+00:00",
   "raw": {
     "skill": "stand",
-    "onnx": "/tmp/tmp_hj43s1x/policy.onnx",
+    "onnx": "/tmp/tmpzuk8ywom/policy.onnx",
     "clip": {
       "clip": "/home/hermes/src/mini-duck-droid/skills/stand/v1/clip.json",
       "loop": true,
@@ -1025,8 +1025,8 @@
       "pushes": "off"
     },
     "recipe_version": 1,
-    "created": "2026-10-26T07:30:09+00:00",
-    "video": "/tmp/tmp_hj43s1x/eval/eval.mp4"
+    "created": "2026-11-24T08:30:20+00:00",
+    "video": "/tmp/tmpzuk8ywom/eval/eval.mp4"
   },
   "tool": "tools/battery.py -> sim/eval_tracking.py",
   "robot_model_hash": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38"

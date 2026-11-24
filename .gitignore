@@ -15,3 +15,7 @@ tracker/data/progress.json.bak
 anim/*.blend1
 tracker/data/jobs/
 anim/blender.log
+
+# third-party papers (public repo): keep local only
+ax_*.pdf
+my_ax_*.txt

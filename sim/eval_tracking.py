@@ -58,8 +58,9 @@ class Policy:
 class TrackingSim:
     """CPU mirror of tracking.ClipTracking for one episode (no sensor noise)."""
 
-    def __init__(self, base_model, ref, policy, loop, pushes=False):
+    def __init__(self, base_model, ref, policy, loop, pushes=False, action_scale=None):
         self.m0, self.ref, self.policy, self.loop, self.pushes = base_model, ref, policy, loop, pushes
+        self.action_scale = R.ACTION_SCALE if action_scale is None else float(action_scale)   # per skill (obs_spec.json)
         m = base_model
         self.act_names = [m.actuator(i).name for i in range(m.nu)]
         self.qadr = np.array([m.joint(n).qposadr[0] for n in self.act_names])
@@ -153,7 +154,7 @@ class TrackingSim:
             a = self.policy(o)
             act_hist.insert(0, a); del act_hist[3:]
             a_d = act_hist[min(act_delay, len(act_hist) - 1)]
-            raw = self.ref.q[self.ref.index(k + 1)] + R.ACTION_SCALE * a_d
+            raw = self.ref.q[self.ref.index(k + 1)] + self.action_scale * a_d
             new = self.alpha * targets + (1 - self.alpha) * raw
             targets = np.clip(new, targets - self.max_step, targets + self.max_step)
             d.ctrl[:] = targets
@@ -283,6 +284,14 @@ def pipeline_battery(raw, skill_name, version=1, thresholds=None):
             "created": datetime.now(timezone.utc).isoformat(timespec="seconds"), "raw": raw}
 
 
+def action_scale_of(spec):
+    """The skill's residual scale: obs_spec.json's action.action_scale (recovery.py widens it), else the recipe's."""
+    try:
+        return float(spec["action"]["action_scale"])
+    except (TypeError, KeyError):
+        return R.ACTION_SCALE
+
+
 def write_package(out_dir, name, onnx, clip, battery, spec, run_meta, loop):
     """package_draft/ in the skills/schema.json layout, loadable by graph_runtime as it stands."""
     pk = os.path.join(out_dir, "package_draft")
@@ -321,11 +330,11 @@ def write_package(out_dir, name, onnx, clip, battery, spec, run_meta, loop):
         "seed": run_meta.get("seed"),
         "obs_spec": obs_spec,
         # graph_runtime: target = clip(t + dt) + action_scale * action, then the deploy filters
-        "policy": {"kind": "onnx", "action_mode": "residual_on_reference", "action_scale": R.ACTION_SCALE,
+        "policy": {"kind": "onnx", "action_mode": "residual_on_reference", "action_scale": action_scale_of(spec),
                    "lpf_hz": R.ACT_LPF_HZ, "max_vel_rad_s": R.MAX_MOTOR_VEL, "head_mode": "policy",
                    "input_name": sess.get_inputs()[0].name},
         # tools/skillkit: the same settings in its vocabulary
-        "runtime": {"action_scale": R.ACTION_SCALE, "lpf_hz": R.ACT_LPF_HZ, "head_mode": "policy"},
+        "runtime": {"action_scale": action_scale_of(spec), "lpf_hz": R.ACT_LPF_HZ, "head_mode": "policy"},
         "thresholds": dict(PACKAGE_THRESHOLDS),
         "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "source": {"clip": os.path.abspath(clip), "run": run_path, "num_timesteps": run_meta.get("num_timesteps"),
@@ -372,7 +381,7 @@ def main():
     if os.path.exists(run_path):
         run_meta = json.load(open(run_path)); run_meta["_path"] = run_path
 
-    sim = TrackingSim(m0, ref, policy, a.loop, pushes=a.pushes)
+    sim = TrackingSim(m0, ref, policy, a.loop, pushes=a.pushes, action_scale=action_scale_of(spec))
     results, per_seed = [], []
     first_fail = None
     for seed in range(a.seeds):

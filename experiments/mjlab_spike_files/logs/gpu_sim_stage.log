@@ -1,0 +1,11 @@
+WARNING: Attach conflict when attaching 'open_duck_mini_v2' to 'mjlab scene', policy is 'warning'
+iterations: parent has 100 (default), child has 1, keeping parent value
+ls_iterations: parent has 50 (default), child has 5, keeping parent value
+
+[entity] bodies=16 joints=24 actuators=14 nq=31 nv=30 nu=14 ngeom=46 nsensor=15
+[entity] joints: ('left_hip_yaw', 'left_hip_yaw_backlash', 'left_hip_roll', 'left_hip_roll_backlash', 'left_hip_pitch', 'left_hip_pitch_backlash', 'left_knee', 'left_knee_backlash', 'left_ankle', 'left_ankle_backlash', 'neck_pitch', 'head_pitch', 'head_yaw', 'head_roll', 'right_hip_yaw', 'right_hip_yaw_backlash', 'right_hip_roll', 'right_hip_roll_backlash', 'right_hip_pitch', 'right_hip_pitch_backlash', 'right_knee', 'right_knee_backlash', 'right_ankle', 'right_ankle_backlash')
+[entity] bodies: ('base', 'trunk_assembly', 'hip_roll_assembly', 'left_roll_to_pitch_assembly', 'knee_and_ankle_assembly', 'knee_and_ankle_assembly_2', 'foot_assembly', 'neck_pitch_assembly', 'head_pitch_to_yaw', 'neck_yaw_assembly', 'head_assembly', 'hip_roll_assembly_2', 'right_roll_to_pitch_assembly', 'knee_and_ankle_assembly_3', 'knee_and_ankle_assembly_4', 'foot_assembly_2')
+[entity] OK (2.9s)
+[sim] built 256 envs on cuda:0 in 0.5s; nworld=256 naconmax=12288 njmax=64
+[sim] 500 physics steps x 256 envs in 0.27s = 473,215 env-steps/s; root z after 1.00s: mean -0.139 min -0.139 max -0.139 (home 0.150)
+[sim] OK (0.8s)

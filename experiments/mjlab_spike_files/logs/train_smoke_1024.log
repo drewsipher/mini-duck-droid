@@ -1,0 +1,353 @@
+WARNING: Attach conflict when attaching 'open_duck_mini_v2' to 'mjlab scene', policy is 'warning'
+iterations: parent has 100 (default), child has 1, keeping parent value
+ls_iterations: parent has 50 (default), child has 5, keeping parent value
+
+Warp 1.18.0 initialized:
+   CUDA Toolkit 13.4, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 4060" (8 GiB, sm_89, mempool enabled)
+   Kernel cache:
+     /home/hermes/.cache/warp/1.18.0
+Module mujoco_warp._src.smooth 43a6a77 load on device 'cuda:0' took 0.68 ms  (cached)
+Module _nxn_broadphase__locals__kernel_32304148 3230414 load on device 'cuda:0' took 0.28 ms  (cached)
+Module _nxn_broadphase__locals__kernel_32304148 2a885b9 load on device 'cuda:0' took 0.23 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_71bf750d 71bf750 load on device 'cuda:0' took 0.50 ms  (cached)
+Module _primitive_narrowphase__locals__primitive_narrowphase_d1d568d3 d1d568d load on device 'cuda:0' took 0.41 ms  (cached)
+Module mujoco_warp._src.constraint 8d4d513 load on device 'cuda:0' took 0.26 ms  (cached)
+Module _friction_dof__locals__kernel_4aeb9e20 4aeb9e2 load on device 'cuda:0' took 0.29 ms  (cached)
+Module _limit_slide_hinge__locals__kernel_a0cedfd2 a0cedfd load on device 'cuda:0' took 0.28 ms  (cached)
+Module _efc_contact_init__locals__kernel_5bd64944 5bd6494 load on device 'cuda:0' took 0.27 ms  (cached)
+Module _efc_contact_jac_dense__locals__kernel_e9660760 29b28db load on device 'cuda:0' took 0.30 ms  (cached)
+Module _efc_contact_update__locals__kernel_55b2a711 55b2a71 load on device 'cuda:0' took 0.25 ms  (cached)
+Module mujoco_warp._src.sensor 8feaecd load on device 'cuda:0' took 0.77 ms  (cached)
+Module mujoco_warp._src.forward 70fadf5 load on device 'cuda:0' took 0.63 ms  (cached)
+Module mujoco_warp._src.passive 0de6fd1 load on device 'cuda:0' took 0.67 ms  (cached)
+Module _qfrc_passive_kernel__locals__kernel_20315922 2031592 load on device 'cuda:0' took 0.23 ms  (cached)
+Module _qfrc_smooth__locals__kernel_2c4e0694 2c4e069 load on device 'cuda:0' took 0.23 ms  (cached)
+Module mujoco_warp._src.support 970ef9a load on device 'cuda:0' took 0.26 ms  (cached)
+Module _tile_cholesky_factorize_solve_block__locals__kernel_67c44654 cebf224 load on device 'cuda:0' took 27.12 ms  (cached)
+Module _solve_init_dof__locals__kernel_45eb01ed 45eb01e load on device 'cuda:0' took 0.31 ms  (cached)
+Module mujoco_warp._src.solver e4420b7 load on device 'cuda:0' took 0.37 ms  (cached)
+Module _solve_init_jaref_kernel__locals__kernel_34a58536 34a5853 load on device 'cuda:0' took 0.25 ms  (cached)
+Module mul_m_kernel__locals___mul_m_6d916077 6d91607 load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_constraint_efc__locals__kernel_e1de18c7 e1de18c load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_41ee2214 41ee221 load on device 'cuda:0' took 0.23 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_c4230897 c423089 load on device 'cuda:0' took 0.23 ms  (cached)
+Module _update_gradient_grad__locals__kernel_21379838 2137983 load on device 'cuda:0' took 0.23 ms  (cached)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_83929960 6040162 load on device 'cuda:0' took 0.63 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_a44df8c9 bbb23ab load on device 'cuda:0' took 29.55 ms  (cached)
+Module _linesearch_iterative_kernel__locals__kernel_b20da06b b2ed528 load on device 'cuda:0' took 0.37 ms  (cached)
+Module _update_constraint_efc__locals__kernel_a341871c a341871 load on device 'cuda:0' took 0.27 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_79955176 7995517 load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_10c2b083 10c2b08 load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_gradient_grad__locals__kernel_b8320cbe b8320cb load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_d6720d97 29c6cb7 load on device 'cuda:0' took 29.27 ms  (cached)
+Module _solve_done__locals__kernel_63147dda 63147dd load on device 'cuda:0' took 0.30 ms  (cached)
+Module mujoco_warp._src.derivative 011f1dc load on device 'cuda:0' took 0.58 ms  (cached)
+Module _next_time_builder__locals___next_time_e59def4b e59def4 load on device 'cuda:0' took 0.28 ms  (cached)
+Module reset_data__locals__reset_xfrc_applied_b0a4c05b b0a4c05 load on device 'cuda:0' took 0.27 ms  (cached)
+Module reset_data__locals__reset_M_2263bd42 2263bd4 load on device 'cuda:0' took 0.22 ms  (cached)
+Module reset_data__locals__reset_mocap_8058fd6f 8058fd6 load on device 'cuda:0' took 0.24 ms  (cached)
+Module reset_data__locals__reset_contact_adcd3765 adcd376 load on device 'cuda:0' took 0.25 ms  (cached)
+Module reset_data__locals__reset_sleep_3246b46a 3246b46 load on device 'cuda:0' took 0.23 ms  (cached)
+Module reset_data__locals__reset_nworld_9d8fd945 9d8fd94 load on device 'cuda:0' took 0.25 ms  (cached)
+
++---------------------------------+
+|         Base Environment        |
++------------------------+--------+
+| Property               | Value  |
++------------------------+--------+
+| Number of environments | 1024   |
+| Environment device     | cuda:0 |
+| Environment seed       | None   |
+| Physics step-size      | 0.002  |
+| Environment step-size  | 0.02   |
++------------------------+--------+
+
+[INFO] <EventManager> contains 2 active terms.
++----------------------------------------------+
+|    Active Event Terms in Mode: 'interval'    |
++-------+------------+-------------------------+
+| Index | Name       | Interval time range (s) |
++-------+------------+-------------------------+
+|   0   | push_robot |        (1.0, 3.0)       |
++-------+------------+-------------------------+
++---------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++-----------+---------------------------+
+|   Index   | Name                      |
++-----------+---------------------------+
+|     0     | base_com                  |
+|     1     | encoder_bias              |
+|     2     | foot_friction             |
++-----------+---------------------------+
++-----------------------------+
+| Domain Randomization Fields |
++-------+---------------------+
+| Index | Field Name          |
++-------+---------------------+
+|   0   | body_ipos           |
+|   1   | body_subtreemass    |
+|   2   | dof_invweight0      |
+|   3   | body_invweight0     |
+|   4   | tendon_length0      |
+|   5   | tendon_invweight0   |
+|   6   | actuator_acc0       |
+|   7   | geom_friction       |
++-------+---------------------+
+
+Module repeat_array_kernel_31f1cdc7 ab09835 load on device 'cuda:0' took 0.35 ms  (cached)
+Module repeat_array_kernel_31f1cdc7 a2cef03 load on device 'cuda:0' took 0.33 ms  (cached)
+Module repeat_array_kernel_31f1cdc7 eb7f276 load on device 'cuda:0' took 0.29 ms  (cached)
+[INFO] <CommandManager> contains 1 active terms.
++--------------------------------+
+|      Active Command Terms      |
++-------+--------+---------------+
+| Index | Name   |      Type     |
++-------+--------+---------------+
+|   0   | motion | MotionCommand |
++-------+--------+---------------+
+
+[INFO] <ActionManager> contains 1 active terms.
++---------------------------------+
+| Active Action Terms (shape: 14) |
++-------+-----------+-------------+
+| Index | Name      |   Dimension |
++-------+-----------+-------------+
+|   0   | joint_pos |          14 |
++-------+-----------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++------------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (105,)) |
++----------+------------------------------------+------------+
+|  Index   | Name                               |   Shape    |
++----------+------------------------------------+------------+
+|    0     | command                            |   (48,)    |
+|    1     | motion_anchor_pos_b                |    (3,)    |
+|    2     | motion_anchor_ori_b                |    (6,)    |
+|    3     | base_lin_vel                       |    (3,)    |
+|    4     | base_ang_vel                       |    (3,)    |
+|    5     | joint_pos                          |   (14,)    |
+|    6     | joint_vel                          |   (14,)    |
+|    7     | actions                            |   (14,)    |
++----------+------------------------------------+------------+
++-------------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (186,)) |
++-----------+------------------------------------+------------+
+|   Index   | Name                               |   Shape    |
++-----------+------------------------------------+------------+
+|     0     | command                            |   (48,)    |
+|     1     | motion_anchor_pos_b                |    (3,)    |
+|     2     | motion_anchor_ori_b                |    (6,)    |
+|     3     | body_pos                           |   (27,)    |
+|     4     | body_ori                           |   (54,)    |
+|     5     | base_lin_vel                       |    (3,)    |
+|     6     | base_ang_vel                       |    (3,)    |
+|     7     | joint_pos                          |   (14,)    |
+|     8     | joint_vel                          |   (14,)    |
+|     9     | actions                            |   (14,)    |
++-----------+------------------------------------+------------+
+
+[INFO] <TerminationManager> contains 4 active terms.
++--------------------------------+
+|    Active Termination Terms    |
++-------+-------------+----------+
+| Index | Name        | Time Out |
++-------+-------------+----------+
+|   0   | time_out    |   True   |
+|   1   | anchor_pos  |  False   |
+|   2   | anchor_ori  |  False   |
+|   3   | ee_body_pos |  False   |
++-------+-------------+----------+
+
+[INFO] <RewardManager> contains 8 active terms.
++-----------------------------------------+
+|           Active Reward Terms           |
++-------+------------------------+--------+
+| Index | Name                   | Weight |
++-------+------------------------+--------+
+|   0   | motion_global_root_pos |    0.5 |
+|   1   | motion_global_root_ori |    0.5 |
+|   2   | motion_body_pos        |    1.0 |
+|   3   | motion_body_ori        |    1.0 |
+|   4   | motion_body_lin_vel    |    1.0 |
+|   5   | motion_body_ang_vel    |    1.0 |
+|   6   | action_rate_l2         |   -0.1 |
+|   7   | joint_limit            |  -10.0 |
++-------+------------------------+--------+
+
+[INFO] <NullCurriculumManager> (inactive)
+[INFO] <NullMetricsManager> (inactive)
+[INFO] <NullRecorderManager> (inactive)
+Module mujoco_warp._src.set_const e45904e load on device 'cuda:0' took 0.45 ms  (cached)
+Module _tile_cholesky_factorize_block__locals__kernel_898d1cf4 7fd4b5e load on device 'cuda:0' took 19.31 ms  (cached)
+Module _tile_cholesky_solve_block__locals__kernel_690d9df8 ffdc314 load on device 'cuda:0' took 20.22 ms  (cached)
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ('actor',)
+	 critic :  ('critic',)
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=105, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=14, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (mlp): MLP(
+    (0): Linear(in_features=186, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+[train] env+runner built in 2.2s; num_envs=1024 steps/env/iter=24 samples/iter=24,576
+Storing git diff for 'mjlab' in: /tmp/claude-1001/-home-hermes-src-mini-duck-droid/7567b96a-f540-4da4-81a7-cb867c23c403/scratchpad/mjlab/train_smoke_1024/git/mjlab.diff
+################################################################################
+[1m                             Learning iteration 0/1                             [0m 
+
+                            Total steps: 24576 
+                       Steps per second: 11312 
+                        Collection time: 1.939s 
+                          Learning time: 0.233s 
+                        Mean value loss: 0.0258
+                    Mean surrogate loss: -0.0074
+                      Mean entropy loss: 19.8259
+                            Mean reward: -0.23
+                    Mean episode length: 22.34
+                        Mean action std: 1.00
+  Episode_Reward/motion_global_root_pos: 0.0101
+  Episode_Reward/motion_global_root_ori: 0.0075
+         Episode_Reward/motion_body_pos: 0.0226
+         Episode_Reward/motion_body_ori: 0.0153
+     Episode_Reward/motion_body_lin_vel: 0.0095
+     Episode_Reward/motion_body_ang_vel: 0.0102
+          Episode_Reward/action_rate_l2: -0.0671
+             Episode_Reward/joint_limit: -0.0025
+        Metrics/motion/error_anchor_pos: 0.0532
+        Metrics/motion/error_anchor_rot: 0.4213
+    Metrics/motion/error_anchor_lin_vel: 0.3330
+    Metrics/motion/error_anchor_ang_vel: 2.6621
+          Metrics/motion/error_body_pos: 0.9271
+          Metrics/motion/error_body_rot: 0.4398
+         Metrics/motion/error_joint_pos: 0.4700
+         Metrics/motion/error_joint_vel: 6.4013
+        Metrics/motion/sampling_entropy: 0.9971
+      Metrics/motion/sampling_top1_prob: 0.3467
+       Metrics/motion/sampling_top1_bin: 0.0758
+      Metrics/motion/error_body_lin_vel: 0.3371
+      Metrics/motion/error_body_ang_vel: 3.2761
+           Episode_Termination/time_out: 2.0000
+         Episode_Termination/anchor_pos: 0.0000
+         Episode_Termination/anchor_ori: 0.0000
+        Episode_Termination/ee_body_pos: 4.6364
+--------------------------------------------------------------------------------
+                         Iteration time: 2.17s
+                           Time elapsed: 0:00:02
+                                    ETA: 0:00:00
+
+[train] iter 0: 2.30s = 10,667 samples/s
+################################################################################
+[1m                             Learning iteration 0/1                             [0m 
+
+                            Total steps: 49152 
+                       Steps per second: 37223 
+                        Collection time: 0.585s 
+                          Learning time: 0.075s 
+                        Mean value loss: 0.0189
+                    Mean surrogate loss: -0.0146
+                      Mean entropy loss: 19.7612
+                            Mean reward: -0.11
+                    Mean episode length: 39.34
+                        Mean action std: 0.99
+  Episode_Reward/motion_global_root_pos: 0.0236
+  Episode_Reward/motion_global_root_ori: 0.0168
+         Episode_Reward/motion_body_pos: 0.0586
+         Episode_Reward/motion_body_ori: 0.0334
+     Episode_Reward/motion_body_lin_vel: 0.0262
+     Episode_Reward/motion_body_ang_vel: 0.0270
+          Episode_Reward/action_rate_l2: -0.1906
+             Episode_Reward/joint_limit: -0.0078
+        Metrics/motion/error_anchor_pos: 0.1283
+        Metrics/motion/error_anchor_rot: 0.9557
+    Metrics/motion/error_anchor_lin_vel: 0.6870
+    Metrics/motion/error_anchor_ang_vel: 4.8912
+          Metrics/motion/error_body_pos: 0.0651
+          Metrics/motion/error_body_rot: 0.8773
+         Metrics/motion/error_joint_pos: 0.6067
+         Metrics/motion/error_joint_vel: 6.6716
+        Metrics/motion/sampling_entropy: 0.8786
+      Metrics/motion/sampling_top1_prob: 0.5141
+       Metrics/motion/sampling_top1_bin: 0.3333
+      Metrics/motion/error_body_lin_vel: 0.6307
+      Metrics/motion/error_body_ang_vel: 5.2136
+           Episode_Termination/time_out: 1.5000
+         Episode_Termination/anchor_pos: 0.0000
+         Episode_Termination/anchor_ori: 0.0000
+        Episode_Termination/ee_body_pos: 23.5417
+--------------------------------------------------------------------------------
+                         Iteration time: 0.66s
+                           Time elapsed: 0:00:02
+                                    ETA: 0:00:00
+
+[train] iter 1: 0.76s = 32,515 samples/s
+################################################################################
+[1m                             Learning iteration 0/1                             [0m 
+
+                            Total steps: 73728 
+                       Steps per second: 37125 
+                        Collection time: 0.591s 
+                          Learning time: 0.071s 
+                        Mean value loss: 0.0179
+                    Mean surrogate loss: -0.0087
+                      Mean entropy loss: 19.7158
+                            Mean reward: -0.01
+                    Mean episode length: 45.26
+                        Mean action std: 0.99
+  Episode_Reward/motion_global_root_pos: 0.0291
+  Episode_Reward/motion_global_root_ori: 0.0215
+         Episode_Reward/motion_body_pos: 0.0708
+         Episode_Reward/motion_body_ori: 0.0421
+     Episode_Reward/motion_body_lin_vel: 0.0330
+     Episode_Reward/motion_body_ang_vel: 0.0334
+          Episode_Reward/action_rate_l2: -0.2247
+             Episode_Reward/joint_limit: -0.0096
+        Metrics/motion/error_anchor_pos: 0.1296
+        Metrics/motion/error_anchor_rot: 0.9755
+    Metrics/motion/error_anchor_lin_vel: 0.7027
+    Metrics/motion/error_anchor_ang_vel: 4.9585
+          Metrics/motion/error_body_pos: 0.0670
+          Metrics/motion/error_body_rot: 0.9104
+         Metrics/motion/error_joint_pos: 0.5930
+         Metrics/motion/error_joint_vel: 6.7415
+        Metrics/motion/sampling_entropy: 0.8252
+      Metrics/motion/sampling_top1_prob: 0.5068
+       Metrics/motion/sampling_top1_bin: 0.3333
+      Metrics/motion/error_body_lin_vel: 0.6487
+      Metrics/motion/error_body_ang_vel: 5.3241
+           Episode_Termination/time_out: 0.2917
+         Episode_Termination/anchor_pos: 0.0000
+         Episode_Termination/anchor_ori: 0.0000
+        Episode_Termination/ee_body_pos: 21.3750
+--------------------------------------------------------------------------------
+                         Iteration time: 0.66s
+                           Time elapsed: 0:00:03
+                                    ETA: 0:00:00
+
+[train] iter 2: 0.75s = 32,829 samples/s
+[train] steady state 0.75s/iter = 32,671 env-steps/s end-to-end
+[train] torch peak allocated 173 MiB, reserved 220 MiB; nvidia-smi total used 1246 MiB
+[train] ONNX exported in 0.0s: inputs [('obs', [1, 105]), ('time_step', [1, 1])] outputs [('actions', [1, 14]), ('joint_pos', [1, 24]), ('joint_vel', [1, 24]), ('body_pos_w', [1, 9, 3]), ('body_quat_w', [1, 9, 4]), ('body_lin_vel_w', [1, 9, 3]), ('body_ang_vel_w', [1, 9, 3])]; metadata keys []

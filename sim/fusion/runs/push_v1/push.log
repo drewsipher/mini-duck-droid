@@ -1,0 +1,15 @@
+{'expert': 'stand', 'push_ms': 0.1, 'success': 20, 'total': 20, 'mean_seconds': 8.0, 'tilt_max_deg': 2.6123402587535955, 'drift_m': 0.004124312889751946}
+{'expert': 'stand', 'push_ms': 0.2, 'success': 20, 'total': 20, 'mean_seconds': 8.0, 'tilt_max_deg': 3.229884903726573, 'drift_m': 0.006732409828912671}
+{'expert': 'stand', 'push_ms': 0.3, 'success': 20, 'total': 20, 'mean_seconds': 8.0, 'tilt_max_deg': 5.128229643913283, 'drift_m': 0.01087198355869816}
+{'expert': 'stand', 'push_ms': 0.4, 'success': 13, 'total': 20, 'mean_seconds': 6.997, 'tilt_max_deg': 6.148958152781125, 'drift_m': 0.02090701737261434}
+{'expert': 'stand', 'push_ms': 0.5, 'success': 2, 'total': 20, 'mean_seconds': 4.491, 'tilt_max_deg': 6.316036996674174, 'drift_m': 0.04512897095269108}
+{'expert': 'stand', 'push_ms': 0.6, 'success': 0, 'total': 20, 'mean_seconds': 3.7159999999999997, 'tilt_max_deg': None, 'drift_m': None}
+{'expert': 'stand', 'push_ms': 0.8, 'success': 0, 'total': 20, 'mean_seconds': 3.2910000000000004, 'tilt_max_deg': None, 'drift_m': None}
+{'expert': 'walk', 'push_ms': 0.1, 'success': 20, 'total': 20, 'mean_seconds': 8.0, 'tilt_max_deg': 17.236967345906965, 'drift_m': 0.710356293443817}
+{'expert': 'walk', 'push_ms': 0.2, 'success': 20, 'total': 20, 'mean_seconds': 8.0, 'tilt_max_deg': 18.351591086117942, 'drift_m': 0.7469783919625871}
+{'expert': 'walk', 'push_ms': 0.3, 'success': 15, 'total': 20, 'mean_seconds': 6.945, 'tilt_max_deg': 18.26840610350547, 'drift_m': 0.7085729072567537}
+{'expert': 'walk', 'push_ms': 0.4, 'success': 8, 'total': 20, 'mean_seconds': 5.651, 'tilt_max_deg': 19.314217321901882, 'drift_m': 0.7219745632863979}
+{'expert': 'walk', 'push_ms': 0.5, 'success': 3, 'total': 20, 'mean_seconds': 4.325000000000001, 'tilt_max_deg': 19.726502855322273, 'drift_m': 0.7510096869108865}
+{'expert': 'walk', 'push_ms': 0.6, 'success': 1, 'total': 20, 'mean_seconds': 3.754, 'tilt_max_deg': 18.367293989650978, 'drift_m': 0.5708064098128492}
+{'expert': 'walk', 'push_ms': 0.8, 'success': 0, 'total': 20, 'mean_seconds': 2.515, 'tilt_max_deg': None, 'drift_m': None}
+wrote /home/hermes/src/mini-duck-droid/sim/fusion/runs/push_v1/push.json

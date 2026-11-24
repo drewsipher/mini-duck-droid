@@ -7,6 +7,9 @@
     scenario    stand -> walk -> stand by command: hard switch / 0.3 s cross-fade (--walk-start, --ds-only)
     blend       hold a fixed mix w of the two for 6 s: output blend vs weight blend, success and speed per w
     stress      12 s, the command flips every 0.5-2 s, pushes on: hard switch / cross-fade / learned gate (--gate)
+    push        each expert alone (stand, walk, and --recovery if given) for 8 s with pushes of one size,
+                sizes 0.1..0.8 m/s: success per size. The push-recovery expert's bench.
+    push-dir    the same at 0.4 and 0.5 m/s, pushed always from one side: front, back, left, right, diagonals
 
 Each writes DIR/<experiment>.json and .png (and scenario a video of one episode).
 """
@@ -34,7 +37,10 @@ def setup(a):
     m0.opt.timestep = F.R.SIM_DT
     stand = F.Expert("stand", a.stand, os.path.join(CLIPS, "Stand.json"), m0)
     walk = F.Expert("walk", a.walk, os.path.join(CLIPS, "Walk.json"), m0)
-    SIM = F.FusionSim(m0, [stand, walk])
+    experts = [stand, walk]
+    if getattr(a, "recovery", None):
+        experts.append(F.Expert("recovery", a.recovery, os.path.join(CLIPS, "Stand.json"), m0))
+    SIM = F.FusionSim(m0, experts)
 
 
 def episodes(seed):
@@ -164,6 +170,94 @@ def job_blend(args):
     return kind, w, seed, summary(r, 2.0)
 
 
+PUSH_SIZES = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8]
+
+
+def job_push(args):
+    import fusion_sim as F
+    name, mag, seed = args
+    W = [1.0 if n == name else 0.0 for n in SIM.names]
+    r = SIM.run(episodes(1000 * seed + int(mag * 100)), F.Fixed(W), 8.0, start=(name, 0), pushes=True, push_mag=(mag, mag), push_force_s=A.force_s)
+    s = summary(r)
+    s["drift_m"] = float(np.hypot(r["trace"][-1]["x"], r["trace"][-1]["y"]))
+    return name, mag, seed, s
+
+
+def push(a):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    setup(a)
+    names = [n for n in SIM.names if not a.only or n in a.only]
+    res = pool_map(job_push, [(n, m, s) for n in names for m in PUSH_SIZES for s in range(a.episodes)], a)
+    rows = []
+    for n in names:
+        for m in PUSH_SIZES:
+            rs = [x for nn, mm, _, x in res if nn == n and mm == m]
+            ok = [x for x in rs if x["success"]]
+            rows.append({"expert": n, "push_ms": m, "success": len(ok), "total": len(rs),
+                         "mean_seconds": float(np.mean([x["seconds"] for x in rs])),
+                         "tilt_max_deg": float(np.degrees(np.mean([x["tilt_max"] for x in ok]))) if ok else None,
+                         "drift_m": float(np.mean([x["drift_m"] for x in ok])) if ok else None})
+            print(rows[-1])
+    out = {"experiment": "push", "rows": rows, "stand": a.stand, "walk": a.walk, "recovery": getattr(a, "recovery", None),
+           "note": "each expert alone for 8 s from its clip start; a kick of this size every 1-3 s (recipe interval), random direction"}
+    fig, axs = plt.subplots(1, 2, figsize=(9, 3.2))
+    for n, col in zip(names, ["#e08a2e", "#3a7bd5", "#2a9d5c"]):
+        rr = [r for r in rows if r["expert"] == n]
+        axs[0].plot(PUSH_SIZES, [r["success"] / r["total"] for r in rr], "o-", color=col, label=n)
+        axs[1].plot(PUSH_SIZES, [r["tilt_max_deg"] if r["tilt_max_deg"] is not None else np.nan for r in rr], "o-", color=col)
+    axs[0].set_ylabel("survived 8 s"); axs[0].set_ylim(-0.05, 1.05); axs[0].legend(fontsize=8)
+    axs[1].set_ylabel("max tilt, survivors (deg)")
+    for ax in axs:
+        ax.set_xlabel(f"push size (m/s, every 1-3 s{', force over %gs' % A.force_s if A.force_s else ', kick'})")
+    fig.tight_layout()
+    return out, fig
+
+
+DIRS = [("forward", 0.0), ("left-fwd", 45.0), ("left", 90.0), ("left-back", 135.0),
+        ("backward", 180.0), ("right-back", 225.0), ("right", 270.0), ("right-fwd", 315.0)]   # the direction the duck is thrown
+
+
+def job_push_dir(args):
+    import fusion_sim as F
+    name, mag, deg, seed = args
+    W = [1.0 if n == name else 0.0 for n in SIM.names]
+    r = SIM.run(episodes(1000 * seed + int(mag * 100) + int(deg)), F.Fixed(W), 8.0, start=(name, 0), pushes=True,
+                push_mag=(mag, mag), push_dir=np.radians(deg), push_force_s=A.force_s)
+    return name, mag, deg, seed, summary(r)
+
+
+def push_dir(a):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    setup(a)
+    names, mags = [n for n in SIM.names if not a.only or n in a.only], a.mags
+    res = pool_map(job_push_dir, [(n, m, d, s) for n in names for m in mags for _, d in DIRS for s in range(a.episodes)], a)
+    rows = []
+    for n in names:
+        for m in mags:
+            for label, d in DIRS:
+                rs = [x for nn, mm, dd, _, x in res if nn == n and mm == m and dd == d]
+                rows.append({"expert": n, "push_ms": m, "direction": label, "deg": d, "success": sum(x["success"] for x in rs), "total": len(rs)})
+            print(n, m, {r["direction"]: f'{r["success"]}/{r["total"]}' for r in rows if r["expert"] == n and r["push_ms"] == m})
+    out = {"experiment": "push-dir", "rows": rows, "stand": a.stand, "walk": a.walk, "recovery": getattr(a, "recovery", None),
+           "note": "8 s alone; every 1-3 s a kick of this size throwing the duck in this direction (its own frame)"}
+    fig, axs = plt.subplots(1, len(mags), figsize=(4.2 * len(mags), 4), subplot_kw={"projection": "polar"})
+    ang = np.radians([d for _, d in DIRS] + [DIRS[0][1]])
+    for ax, m in zip(np.atleast_1d(axs), mags):
+        for n, col in zip(names, ["#e08a2e", "#3a7bd5", "#2a9d5c"]):
+            v = [r["success"] / r["total"] for r in rows if r["expert"] == n and r["push_ms"] == m]
+            ax.plot(ang, v + v[:1], "o-", color=col, label=n)
+        ax.set_theta_zero_location("N"); ax.set_theta_direction(-1)
+        ax.set_xticks(np.radians([d for _, d in DIRS])); ax.set_xticklabels([l for l, _ in DIRS], fontsize=7)
+        ax.set_ylim(0, 1.0); ax.set_title(f"thrown at {m} m/s{' (force over %gs)' % A.force_s if A.force_s else ' (kick)'}: survived 8 s", fontsize=9)
+    np.atleast_1d(axs)[0].legend(fontsize=7, loc="lower left", bbox_to_anchor=(-0.2, -0.15))
+    fig.tight_layout()
+    return out, fig
+
+
 def pool_map(fn, jobs, a):
     with Pool(a.procs, initializer=setup, initargs=(a,)) as pool:
         return pool.map(fn, jobs, chunksize=1)
@@ -276,9 +370,13 @@ def blend(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("experiment", choices=["phase-in", "phase-out", "scenario", "blend", "stress"])
+    ap.add_argument("experiment", choices=["phase-in", "phase-out", "scenario", "blend", "stress", "push", "push-dir"])
     ap.add_argument("--stand", required=True)
     ap.add_argument("--walk", required=True)
+    ap.add_argument("--recovery", default=None, help="the push-recovery expert's policy.onnx (push: adds it)")
+    ap.add_argument("--force-s", type=float, default=0.0, help="push, push-dir: a force over this long instead of an instant kick")
+    ap.add_argument("--mags", type=float, nargs="+", default=[0.4, 0.5], help="push-dir: push sizes")
+    ap.add_argument("--only", nargs="+", default=None, help="push, push-dir: run only these experts")
     ap.add_argument("--out", required=True)
     ap.add_argument("--episodes", type=int, default=20)
     ap.add_argument("--phase-step", type=int, default=2, help="sweep every Nth walk frame")
@@ -289,12 +387,16 @@ def main():
     a = ap.parse_args()
     a.stand, a.walk, a.out = map(os.path.abspath, (a.stand, a.walk, a.out))
     a.gate = a.gate and os.path.abspath(a.gate)
+    a.recovery = a.recovery and os.path.abspath(a.recovery)
     os.makedirs(a.out, exist_ok=True)
     out, fig = {"phase-in": lambda: phase_sweep(a, "in"), "phase-out": lambda: phase_sweep(a, "out"),
-                "scenario": lambda: scenario(a), "blend": lambda: blend(a), "stress": lambda: stress(a)}[a.experiment]()
-    json.dump(out, open(os.path.join(a.out, f"{a.experiment}.json"), "w"), indent=1)
-    fig.savefig(os.path.join(a.out, f"{a.experiment}.png"), dpi=110)
-    print("wrote", os.path.join(a.out, f"{a.experiment}.json"))
+                "scenario": lambda: scenario(a), "blend": lambda: blend(a), "stress": lambda: stress(a),
+                "push": lambda: push(a), "push-dir": lambda: push_dir(a)}[a.experiment]()
+    tag = a.experiment + (f"_force{a.force_s:g}s" if a.force_s else "")
+    out["force_s"] = a.force_s
+    json.dump(out, open(os.path.join(a.out, f"{tag}.json"), "w"), indent=1)
+    fig.savefig(os.path.join(a.out, f"{tag}.png"), dpi=110)
+    print("wrote", os.path.join(a.out, f"{tag}.json"))
 
 
 if __name__ == "__main__":

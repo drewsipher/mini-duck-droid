@@ -20,7 +20,7 @@ Mapped onto the framework's four layers and six stages. "Exists" means working t
 |---|---|---|
 | L4 robot runtime | exists | `Open_Duck_Mini_Runtime` on the Pi: 50 Hz policy loop, PD servos, IMU, battery guard, stability governor, web UI :8080, gamepad |
 | L3 locomotion skill | exists (v1) | `BEST_WALK_ONNX_2.onnx` deployed and demoable. Scaffold-curriculum replacement in progress (`sim/curriculum.sh`, round 8 = stage p2) |
-| L3 recovery skill | partial | Upstream stand-up addon in `train_pg/.../standup.py`, `standup_*.npy` references. Never trained or packaged by us |
+| L3 recovery skill | push recovery v1 (2026-10-27) | `skills/recovery/v1`: clipless RL on the Stand pose with force shoves (`recovery.py`), action scale 0.5; takes 0.3 m/s 0.2 s shoves backward 18/20 where stand takes 0/20. Fidgets 10x the stand expert; fine-tune with the fidget penalty (`recovery_quiet`) in progress. Stand-up from the floor still the upstream addon, untrained by us |
 | L3 episodic skills | none | — |
 | L3 overlay layer | partial | Head (4 DoF) is already a command input to the walk policy, not a learned behaviour. Antennas, eyes, sound are classical |
 | L2 animation engine, state machine | none | Runtime runs exactly one ONNX. No transitions, no blending, no clip layer |
@@ -49,6 +49,8 @@ Mapped onto the framework's four layers and six stages. "Exists" means working t
 7. **One MJCF is the source of truth.** `open_duck_mini_v2_backlash*.xml` in `train_pg`. Any mass or actuator change bumps the robot model hash, and every package records the hash it was trained against.
 8. **Reports stay visual.** Every milestone ends with videos and curves in the artifact, as before.
 9. **Skills are fused by output, not by weights (2026-10-26).** Every skill is trained on its own; no shared base network. At run time the active experts all run every step (each with its own clock and previous actions) and their motor targets are mixed; a hard switch already works for stand and walk at any gait phase. Averaging network weights falls even when walk is branched from stand. A learned gate (IMU + command) is added when an expert brings something new, starting with push recovery. Evidence: `experiments/log.md`, 2026-10-25/26.
+10. **Measure the passive robot before training robustness (2026-10-27).** Before a robustness skill is trained, the static pose is pushed across magnitude, direction and duration until it falls (`sim/fusion/passive_push.py`); those limits are the training range's starting values and the bench's floor. Sideways pushes on the duck measure nothing (it does not fall), forward and backward do.
+11. **Loop clips run outside the graph engine for now (2026-10-27).** The engine's ClipClock saturates after one cycle, so stand, walk and recovery run on the Pi through the solo runner `graph_runtime/run_hw.py` until the engine supports loops (M3 work).
 
 ---
 

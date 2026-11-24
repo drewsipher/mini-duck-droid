@@ -264,3 +264,11 @@ already has adaptive sampling, RSI, the reward set and ONNX export; VRAM is a qu
 card at 4096 envs; the costs are a second toolchain, a clip-format and deploy-contract
 change, humanoid constants to retune, and the fact that an end-to-end training run has not
 been done yet, which one overnight run settles.
+
+## Archive note (2026-11-24)
+
+`~/src/mjlab_spike/` was deleted to free disk space (6.7 GB, almost all of it mjlab's venv).
+The duck-specific files (config, tasks, converter, train/play scripts, the converted bow
+motion and the spike logs) are kept in `experiments/mjlab_spike_files/`. To resume, clone
+https://github.com/mujocolab/mjlab (the spike used commit `8bb2bc9e`), run `uv sync`, and copy
+`mjlab_spike_files/duck` and `motions` next to it.

@@ -32,10 +32,10 @@
   },
   "mean_joint_err_rad": 0.05,
   "evaluator": "sim/eval_tracking.py",
-  "created": "2026-10-25T18:28:28+00:00",
+  "created": "2026-11-24T08:30:27+00:00",
   "raw": {
     "skill": "walk",
-    "onnx": "/tmp/tmpr9i2xpe2/policy.onnx",
+    "onnx": "/tmp/tmp2ewxfy3p/policy.onnx",
     "clip": {
       "clip": "/home/hermes/src/mini-duck-droid/skills/walk/v1/clip.json",
       "loop": true,
@@ -1025,8 +1025,8 @@
       "pushes": "off"
     },
     "recipe_version": 1,
-    "created": "2026-10-25T18:28:26+00:00",
-    "video": "/tmp/tmpr9i2xpe2/eval/eval.mp4"
+    "created": "2026-11-24T08:30:26+00:00",
+    "video": "/tmp/tmp2ewxfy3p/eval/eval.mp4"
   },
   "tool": "tools/battery.py -> sim/eval_tracking.py",
   "robot_model_hash": "11e922dc9524716e9f54b2fd8be54133fa65efbc61de96ddc846d991de1c9d38"

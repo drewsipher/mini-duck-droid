@@ -1,0 +1,393 @@
+{
+ "experiment": "push-dir",
+ "rows": [
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 18,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 13,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 0,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 17,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.4,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 1,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 1,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 0,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 1,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "stand",
+   "push_ms": 0.5,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 18,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 2,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 7,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 14,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 15,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 1,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 8,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 19,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.4,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 7,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 0,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 2,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 13,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 4,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 0,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 4,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 13,
+   "total": 20
+  },
+  {
+   "expert": "walk",
+   "push_ms": 0.5,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 3,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 19,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.4,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "forward",
+   "deg": 0.0,
+   "success": 14,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "left-fwd",
+   "deg": 45.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "left",
+   "deg": 90.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "left-back",
+   "deg": 135.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "backward",
+   "deg": 180.0,
+   "success": 17,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "right-back",
+   "deg": 225.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "right",
+   "deg": 270.0,
+   "success": 20,
+   "total": 20
+  },
+  {
+   "expert": "recovery",
+   "push_ms": 0.5,
+   "direction": "right-fwd",
+   "deg": 315.0,
+   "success": 20,
+   "total": 20
+  }
+ ],
+ "stand": "/home/hermes/src/mini-duck-droid/skills/stand/v1/policy.onnx",
+ "walk": "/home/hermes/src/mini-duck-droid/skills/walk/v1/policy.onnx",
+ "recovery": "/home/hermes/src/mini-duck-droid/sim/train_pg/runs_skills/recovery_push05_s50/full/2026_10_27_133544_83558400.onnx",
+ "note": "8 s alone; every 1-3 s a kick of this size throwing the duck in this direction (its own frame)"
+}
